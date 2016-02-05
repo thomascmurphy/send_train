@@ -588,41 +588,51 @@ input[type=range]:focus::-ms-fill-upper {
     margin: 17px 0 5px 0;
     border: none;
     background: none;
-    color: $white;
 
     .navbar-collapse{
       border: none;
 
       ul.nav{
 
-        li{
+        > li:first-child{
+          margin-left: 0px;
+        }
+
+        > li{
           font-size: 20px;
           font-weight: bold;
-          margin-right: 20px;
+          margin-left: 20px;
+          color: $white;
 
-          a{
+          > a{
             background-color: $shader_hover;
             color: $white;
             @include border-radius(5px);
           }
 
-          a:hover{
+          > a:hover{
             background-color: $shader_light;
           }
 
-          a.no_bg, a.no_bg:hover{
+          > a.no_bg, a.no_bg:hover{
             background: none;
           }
         }
 
-        li.active{
-          a{
+        > li.active{
+          > a{
             background-color: $white;
             color: $cyan;
           }
         }
       }
-    } //navbar-collapse
+
+      ul.nav.navbar-right{
+        > li{
+          font-size: 14px;
+        }
+      }
+    }
 
     .navbar-toggle{
       background-color: $white;
