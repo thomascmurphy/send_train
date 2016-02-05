@@ -1,10 +1,13 @@
 TrainToSend::Application.routes.draw do
 
-  get 'profile/show'
-
   get 'home/index'
 
   devise_for :users, controllers: { sessions: "users/sessions" }
+
+  resources :climbs
+
+  get 'profile', to: 'profile#show'
+
   root to: "home#index"
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
