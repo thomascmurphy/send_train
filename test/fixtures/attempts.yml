@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  date: 2016-02-04 17:47:38
+  completion: 1
+  climb_id: 
+
+two:
+  date: 2016-02-04 17:47:38
+  completion: 1
+  climb_id: 

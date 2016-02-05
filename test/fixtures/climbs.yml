@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id:
+  grade: MyString
+  success: false
+  location: MyString
+  name: MyString
+  length: 1
+  length_unit: MyString
+
+two:
+  user_id: 
+  grade: MyString
+  success: false
+  location: MyString
+  name: MyString
+  length: 1
+  length_unit: MyString

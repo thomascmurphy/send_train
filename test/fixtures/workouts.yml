@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  microcycle_id: 
+  start_date: 2016-02-04 18:11:21
+  end_date: 2016-02-04 18:11:21
+  label: MyString
+  reference_id: 1
+  type: 
+
+two:
+  microcycle_id: 
+  start_date: 2016-02-04 18:11:21
+  end_date: 2016-02-04 18:11:21
+  label: MyString
+  reference_id: 1
+  type: 
