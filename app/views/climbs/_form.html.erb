@@ -1,0 +1,66 @@
+<%= form_for(@climb, remote: true) do |f| %>
+  <div class="modal-body">
+    <ul class="errors"></ul>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= f.label :name %><br>
+          <%= f.text_field :name, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="form-group">
+          <%= f.label :location %><br>
+          <%= f.text_field :location, class: "form-control location_field" %>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="form-group">
+          <%= f.label :outdoor %><br>
+          <%= f.check_box :outdoor, class: "outdoor_checkbox" %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= f.label :climb_type %><br>
+          <%= f.select(:climb_type, [['Boulder', 'boulder'], ['Sport', 'sport'], ['Trad', 'trad']], {}, {class: "form-control type_select"}) %>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= f.label :grade %><br>
+          <%= f.select(:grade, @boulder_grades, {}, {class: "form-control boulder_grades"}) %>
+          <%= f.select(:grade, @sport_grades, {}, {class: "form-control sport_grades hidden", disabled: true}) %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-3">
+        <div class="form-group">
+          <%= f.label :length %><br>
+          <%= f.text_field :length, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="form-group">
+          <%= f.label :length_unit %><br>
+          <%= f.select(:length_unit, [['Feet', 'feet'], ['Meters', 'meters']], {}, {class: "form-control"}) %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="form-group">
+          <%= f.label :notes %><br>
+          <%= f.text_area :notes, class: "form-control", size: "60x12" %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <input type="submit" class="btn btn-primary" value="Save">
+  </div>
+<% end %>

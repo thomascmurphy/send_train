@@ -1,0 +1,30 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h1>Macrocycles</h1>
+    <p>These are multi-week to multi-month blocks of mesocycles that attempt to improve multiple facets of your climbing over the entire duration.</p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-8">
+    <%= form_tag("/macrocycles", method: "get", remote: true, class: "form-inline margin_top" ) do %>
+      <strong>Filter by:</strong>
+      <div class="form-group margin_left">
+        <%= label_tag(:macrocycle_type, "Type:") %>
+        <%= select_tag(:macrocycle_type, options_for_select([['All', ''], ['Bouldering', 'boulder'], ['Sport Climbing', 'sport']]), class: "form-control") %>
+      </div>
+      <%= submit_tag("Filter", class: "btn btn-default margin_left") %>
+    <% end %>
+  </div>
+  <div class="col-xs-4 text-right">
+    <%= link_to "Add Macrocycle", new_macrocycle_path, remote: true, class: "btn btn-success btn-lg" %>
+  </div>
+</div>
+
+<div class="macrocycle_list margin_top">
+  <%= render "index" %>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="macrocycle_modal" tabindex="-1" role="dialog" aria-labelledby="macrocycleModal">
+
+</div>

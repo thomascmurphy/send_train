@@ -1,0 +1,51 @@
+<%= form_for(@event, remote: true) do |f| %>
+  <div class="modal-body">
+    <ul class="errors"></ul>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= f.label :name %><br>
+          <%= f.text_field :label, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= f.label :macrocycle %><br>
+          <%= f.collection_select(:macrocycle_id, current_user.macrocycles.all, :id, :label_with_duration, {prompt: "None"}, {class: "form-control type_select"}) %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= f.label :start_date %><br>
+          <%= select_month(@event.start_date.month, {field_name: "month", prefix: "start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+          <%= select_day(@event.start_date.day, {field_name: "day", prefix: "start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+          <%= select_year(@event.start_date.year, {field_name: "year", prefix: "start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+        </div>
+      </div>
+      <% if @event.id.present? %>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <%= f.label :end_date %><br>
+            <%= select_month(@event.end_date.month, {field_name: "month", prefix: "end_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+            <%= select_day(@event.end_date.day, {field_name: "day", prefix: "end_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+            <%= select_year(@event.end_date.year, {field_name: "year", prefix: "end_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="form-group">
+          <%= f.label :notes %><br>
+          <%= f.text_area :notes, class: "form-control", size: "60x12" %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <input type="submit" class="btn btn-primary" value="Save">
+  </div>
+<% end %>

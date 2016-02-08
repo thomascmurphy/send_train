@@ -1,0 +1,16 @@
+<div class="col-lg-3 col-md-4 col-sm-6">
+  <div class="panel<%= event.panel_class %>">
+    <div class="panel-heading">
+      <h3 class="panel-title"><%= event.label %></h3>
+    </div>
+    <div class="panel-body">
+      <%= event.start_date.strftime('%b %d %Y') %> - <%= event.end_date.strftime('%b %d %Y') %>
+
+      <%= truncate(event.notes, length: 50, separator: ' ') %>
+    </div>
+    <div class="panel-footer">
+      <%= link_to "Edit", edit_event_path(event), remote: true, class: "btn btn-info" %>
+      <%= link_to "Delete", event_delete_path(event), remote: true, class: "btn btn-danger" %>
+    </div>
+  </div>
+</div>

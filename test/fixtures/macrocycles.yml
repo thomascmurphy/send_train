@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  label: MyString
+  macrocycle_type: MyString
+  user_id: 
+
+two:
+  label: MyString
+  macrocycle_type: MyString
+  user_id: 

@@ -4,7 +4,31 @@ TrainToSend::Application.routes.draw do
 
   devise_for :users, controllers: { sessions: "users/sessions" }
 
-  resources :climbs
+  resources :climbs do
+    get "delete"
+
+    resources :attempts
+  end
+
+  resources :workouts do
+    get "delete"
+  end
+
+  resources :microcycles do
+    get "delete"
+  end
+
+  resources :mesocycles do
+    get "delete"
+  end
+
+  resources :macrocycles do
+    get "delete"
+  end
+
+  resources :events do
+    get "delete"
+  end
 
   get 'profile', to: 'profile#show'
 

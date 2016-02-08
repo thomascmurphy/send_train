@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h1>Events</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-8">
+    <%= form_tag("/events", method: "get", remote: true, class: "form-inline margin_top" ) do %>
+      <strong>Filter by:</strong>
+      <div class="form-group margin_left">
+        <%= label_tag(:event_type, "Type:") %>
+        <%= select_tag(:event_type, options_for_select([['All', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']]), class: "form-control") %>
+      </div>
+      <%= submit_tag("Filter", class: "btn btn-default margin_left") %>
+    <% end %>
+  </div>
+  <div class="col-xs-4 text-right">
+    <%= link_to "Add Event", new_event_path, remote: true, class: "btn btn-success btn-lg" %>
+  </div>
+</div>
+
+<div class="event_list margin_top">
+  <%= render "index" %>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="event_modal" tabindex="-1" role="dialog" aria-labelledby="eventModal">
+
+</div>

@@ -1,12 +1,10 @@
 class CreateMicrocycles < ActiveRecord::Migration
   def change
     create_table :microcycles do |t|
-      t.references :mesocycle, index: true, foreign_key: true
-      t.datetime :start_date
-      t.datetime :end_date
       t.string :label
-      t.integer :reference_id
-      t.string :type
+      t.string :microcycle_type
+      t.references :user, index: true, foreign_key: true
+      t.integer :duration, default: 604800
 
       t.timestamps null: false
     end

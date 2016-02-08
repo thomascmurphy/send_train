@@ -1,0 +1,9 @@
+$("ul.errors").html("")
+<% if @attempt.errors.any? %>
+  <% @attempt.errors.full_messages.each do |message| %>
+    $("ul.errors").append($("<li />").html("<%= message.html_safe %>"))
+  <% end %>
+<% else %>
+  $(".climb_list").html("<%= escape_javascript(render 'climbs/index') %>")
+  $("#climb_modal").modal("hide")
+<% end %>

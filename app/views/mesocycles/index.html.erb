@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h1>Mesocycles</h1>
+    <p>These are simply a block of microcycles and can vary in length.
+      For instance I may want to do 4 weeks of hangboard training but only 3 weeks of campusboarding, so I would create two mesocycles to keep those separate.</p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-8">
+    <%= form_tag("/mesocycles", method: "get", remote: true, class: "form-inline margin_top" ) do %>
+      <strong>Filter by:</strong>
+      <div class="form-group margin_left">
+        <%= label_tag(:mesocycle_type, "Type:") %>
+        <%= select_tag(:mesocycle_type, options_for_select([['All', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']]), class: "form-control") %>
+      </div>
+      <%= submit_tag("Filter", class: "btn btn-default margin_left") %>
+    <% end %>
+  </div>
+  <div class="col-xs-4 text-right">
+    <%= link_to "Add Mesocycle", new_mesocycle_path, remote: true, class: "btn btn-success btn-lg" %>
+  </div>
+</div>
+
+<div class="mesocycle_list margin_top">
+  <%= render "index" %>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="mesocycle_modal" tabindex="-1" role="dialog" aria-labelledby="mesocycleModal">
+
+</div>

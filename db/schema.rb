@@ -11,70 +11,116 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160205011121) do
+ActiveRecord::Schema.define(version: 20160208153046) do
 
   create_table "attempts", force: :cascade do |t|
-    t.datetime "date"
-    t.integer  "completion"
+    t.datetime "date",       default: '2016-02-08 16:49:22'
+    t.integer  "completion", default: 0
     t.integer  "climb_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.boolean  "onsight",    default: false
+    t.boolean  "flash",      default: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
   end
 
   add_index "attempts", ["climb_id"], name: "index_attempts_on_climb_id"
 
   create_table "climbs", force: :cascade do |t|
     t.integer  "user_id"
-    t.string   "grade"
+    t.string   "climb_type"
+    t.integer  "grade"
     t.boolean  "success"
     t.string   "location"
     t.string   "name"
     t.integer  "length"
     t.string   "length_unit"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.boolean  "outdoor",     default: true
+    t.text     "notes"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   add_index "climbs", ["user_id"], name: "index_climbs_on_user_id"
 
   create_table "events", force: :cascade do |t|
-    t.datetime "start_date"
-    t.datetime "end_date"
+    t.datetime "start_date",      default: '2016-02-08 16:49:22'
+    t.datetime "end_date",        default: '2016-02-08 16:49:22'
     t.string   "label"
-    t.integer  "user_id"
-    t.string   "type"
+    t.string   "event_type"
     t.integer  "perception"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.text     "notes"
+    t.boolean  "completed",       default: false
+    t.integer  "parent_event_id"
+    t.integer  "user_id"
+    t.integer  "workout_id"
+    t.integer  "microcycle_id"
+    t.integer  "mesocycle_id"
+    t.integer  "macrocycle_id"
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
   end
 
+  add_index "events", ["macrocycle_id"], name: "index_events_on_macrocycle_id"
+  add_index "events", ["mesocycle_id"], name: "index_events_on_mesocycle_id"
+  add_index "events", ["microcycle_id"], name: "index_events_on_microcycle_id"
+  add_index "events", ["parent_event_id"], name: "index_events_on_parent_event_id"
   add_index "events", ["user_id"], name: "index_events_on_user_id"
+  add_index "events", ["workout_id"], name: "index_events_on_workout_id"
+
+  create_table "macrocycles", force: :cascade do |t|
+    t.string   "label"
+    t.string   "macrocycle_type"
+    t.integer  "user_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "macrocycles", ["user_id"], name: "index_macrocycles_on_user_id"
+
+  create_table "macrocycles_mesocycles", id: false, force: :cascade do |t|
+    t.integer "macrocycle_id"
+    t.integer "mesocycle_id"
+  end
+
+  add_index "macrocycles_mesocycles", ["macrocycle_id"], name: "index_macrocycles_mesocycles_on_macrocycle_id"
+  add_index "macrocycles_mesocycles", ["mesocycle_id"], name: "index_macrocycles_mesocycles_on_mesocycle_id"
 
   create_table "mesocycles", force: :cascade do |t|
-    t.integer  "event_id"
-    t.datetime "start_date"
-    t.datetime "end_date"
     t.string   "label"
-    t.integer  "reference_id"
-    t.string   "type"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.string   "mesocycle_type"
+    t.integer  "user_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
-  add_index "mesocycles", ["event_id"], name: "index_mesocycles_on_event_id"
+  add_index "mesocycles", ["user_id"], name: "index_mesocycles_on_user_id"
+
+  create_table "mesocycles_microcycles", id: false, force: :cascade do |t|
+    t.integer "microcycle_id"
+    t.integer "mesocycle_id"
+  end
+
+  add_index "mesocycles_microcycles", ["mesocycle_id"], name: "index_mesocycles_microcycles_on_mesocycle_id"
+  add_index "mesocycles_microcycles", ["microcycle_id"], name: "index_mesocycles_microcycles_on_microcycle_id"
 
   create_table "microcycles", force: :cascade do |t|
-    t.integer  "mesocycle_id"
-    t.datetime "start_date"
-    t.datetime "end_date"
     t.string   "label"
-    t.integer  "reference_id"
-    t.string   "type"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.string   "microcycle_type"
+    t.integer  "user_id"
+    t.integer  "duration"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
-  add_index "microcycles", ["mesocycle_id"], name: "index_microcycles_on_mesocycle_id"
+  add_index "microcycles", ["user_id"], name: "index_microcycles_on_user_id"
+
+  create_table "microcycles_workouts", id: false, force: :cascade do |t|
+    t.integer "workout_id"
+    t.integer "microcycle_id"
+  end
+
+  add_index "microcycles_workouts", ["microcycle_id"], name: "index_microcycles_workouts_on_microcycle_id"
+  add_index "microcycles_workouts", ["workout_id"], name: "index_microcycles_workouts_on_workout_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -103,16 +149,14 @@ ActiveRecord::Schema.define(version: 20160205011121) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
 
   create_table "workouts", force: :cascade do |t|
-    t.integer  "microcycle_id"
-    t.datetime "start_date"
-    t.datetime "end_date"
     t.string   "label"
-    t.integer  "reference_id"
-    t.string   "type"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.string   "workout_type"
+    t.integer  "user_id"
+    t.text     "description"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
-  add_index "workouts", ["microcycle_id"], name: "index_workouts_on_microcycle_id"
+  add_index "workouts", ["user_id"], name: "index_workouts_on_user_id"
 
 end

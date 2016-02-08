@@ -1,0 +1,31 @@
+<%= form_for(@workout, remote: true) do |f| %>
+  <div class="modal-body">
+    <ul class="errors"></ul>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= f.label :name %><br>
+          <%= f.text_field :label, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= f.label :workout_type %><br>
+          <%= f.select(:workout_type, [['None', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']], {}, {class: "form-control type_select"}) %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="form-group">
+          <%= f.label :description %><br>
+          <%= f.text_area :description, class: "form-control", size: "60x12" %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <input type="submit" class="btn btn-primary" value="Save">
+  </div>
+<% end %>

@@ -1,0 +1,42 @@
+<%= form_for([@climb, @attempt], remote: true) do |f| %>
+  <div class="modal-body">
+    <ul class="errors"></ul>
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="form-group">
+          <%= f.label :date %><br>
+          <%= select_month(@attempt.date.month, {field_name: "month"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+          <%= select_day(@attempt.date.day, {field_name: "day"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+          <%= select_year(@attempt.date.year, {field_name: "year"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="form-group">
+          <%= f.label :completion %><br>
+          <div class="row slider_container">
+						<div class="col-xs-9">
+							<input type="range" name="attempt[completion]" min="0" max="100" step="5" value="<%= @attempt.completion %>" class="completion_slider">
+						</div>
+						<div class="col-xs-3">
+							<span class="slider_value_wrapper alt_font"><span class="slider_value">0</span>%</span>
+						</div>
+					</div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="form-group">
+          <%= f.check_box :onsight, class: "onsight_checkbox" %>
+          <%= f.label :onsight %>
+        </div>
+        <div class="form-group">
+          <%= f.check_box :flash, class: "flash_checkbox" %>
+          <%= f.label :flash %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <input type="submit" class="btn btn-primary" value="Save">
+  </div>
+<% end %>

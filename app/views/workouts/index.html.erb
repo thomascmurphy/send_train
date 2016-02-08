@@ -1,0 +1,30 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h1>Workouts</h1>
+    <p>These should be individual training sessions (e.g. a hangboard workout, a ring workout, etc).</p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-8">
+    <%= form_tag("/workouts", method: "get", remote: true, class: "form-inline margin_top" ) do %>
+      <strong>Filter by:</strong>
+      <div class="form-group margin_left">
+        <%= label_tag(:workout_type, "Type:") %>
+        <%= select_tag(:workout_type, options_for_select([['All', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']]), class: "form-control") %>
+      </div>
+      <%= submit_tag("Filter", class: "btn btn-default margin_left") %>
+    <% end %>
+  </div>
+  <div class="col-xs-4 text-right">
+    <%= link_to "Add Workout", new_workout_path, remote: true, class: "btn btn-success btn-lg" %>
+  </div>
+</div>
+
+<div class="workout_list margin_top">
+  <%= render "index" %>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="workout_modal" tabindex="-1" role="dialog" aria-labelledby="workoutModal">
+
+</div>

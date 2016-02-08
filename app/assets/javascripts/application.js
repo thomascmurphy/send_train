@@ -20,73 +20,63 @@
 
 jQuery(function($){
 
-  $('body').on('submit', 'form.ajax_form', function(e){
-    e.preventDefault();
-    var ajax_form = $(this),
-    form_action = ajax_form.attr('action'),
-    form_method = ajax_form.attr('method'),
-    form_data = ajax_form.serializeArray();
-
-    $.ajax({
-      type: form_method,
-      url: form_action,
-      data: form_data,
-      success: function(return_data){
-        var form_wrapper = ajax_form.parent();
-        if(form_wrapper.hasClass('editable_region')){
-          ajax_form.find('a.edit_toggle').removeClass('submit_form').text('Edit');
-          form_wrapper.toggleClass('editing');
-        }
-      }
-    });
+  $('body').on('click', '.disable_after_click', function(e){
+    $(this).prop("disabled", true);
   });
 
-	$('body').on('change, input', '.slider_container input[type="range"]', function(){
+  $('body').on('change, input', '.slider_container input[type="range"]', function(){
 		var slider_container = $(this).closest('.slider_container');
 		var show_value = $(this).val();
-		var value_conversions_piped = $(this).data('value_conversions_piped');
-		if(value_conversions_piped){
-  		var value_conversions = value_conversions_piped.split('|');
-  		if(value_conversions[show_value]){
-    		show_value = value_conversions[show_value];
-  		}
-		}
 		slider_container.find('span.slider_value').text(show_value);
 	});
 
-	$('body').on('click', 'a.edit_toggle', function(){
-  	var editable_region = $(this).closest('.editable_region');
-  	var editable_region_list_parent = editable_region.data('list_parent');
-  	if($(this).hasClass('submit_form')){
-    	editable_region.find('form').submit();
-  	} else {
-    	if(editable_region_list_parent && editable_region.closest(editable_region_list_parent).find('.editable_region.editing').length){
-        editable_region.closest(editable_region_list_parent).find('.editable_region.editing a.edit_toggle').click();
-    	}
-    	$(this).addClass('submit_form').text('Save');
-    	editable_region.toggleClass('editing');
-  	}
-	});
-
-	$('body').on('click', 'a.delete_link', function(event){
-  	event.preventDefault();
-  	event.stopPropagation();
-  	var editable_container = $(this).closest('.editable_container');
-  	var delete_url = $(this).attr('href');
-  	var delete_method = $(this).data('method');
-  	$.ajax({
-      type: delete_method,
-      url: delete_url,
-      success: function(return_data){
-        editable_container.fadeOut(200, function(){
-          $(this).remove();
-        });
-      }
-    });
-
-
+  $('body').on('change', '.type_select', function(e){
+    var boulder_grades = $(this).closest('form').find('.boulder_grades');
+    var sport_grades = $(this).closest('form').find('.sport_grades');
+    if ($(this).val() == "boulder" && boulder_grades.prop('disabled')) {
+      boulder_grades.toggleClass('hidden').prop('disabled', false);
+      sport_grades.toggleClass('hidden').prop('disabled', true);
+    } else if ($(this).val() == "sport" && sport_grades.prop('disabled')) {
+      boulder_grades.toggleClass('hidden').prop('disabled', true);
+      sport_grades.toggleClass('hidden').prop('disabled', false);
+    } else if ($(this).val() == "trad" && sport_grades.prop('disabled')) {
+      boulder_grades.toggleClass('hidden').prop('disabled', true);
+      sport_grades.toggleClass('hidden').prop('disabled', false);
+    }
   });
 
+  $('body').on('click', '.selectable_items .add_selected_item', function() {
+    var selectable_form = $(this).closest('form');
+    var add_html = (
+      $(this).closest('tr').html()
+      .replace('Add', 'Remove')
+      .replace('btn-success', 'btn-danger')
+      .replace('add_selected_item', 'remove_selected_item')
+    );
+    $('.selected_items tbody').append('<tr>' + add_html + '</tr>');
+    var existing_ids = selectable_form.find('.selected_ids').val();
+    existing_ids += " " + $(this).data('item-id');
+    selectable_form.find('.selected_ids').val(existing_ids);
+  });
 
+  $('body').on('click', '.selected_items .remove_selected_item', function() {
+    var selectable_form = $(this).closest('form');
+    $(this).closest('tr').remove();
+    var existing_ids = selectable_form.find('.selected_ids').val();
+    var substring_start = existing_ids.lastIndexOf($(this).data('item-id'));
+    if (substring_start == 0) {
+      existing_ids = existing_ids.substring($(this).data('item-id').toString().length + 1);
+    } else if (substring_start > 0) {
+      existing_ids = existing_ids.substring(0,substring_start - 1) + existing_ids.substring(substring_start + $(this).data('item-id').toString().length);
+    }
+    selectable_form.find('.selected_ids').val(existing_ids);
+  });
+
+  $('body').on('change', '.onsight_checkbox, .flash_checkbox', function() {
+    if ($(this).val()) {
+      var attempt_form = $(this).closest('form');
+      attempt_form.find('.completion_slider').val(100).trigger('input');
+    }
+  });
 
 });

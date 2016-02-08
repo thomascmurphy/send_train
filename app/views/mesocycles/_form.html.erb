@@ -1,0 +1,68 @@
+<%= form_for(@mesocycle, remote: true) do |f| %>
+  <div class="modal-body">
+    <ul class="errors"></ul>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= f.label :name %><br>
+          <%= f.text_field :label, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= f.label :mesocycle_type %><br>
+          <%= f.select(:mesocycle_type, [['None', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']], {}, {class: "form-control type_select"}) %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="form-group">
+          <label>Selected Microcycles</label>
+          <table class="selected_items table table-striped">
+            <thead>
+              <th>Label</th>
+              <th>Type</th>
+              <th></th>
+            </thead>
+            <tbody>
+              <% @mesocycle.microcycles.each do |microcycle| %>
+                <tr>
+                  <td><%= microcycle.label %></td>
+                  <td><%= microcycle.microcycle_type %></td>
+                  <td><a href="javascript:void(0);" class="remove_selected_item btn btn-danger" data-item-id="<%= microcycle.id %>">Remove</a></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <%= f.hidden_field :microcycle_ids, class: "selected_ids" %>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="form-group">
+          <label>Available Microcycles</label>
+          <table class="selectable_items table table-striped">
+            <thead>
+              <th>Label</th>
+              <th>Type</th>
+              <th></th>
+            </thead>
+            <tbody>
+              <% @microcycles.each do |microcycle| %>
+                <tr>
+                  <td><%= microcycle.label %></td>
+                  <td><%= microcycle.microcycle_type %></td>
+                  <td><a href="javascript:void(0);" class="add_selected_item btn btn-success" data-item-id="<%= microcycle.id %>">Add</a></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <input type="submit" class="btn btn-primary" value="Save">
+  </div>
+<% end %>

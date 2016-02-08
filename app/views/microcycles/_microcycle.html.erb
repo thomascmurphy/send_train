@@ -1,0 +1,14 @@
+<div class="col-lg-3 col-md-4 col-sm-6">
+  <div class="panel<%= microcycle.panel_class %>">
+    <div class="panel-heading">
+      <h3 class="panel-title"><%= microcycle.label %></h3>
+    </div>
+    <div class="panel-body">
+      
+    </div>
+    <div class="panel-footer">
+      <%= link_to "Edit", edit_microcycle_path(microcycle), remote: true, class: "btn btn-info" %>
+      <%= link_to "Delete", microcycle_delete_path(microcycle), remote: true, class: "btn btn-danger" %>
+    </div>
+  </div>
+</div>

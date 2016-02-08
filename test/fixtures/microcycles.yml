@@ -1,17 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  mesocycle_id: 
-  start_date: 2016-02-04 18:07:32
-  end_date: 2016-02-04 18:07:32
   label: MyString
   reference_id: 1
-  type: 
+  microcycle_type: MyString
+  user_id:
 
 two:
-  mesocycle_id: 
-  start_date: 2016-02-04 18:07:32
-  end_date: 2016-02-04 18:07:32
   label: MyString
   reference_id: 1
-  type: 
+  microcycle_type: MyString
+  user_id:

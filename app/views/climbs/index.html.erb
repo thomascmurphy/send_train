@@ -3,3 +3,61 @@
     <h1>Climbs</h1>
   </div>
 </div>
+<div class="row">
+  <div class="col-xs-8">
+    <%= form_tag("/climbs", method: "get", remote: true, class: "form-inline margin_top" ) do %>
+      <strong>Filter by:</strong>
+      <div class="form-group margin_left">
+        <%= label_tag(:climb_type, "Type:") %>
+        <%= select_tag(:climb_type, options_for_select([['All', ''], ['Boulder', 'boulder'], ['Sport', 'sport'], ['Trad', 'trad']]), class: "form-control") %>
+      </div>
+      <% if @date_lower.present? %>
+        <div class="form-group margin_left">
+          <%= label_tag(:climb_type, "From:") %>
+          <%= select_month(@date_lower, {field_name: "month_lower"}, {class: "form-control"}) %>
+          <%= select_day(@date_lower, {field_name: "day_lower"}, {class: "form-control"}) %>
+          <%= select_year(@date_lower, {field_name: "year_lower"}, {class: "form-control"}) %>
+        </div>
+      <% end %>
+      <% if @date_upper.present? %>
+        <div class="form-group margin_left">
+          <%= label_tag(:climb_type, "To:") %>
+          <%= select_month(@date_upper, {field_name: "month_upper"}, {class: "form-control"}) %>
+          <%= select_day(@date_upper, {field_name: "day_upper"}, {class: "form-control"}) %>
+          <%= select_year(@date_upper, {field_name: "year_upper"}, {class: "form-control"}) %>
+        </div>
+      <% end %>
+      <%= submit_tag("Filter", class: "btn btn-default margin_left") %>
+    <% end %>
+  </div>
+  <div class="col-xs-4 text-right">
+    <%= link_to "Add Climb", new_climb_path, remote: true, class: "btn btn-success btn-lg" %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <table class="table table-striped" id="climbs">
+      <thead>
+        <tr>
+          <th>Climb Name</th>
+          <th>Location</th>
+          <th>Type</th>
+          <th>Grade</th>
+          <th>Attempts</th>
+          <th>Length</th>
+          <th>Redpointed</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody class="climb_list">
+        <%= render "index" %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="climb_modal" tabindex="-1" role="dialog" aria-labelledby="climbModalForm">
+
+</div>

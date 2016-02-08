@@ -1,0 +1,14 @@
+<tr data-climb-id="<%= climb.id %>">
+  <td><strong><%= climb.name %></strong></td>
+  <td><%= climb.location %></td>
+  <td><%= climb.climb_type %></td>
+  <td><%= climb.grade %></td>
+  <td><%= climb.attempts.length %></td>
+  <td><%= climb.length %> <%= climb.length_unit_short %></td>
+  <td><%= climb.redpointed %></td>
+  <td class="text-right">
+    <%= link_to "Add Attempt", new_climb_attempt_path(climb), remote: true, class: "btn btn-success" %>
+    <%= link_to "Edit", edit_climb_path(climb), remote: true, class: "btn btn-info" %>
+    <%= link_to "Delete", climb_delete_path(climb), remote: true, class: "btn btn-danger" %>
+  </td>
+</tr>

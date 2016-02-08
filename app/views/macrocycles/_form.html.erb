@@ -1,0 +1,68 @@
+<%= form_for(@macrocycle, remote: true) do |f| %>
+  <div class="modal-body">
+    <ul class="errors"></ul>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= f.label :name %><br>
+          <%= f.text_field :label, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= f.label :macrocycle_type %><br>
+          <%= f.select(:macrocycle_type, [['None', ''], ['Bouldering', 'boulder'], ['Sport Climbing', 'sport']], {}, {class: "form-control type_select"}) %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="form-group">
+          <label>Selected Mesocycles</label>
+          <table class="selected_items table table-striped">
+            <thead>
+              <th>Label</th>
+              <th>Type</th>
+              <th></th>
+            </thead>
+            <tbody>
+              <% @macrocycle.mesocycles.each do |mesocycle| %>
+                <tr>
+                  <td><%= mesocycle.label %></td>
+                  <td><%= mesocycle.mesocycle_type %></td>
+                  <td><a href="javascript:void(0);" class="remove_selected_item btn btn-danger" data-item-id="<%= mesocycle.id %>">Remove</a></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <%= f.hidden_field :mesocycle_ids, class: "selected_ids" %>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="form-group">
+          <label>Available Mesocycles</label>
+          <table class="selectable_items table table-striped">
+            <thead>
+              <th>Label</th>
+              <th>Type</th>
+              <th></th>
+            </thead>
+            <tbody>
+              <% @mesocycles.each do |mesocycle| %>
+                <tr>
+                  <td><%= mesocycle.label %></td>
+                  <td><%= mesocycle.mesocycle_type %></td>
+                  <td><a href="javascript:void(0);" class="add_selected_item btn btn-success" data-item-id="<%= mesocycle.id %>">Add</a></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <input type="submit" class="btn btn-primary" value="Save">
+  </div>
+<% end %>

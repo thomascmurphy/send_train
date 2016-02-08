@@ -145,6 +145,16 @@ $font_stack_alt: "Oswald", sans-serif;
   }
 }
 
+.panel-orange {
+  border-color: #F9CBB2;
+
+  > .panel-heading {
+    color: #8A563B;
+    background-color: #FFE2C9;
+    border-color: #F9CBB2;
+  }
+}
+
 
 
 /* ============ General Elements */
@@ -581,11 +591,11 @@ input[type=range]:focus::-ms-fill-upper {
 #header_area{
   background-color: $cyan;
   border-bottom: 5px solid $cyan_dark;
-  padding: 20px 0;
+  padding: 10px 0;
   color: $white;
 
   .navbar-default{
-    margin: 17px 0 5px 0;
+    margin: 5px 0 5px 0;
     border: none;
     background: none;
 

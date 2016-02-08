@@ -2,18 +2,20 @@
 
 one:
   user_id:
-  grade: MyString
+  grade: 1
   success: false
   location: MyString
   name: MyString
   length: 1
   length_unit: MyString
+  notes:
 
 two:
-  user_id: 
-  grade: MyString
+  user_id:
+  grade: 1
   success: false
   location: MyString
   name: MyString
   length: 1
   length_unit: MyString
+  notes:
