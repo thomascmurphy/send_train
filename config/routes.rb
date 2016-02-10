@@ -28,6 +28,7 @@ TrainToSend::Application.routes.draw do
 
   resources :events do
     get "delete"
+    get "complete"
   end
 
   get 'profile', to: 'profile#show'

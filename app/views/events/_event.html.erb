@@ -1,14 +1,28 @@
-<div class="col-lg-3 col-md-4 col-sm-6">
-  <div class="panel<%= event.panel_class %>">
+<div class="col-md-3 col-sm-6 margin_bottom">
+  <div class="panel<%= event.panel_class %> event_panel" data-event-id="<%= event.id %>">
     <div class="panel-heading">
       <h3 class="panel-title"><%= event.label %></h3>
     </div>
     <div class="panel-body">
-      <%= event.start_date.strftime('%b %d %Y') %> - <%= event.end_date.strftime('%b %d %Y') %>
+      <%= event.start_date.strftime('%b %d %Y') %> - <%= event.end_date.strftime('%b %d %Y') %><br>
 
       <%= truncate(event.notes, length: 50, separator: ' ') %>
+
+      <% if event.child_events.present? %>
+        <hr/>
+        <ul>
+          <% event.child_events.each do |child_event| %>
+            <li class="<% if child_event.completed.present? %>translucent<% end %>">
+              <%= child_event.label %>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
     </div>
     <div class="panel-footer">
+      <% unless event.completed %>
+        <%= link_to "Complete", event_complete_path(event), remote: true, class: "btn btn-success complete_button" %>
+      <% end %>
       <%= link_to "Edit", edit_event_path(event), remote: true, class: "btn btn-info" %>
       <%= link_to "Delete", event_delete_path(event), remote: true, class: "btn btn-danger" %>
     </div>

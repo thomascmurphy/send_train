@@ -10,7 +10,9 @@ one:
   workout_id:
   microcycle_id:
   mesocycle_id:
+  macrocycle_id:
   notes:
+  completed:
 
 two:
   start_date: 2016-02-04 18:00:43
@@ -22,4 +24,6 @@ two:
   workout_id:
   microcycle_id:
   mesocycle_id:
+  macrocycle_id:
   notes:
+  completed:

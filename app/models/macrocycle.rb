@@ -37,4 +37,16 @@ class Macrocycle < ActiveRecord::Base
   def label_with_duration
     return "#{self.label} (#{self.duration_string})"
   end
+
+  def efficacy(type)
+    event_scores = []
+    self.events.each do |event|
+      event_scores << self.user.climb_score_difference_for_periods(event.start_date,
+                                                                   event.end_date + self.duration.seconds,
+                                                                   event.start_date - (2 * self.duration).seconds,
+                                                                   event.start_date,
+                                                                   type)
+    end
+    return (event_scores.inject{ |sum, el| sum + el }.to_f / event_scores.size) * 100
+  end
 end

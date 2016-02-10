@@ -4,12 +4,18 @@ class CreateClimbs < ActiveRecord::Migration
       t.references :user, index: true, foreign_key: true
       t.string :climb_type
       t.integer :grade
-      t.boolean :success
       t.string :location
       t.string :name
       t.integer :length
       t.string :length_unit
       t.boolean :outdoor, default: true
+      t.boolean :crimpy, default: false
+      t.boolean :slopey, default: false
+      t.boolean :pinchy, default: false
+      t.boolean :pockety, default: false
+      t.boolean :powerful, default: false
+      t.boolean :endurance, default: false
+      t.boolean :technical, default: false
       t.text :notes
 
       t.timestamps null: false

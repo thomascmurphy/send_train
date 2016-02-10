@@ -84,6 +84,8 @@ class ClimbsController < ApplicationController
 
   def edit
     if user_signed_in?
+      @boulder_grades = Climb.bouldering_grades
+      @sport_grades = Climb.sport_grades
       @climb = current_user.climbs.find_by_id(params[:id])
       respond_to do |format|
         format.html
@@ -133,6 +135,7 @@ class ClimbsController < ApplicationController
   private
     def climb_params
       params.require(:climb).permit(:name, :location, :climb_type, :grade, :length,
-                                    :length_unit, :outdoor, :notes)
+                                    :length_unit, :outdoor, :crimpy, :slopey, :pinchy,
+                                    :pockety, :powerful, :endurance, :technical, :notes)
     end
 end

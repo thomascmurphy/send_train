@@ -583,6 +583,13 @@ input[type=range]:focus::-ms-fill-upper {
   font-weight: normal;
 }
 
+.translucent{
+  opacity: 0.5;
+  transition: opacity .25s ease-in-out;
+  -moz-transition: opacity .25s ease-in-out;
+  -webkit-transition: opacity .25s ease-in-out;
+}
+
 
 
 

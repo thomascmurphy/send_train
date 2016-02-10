@@ -14,7 +14,7 @@
 ActiveRecord::Schema.define(version: 20160208153046) do
 
   create_table "attempts", force: :cascade do |t|
-    t.datetime "date",       default: '2016-02-08 16:49:22'
+    t.datetime "date",       default: '2016-02-09 20:32:27'
     t.integer  "completion", default: 0
     t.integer  "climb_id"
     t.boolean  "onsight",    default: false
@@ -35,16 +35,23 @@ ActiveRecord::Schema.define(version: 20160208153046) do
     t.integer  "length"
     t.string   "length_unit"
     t.boolean  "outdoor",     default: true
+    t.boolean  "crimpy",      default: false
+    t.boolean  "slopey",      default: false
+    t.boolean  "pinchy",      default: false
+    t.boolean  "pockety",     default: false
+    t.boolean  "powerful",    default: false
+    t.boolean  "endurance",   default: false
+    t.boolean  "technical",   default: false
     t.text     "notes"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   add_index "climbs", ["user_id"], name: "index_climbs_on_user_id"
 
   create_table "events", force: :cascade do |t|
-    t.datetime "start_date",      default: '2016-02-08 16:49:22'
-    t.datetime "end_date",        default: '2016-02-08 16:49:22'
+    t.datetime "start_date",      default: '2016-02-09 20:32:27'
+    t.datetime "end_date",        default: '2016-02-09 20:32:27'
     t.string   "label"
     t.string   "event_type"
     t.integer  "perception"
@@ -107,9 +114,9 @@ ActiveRecord::Schema.define(version: 20160208153046) do
     t.string   "label"
     t.string   "microcycle_type"
     t.integer  "user_id"
-    t.integer  "duration"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.integer  "duration",        default: 604800
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
   add_index "microcycles", ["user_id"], name: "index_microcycles_on_user_id"

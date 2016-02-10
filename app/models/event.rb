@@ -4,8 +4,19 @@ class Event < ActiveRecord::Base
   belongs_to :microcycle
   belongs_to :mesocycle
   belongs_to :macrocycle
-  belongs_to :parent_event
-  has_many :child_events, inverse_of: :parent_event
+  belongs_to :parent_event, class_name: 'Event', foreign_key: 'parent_event_id'
+  before_destroy :destroy_child_events
+  after_create :create_child_events
+
+  def child_events
+    return self.user.events.where(parent_event_id: self.id)
+  end
+
+  def destroy_child_events
+    self.child_events.each do |child_event|
+      child_event.destroy
+    end
+  end
 
   def panel_class
     if self.macrocycle.present?
@@ -29,6 +40,10 @@ class Event < ActiveRecord::Base
       end
     end
 
+    if self.completed.present?
+      color_class << " translucent"
+    end
+
     return color_class
   end
 
@@ -38,6 +53,8 @@ class Event < ActiveRecord::Base
       mesocycle_count = 1
       microcycle_start_date = self.start_date
       microcycle_count = 1
+      workout_start_date = self.start_date
+      workout_count = 1
       self.macrocycle.mesocycles.each do |mesocycle|
         mesocycle_end_date = mesocycle_start_date + mesocycle.duration.seconds
         mesocycle_event = Event.create(label: "#{mesocycle.label} #{mesocycle_count}",
@@ -49,16 +66,30 @@ class Event < ActiveRecord::Base
                                        event_type: mesocycle.mesocycle_type)
         mesocycle.microcycles.each do |microcycle|
           microcycle_end_date = microcycle_start_date + microcycle.duration.seconds
-          microcycle_event = Event.create(label: "#{microcycle.label} #{mesocycle_count}",
+          microcycle_event = Event.create(label: "#{microcycle.label} #{microcycle_count}",
                                           start_date: microcycle_start_date,
                                           end_date: microcycle_end_date,
                                           microcycle_id: microcycle.id,
-                                          parent_event_id: self.id,
+                                          parent_event_id: mesocycle_event.id,
                                           user_id: self.user_id,
                                           event_type: microcycle.microcycle_type)
+          microcycle.workouts.each do |workout|
+            workout_end_date = workout_start_date + (microcycle.duration / microcycle.workouts.length)
+            workout_event = Event.create(label: "#{workout.label} #{workout_count}",
+                                         start_date: workout_start_date,
+                                         end_date: workout_end_date,
+                                         workout_id: workout.id,
+                                         parent_event_id: microcycle_event.id,
+                                         user_id: self.user_id,
+                                         event_type: microcycle.microcycle_type)
+            workout_start_date = workout_end_date
+            workout_count += 1
+          end
           microcycle_start_date = microcycle_end_date
+          microcycle_count += 1
         end
         mesocycle_start_date = mesocycle_end_date
+        mesocycle_count += 1
       end
     end
   end

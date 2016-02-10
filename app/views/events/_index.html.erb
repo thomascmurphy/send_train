@@ -8,7 +8,12 @@
     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
       <div class="panel-body">
         <div class="row">
-          <%= render @current_events %>
+          <% @current_events.each_with_index do |event, index| %>
+            <%= render event %>
+            <% if index % 4 == 3 %>
+          </div><div class="row">
+            <% end %>
+          <% end %>
         </div>
       </div>
     </div>
@@ -24,7 +29,12 @@
     <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
       <div class="panel-body">
         <div class="row">
-          <%= render @upcoming_events %>
+          <% @upcoming_events.each_with_index do |event, index| %>
+            <%= render event %>
+            <% if index % 4 == 3 %>
+          </div><div class="row margin_bottom">
+            <% end %>
+          <% end %>
         </div>
       </div>
     </div>
@@ -40,7 +50,12 @@
     <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
       <div class="panel-body">
         <div class="row">
-          <%= render @past_events %>
+          <% @past_events.each_with_index do |event, index| %>
+            <%= render event %>
+            <% if index % 4 == 3 %>
+          </div><div class="row margin_bottom">
+            <% end %>
+          <% end %>
         </div>
       </div>
     </div>

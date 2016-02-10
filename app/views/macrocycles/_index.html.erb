@@ -1,3 +1,8 @@
 <div class="row">
-  <%= render @macrocycles %>
+  <% @macrocycles.each_with_index do |macrocycle, index| %>
+    <%= render macrocycle %>
+    <% if index % 4 == 3 %>
+  </div><div class="row">
+    <% end %>
+  <% end %>
 </div>

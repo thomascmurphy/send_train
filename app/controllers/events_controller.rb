@@ -2,15 +2,39 @@ class EventsController < ApplicationController
 
   def index
     if user_signed_in?
-      @events = current_user.events.order(created_at: :desc)
+      @events = current_user.events
 
       if params[:event_type].present?
         @events = @events.where(event_type: params[:event_type])
       end
 
-      @current_events = @events.where("start_date < ? AND end_date > ?", DateTime.now, DateTime.now)
-      @upcoming_events = @events.where("start_date > ?", DateTime.now)
-      @past_events = @events.where("end_date < ?", DateTime.now)
+      if params[:event_length].present?
+        case params[:event_length]
+        when "workout"
+          @events = @events.where.not(workout_id: nil)
+        when "microcycle"
+          @events = @events.where.not(microcycle_id: nil)
+        when "mesocycle"
+          @events = @events.where.not(mesocycle_id: nil)
+        when "macrocycle"
+          @events = @events.where.not(macrocycle_id: nil)
+        else
+        end
+      end
+
+      if params[:event_status].present?
+        case params[:event_status]
+        when "uncompleted"
+          @events = @events.where(completed: false)
+        when "completed"
+          @events = @events.where(completed: true)
+        else
+        end
+      end
+
+      @current_events = @events.where("start_date < ? AND end_date > ?", DateTime.now, DateTime.now).order(start_date: :asc)
+      @upcoming_events = @events.where("start_date > ?", DateTime.now).order(start_date: :asc)
+      @past_events = @events.where("end_date < ?", DateTime.now).order(start_date: :asc)
 
       respond_to do |format|
         format.html
@@ -46,10 +70,10 @@ class EventsController < ApplicationController
 
   def create
     if user_signed_in?
-      @events = current_user.events.order(created_at: :desc)
-      @current_events = @events.where("start_date < ? AND end_date > ?", DateTime.now, DateTime.now)
-      @upcoming_events = @events.where("start_date > ?", DateTime.now)
-      @past_events = @events.where("end_date < ?", DateTime.now)
+      @events = current_user.events
+      @current_events = @events.where("start_date < ? AND end_date > ?", DateTime.now, DateTime.now).order(start_date: :asc)
+      @upcoming_events = @events.where("start_date > ?", DateTime.now).order(start_date: :asc)
+      @past_events = @events.where("end_date < ?", DateTime.now).order(start_date: :asc)
       start_date_params = params[:start_date]
       if start_date_params.present?
         if start_date_params[:day].present? && start_date_params[:month].present? && start_date_params[:year].present?
@@ -78,7 +102,6 @@ class EventsController < ApplicationController
 
       respond_to do |format|
         if @event.save
-          @event.create_child_events
           format.html { redirect_to @event, notice: 'Event was successfully created.' }
           format.js
           format.json { render json: @event, status: :created, location: @event }
@@ -103,10 +126,10 @@ class EventsController < ApplicationController
 
   def update
     if user_signed_in?
-      @events = current_user.events.order(created_at: :desc)
-      @current_events = @events.where("start_date < ? AND end_date > ?", DateTime.now, DateTime.now)
-      @upcoming_events = @events.where("start_date > ?", DateTime.now)
-      @past_events = @events.where("end_date < ?", DateTime.now)
+      @events = current_user.events
+      @current_events = @events.where("start_date < ? AND end_date > ?", DateTime.now, DateTime.now).order(start_date: :asc)
+      @upcoming_events = @events.where("start_date > ?", DateTime.now).order(start_date: :asc)
+      @past_events = @events.where("end_date < ?", DateTime.now).order(start_date: :asc)
       start_date_params = params[:start_date]
       if start_date_params.present?
         if start_date_params[:day].present? && start_date_params[:month].present? && start_date_params[:year].present?
@@ -149,12 +172,25 @@ class EventsController < ApplicationController
 
   def destroy
     if user_signed_in?
-      @events = current_user.events.order(created_at: :desc)
-      @current_events = @events.where("start_date < ? AND end_date > ?", DateTime.now, DateTime.now)
-      @upcoming_events = @events.where("start_date > ?", DateTime.now)
-      @past_events = @events.where("end_date < ?", DateTime.now)
+      @events = current_user.events
+      @current_events = @events.where("start_date < ? AND end_date > ?", DateTime.now, DateTime.now).order(start_date: :asc)
+      @upcoming_events = @events.where("start_date > ?", DateTime.now).order(start_date: :asc)
+      @past_events = @events.where("end_date < ?", DateTime.now).order(start_date: :asc)
       @event = current_user.events.find_by_id(params[:id])
       @event.destroy
+    end
+  end
+
+  def complete
+    if user_signed_in?
+      @event = current_user.events.find_by_id(params[:event_id])
+      @event.completed = true
+      @event.save
+      respond_to do |format|
+        format.html
+        format.js
+        format.json
+      end
     end
   end
 

@@ -27,10 +27,15 @@
       <% if @event.id.present? %>
         <div class="col-sm-6">
           <div class="form-group">
-            <%= f.label :end_date %><br>
-            <%= select_month(@event.end_date.month, {field_name: "month", prefix: "end_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
-            <%= select_day(@event.end_date.day, {field_name: "day", prefix: "end_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
-            <%= select_year(@event.end_date.year, {field_name: "year", prefix: "end_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+            <% if @event.workout_id.present? %>
+              <%= f.label :completed %><br>
+              <%= f.check_box :completed %>
+            <% else %>
+              <%= f.label :end_date %><br>
+              <%= select_month(@event.end_date.month, {field_name: "month", prefix: "end_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+              <%= select_day(@event.end_date.day, {field_name: "day", prefix: "end_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+              <%= select_year(@event.end_date.year, {field_name: "year", prefix: "end_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+            <% end %>
           </div>
         </div>
       <% end %>

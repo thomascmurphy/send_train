@@ -18,7 +18,8 @@
 //= require bootstrap-sprockets
 //= require chartery
 
-jQuery(function($){
+var ready;
+ready = function() {
 
   $('body').on('click', '.disable_after_click', function(e){
     $(this).prop("disabled", true);
@@ -79,4 +80,7 @@ jQuery(function($){
     }
   });
 
-});
+}
+
+$(document).ready(ready);
+$(document).on('page:load', ready);

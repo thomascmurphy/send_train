@@ -2,12 +2,10 @@
 
 one:
   label: MyString
-  reference_id: 1
   microcycle_type: MyString
   user_id:
 
 two:
   label: MyString
-  reference_id: 1
   microcycle_type: MyString
   user_id:

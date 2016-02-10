@@ -1,21 +1,91 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  user_id:
-  grade: 1
-  success: false
+  user_id: 1
+  grade: 65
   location: MyString
-  name: MyString
+  name: Some v6
   length: 1
   length_unit: MyString
   notes:
 
 two:
-  user_id:
-  grade: 1
-  success: false
+  user_id: 1
+  grade: 75
   location: MyString
-  name: MyString
+  name: Some v7
+  length: 1
+  length_unit: MyString
+  notes:
+
+three:
+  user_id: 1
+  grade: 85
+  location: MyString
+  name: Some v8
+  length: 1
+  length_unit: MyString
+  notes:
+
+four:
+  user_id: 1
+  grade: 95
+  location: MyString
+  name: Some v9
+  length: 1
+  length_unit: MyString
+  notes:
+
+five:
+  user_id: 1
+  grade: 100
+  location: MyString
+  name: Some v10
+  length: 1
+  length_unit: MyString
+  notes:
+
+six:
+  user_id: 1
+  grade: 80
+  location: MyString
+  name: Some 5.12d
+  length: 1
+  length_unit: MyString
+  notes:
+
+seven:
+  user_id: 1
+  grade: 85
+  location: MyString
+  name: Some 5.13a
+  length: 1
+  length_unit: MyString
+  notes:
+
+eight:
+  user_id: 1
+  grade: 90
+  location: MyString
+  name: Some 5.13b
+  length: 1
+  length_unit: MyString
+  notes:
+
+nine:
+  user_id: 1
+  grade: 95
+  location: MyString
+  name: Some 5.13c
+  length: 1
+  length_unit: MyString
+  notes:
+
+ten:
+  user_id: 1
+  grade: 100
+  location: MyString
+  name: Some 5.13d
   length: 1
   length_unit: MyString
   notes:

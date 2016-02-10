@@ -31,8 +31,13 @@
       <div class="col-sm-6">
         <div class="form-group">
           <%= f.label :grade %><br>
-          <%= f.select(:grade, @boulder_grades, {}, {class: "form-control boulder_grades"}) %>
-          <%= f.select(:grade, @sport_grades, {}, {class: "form-control sport_grades hidden", disabled: true}) %>
+          <% if @climb.climb_type == "sport" || @climb.climb_type == "trad" %>
+            <%= f.select(:grade, @boulder_grades, {}, {class: "form-control boulder_grades hidden", disabled: true}) %>
+            <%= f.select(:grade, @sport_grades, {}, {class: "form-control sport_grades"}) %>
+          <% else %>
+            <%= f.select(:grade, @boulder_grades, {}, {class: "form-control boulder_grades"}) %>
+            <%= f.select(:grade, @sport_grades, {}, {class: "form-control sport_grades hidden", disabled: true}) %>
+          <% end %>
         </div>
       </div>
     </div>
@@ -40,13 +45,38 @@
       <div class="col-sm-3">
         <div class="form-group">
           <%= f.label :length %><br>
-          <%= f.text_field :length, class: "form-control" %>
+          <%= f.number_field :length, class: "form-control" %>
         </div>
       </div>
       <div class="col-sm-3">
         <div class="form-group">
           <%= f.label :length_unit %><br>
           <%= f.select(:length_unit, [['Feet', 'feet'], ['Meters', 'meters']], {}, {class: "form-control"}) %>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= f.label "Characteristics" %><br>
+          <div class="row">
+            <div class="col-xs-6">
+              <%= f.check_box :crimpy %>
+              <%= f.label :crimpy %><br>
+              <%= f.check_box :slopey %>
+              <%= f.label :slopey %><br>
+              <%= f.check_box :pinchy %>
+              <%= f.label :pinchy %><br>
+              <%= f.check_box :pockety %>
+              <%= f.label :pockety %>
+            </div>
+            <div class="col-xs-6">
+              <%= f.check_box :powerful %>
+              <%= f.label :powerful %><br>
+              <%= f.check_box :endurance %>
+              <%= f.label :endurance %><br>
+              <%= f.check_box :technical %>
+              <%= f.label :technical %>
+            </div>
+          </div>
         </div>
       </div>
     </div>

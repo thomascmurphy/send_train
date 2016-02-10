@@ -2,14 +2,12 @@
 
 one:
   label: MyString
-  reference_id: 1
   workout_type:
   description:
   user_id:
 
 two:
   label: MyString
-  reference_id: 1
   workout_type:
   description:
   user_id:

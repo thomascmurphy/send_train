@@ -1,4 +1,5 @@
 class Microcycle < ActiveRecord::Base
+  belongs_to :user
   has_and_belongs_to_many :workouts
   has_and_belongs_to_many :mesocycles
   has_many :events
@@ -46,6 +47,11 @@ class Microcycle < ActiveRecord::Base
 
   def duration_unit
     return self.duration_clean[:duration_unit]
+  end
+
+  def duration_days
+    dd, hh = self.duration.divmod(86400)
+    return dd
   end
 
 end

@@ -1,10 +1,18 @@
-<div class="col-lg-3 col-md-4 col-sm-6">
+<div class="col-md-3 col-sm-6 margin_bottom">
   <div class="panel<%= mesocycle.panel_class %>">
     <div class="panel-heading">
       <h3 class="panel-title"><%= mesocycle.label %></h3>
     </div>
     <div class="panel-body">
-      
+      <% if mesocycle.microcycles.present? %>
+        <ul>
+          <% mesocycle.microcycles.each do |microcycle| %>
+            <li>
+              <%= microcycle.label %>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
     </div>
     <div class="panel-footer">
       <%= link_to "Edit", edit_mesocycle_path(mesocycle), remote: true, class: "btn btn-info" %>

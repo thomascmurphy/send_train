@@ -1,5 +1,85 @@
 <div class="row">
   <div class="col-xs-12">
-    <h1><%= @user.first_name %> <%= @user.last_name %></h1>
+    <h1>My Profile</h1>
+  </div>
+</div>
+
+<div class="row large_margin_top margin_bottom">
+  <div class="col-sm-6">
+    <h3>Recent Progress</h3>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Best Climbs</h3>
+      </div>
+      <div class="panel-body">
+        <div class="build_line" <% @user.profile_graph_data.each_with_index do |line_data, index| %>
+                                    data-primary-name-<%= index %> = "<%= line_data[:name] %>"
+                                    data-primary-value-<%= index %> = "<%= line_data[:value] %>"
+                                    data-primary-tooltip-value-<%= index %> = "<%= line_data[:tooltip_value] %>"
+                                <% end %>></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <h3>Upcoming Workouts</h3>
+    <div class="row">
+      <% @next_events.each do |event| %>
+        <div class="col-sm-6 margin_bottom">
+          <div class="panel<%= event.panel_class %>">
+            <div class="panel-heading">
+              <h3 class="panel-title"><%= event.label %></h3>
+            </div>
+            <div class="panel-body">
+              <%= event.start_date.strftime('%b %d %Y') %> - <%= event.end_date.strftime('%b %d %Y') %><br>
+              <hr/>
+              <%= truncate(event.notes, length: 50, separator: ' ') %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="row margin_bottom">
+  <div class="col-sm-6">
+    <h3>Most Effective Bouldering Workouts</h3>
+    <div class="row">
+      <% @best_workouts_bouldering.each do |workout| %>
+        <div class="col-sm-6 margin_bottom">
+          <div class="panel<%= workout.panel_class %>">
+            <div class="panel-heading">
+              <h3 class="panel-title"><%= workout.label %></h3>
+            </div>
+            <div class="panel-body">
+              <%= truncate(workout.description, length: 50, separator: ' ') %>
+            </div>
+            <div class="panel-footer text-right">
+              <h3><small>Score:</small> <span class="alt_font"><%= workout.efficacy("bouldering") %></span></h3>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <h3>Most Effective Sport Climbing Workouts</h3>
+    <div class="row">
+      <% @best_workouts_sport_climbing.each do |workout| %>
+        <div class="col-sm-6 margin_bottom">
+          <div class="panel<%= workout.panel_class %>">
+            <div class="panel-heading">
+              <h3 class="panel-title"><%= workout.label %></h3>
+            </div>
+            <div class="panel-body">
+              <%= truncate(workout.description, length: 50, separator: ' ') %>
+            </div>
+            <div class="panel-footer text-right">
+              <h3><small>Score:</small> <span class="alt_font"><%= workout.efficacy("sport") %></span></h3>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>
