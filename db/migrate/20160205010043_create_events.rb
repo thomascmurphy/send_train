@@ -8,7 +8,7 @@ class CreateEvents < ActiveRecord::Migration
       t.integer :perception
       t.text :notes
       t.boolean :completed, default: false
-      t.references :parent_event, index: true, foreign_key: true
+      t.integer :parent_event_id, index: true
       t.references :user, index: true, foreign_key: true
       t.references :workout, index: true, foreign_key: true
       t.references :microcycle, index: true, foreign_key: true

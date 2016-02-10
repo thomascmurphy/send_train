@@ -14,7 +14,7 @@
 ActiveRecord::Schema.define(version: 20160208153046) do
 
   create_table "attempts", force: :cascade do |t|
-    t.datetime "date",       default: '2016-02-10 03:44:48'
+    t.datetime "date",       default: '2016-02-10 04:07:14'
     t.integer  "completion", default: 0
     t.integer  "climb_id"
     t.boolean  "onsight",    default: false
@@ -49,8 +49,8 @@ ActiveRecord::Schema.define(version: 20160208153046) do
   add_index "climbs", ["user_id"], name: "index_climbs_on_user_id"
 
   create_table "events", force: :cascade do |t|
-    t.datetime "start_date",      default: '2016-02-10 03:44:48'
-    t.datetime "end_date",        default: '2016-02-10 03:44:48'
+    t.datetime "start_date",      default: '2016-02-10 04:07:14'
+    t.datetime "end_date",        default: '2016-02-10 04:07:14'
     t.string   "label"
     t.string   "event_type"
     t.integer  "perception"
