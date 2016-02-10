@@ -34,7 +34,7 @@ class Workout < ActiveRecord::Base
         mesocycle_event_ids << microcycle_event.parent_event_id
       end
     end
-    mesocycle_events = self.user.events.where(id: mesocycle_event_ids)
+    mesocycle_events = self.user.events.where(id: mesocycle_event_ids.uniq)
     mesocycle_events.each do |event|
       duration = event.end_date - event.start_date
       user_score = self.user.climb_score_for_period(event.end_date + duration - 1.year, event.end_date + duration, type)

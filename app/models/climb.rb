@@ -4,6 +4,25 @@ class Climb < ActiveRecord::Base
 
   def redpointed
     successful_attempts = self.attempts.where(completion: 100).order(date: :desc)
+    redpointed = false
+    if successful_attempts.present?
+      redpointed = true
+    end
+    return redpointed
+  end
+
+  def redpoint_date
+    successful_attempts = self.attempts.where(completion: 100).order(date: :asc)
+    redpoint_date = nil
+    if successful_attempts.present?
+      best_attempt = successful_attempts.first
+      redpoint_date = best_attempt.date
+    end
+    return redpoint_date
+  end
+
+  def redpoint_text
+    successful_attempts = self.attempts.where(completion: 100).order(date: :asc)
     redpointed_text = "Open Project"
     if successful_attempts.present?
       if successful_attempts.where(onsight: true).present?
