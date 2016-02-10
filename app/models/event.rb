@@ -50,11 +50,10 @@ class Event < ActiveRecord::Base
   def create_child_events
     if self.macrocycle.present?
       mesocycle_start_date = self.start_date
-      mesocycle_count = 1
       microcycle_start_date = self.start_date
-      microcycle_count = 1
       workout_start_date = self.start_date
-      workout_count = 1
+
+      mesocycle_count = 1
       self.macrocycle.mesocycles.each do |mesocycle|
         mesocycle_end_date = mesocycle_start_date + mesocycle.duration.seconds
         mesocycle_event = Event.create(label: "#{mesocycle.label} #{mesocycle_count}",
@@ -64,6 +63,7 @@ class Event < ActiveRecord::Base
                                        parent_event_id: self.id,
                                        user_id: self.user_id,
                                        event_type: mesocycle.mesocycle_type)
+        microcycle_count = 1
         mesocycle.microcycles.each do |microcycle|
           microcycle_end_date = microcycle_start_date + microcycle.duration.seconds
           microcycle_event = Event.create(label: "#{microcycle.label} #{microcycle_count}",
@@ -73,6 +73,7 @@ class Event < ActiveRecord::Base
                                           parent_event_id: mesocycle_event.id,
                                           user_id: self.user_id,
                                           event_type: microcycle.microcycle_type)
+          workout_count = 1
           microcycle.workouts.each do |workout|
             workout_end_date = workout_start_date + (microcycle.duration / microcycle.workouts.length)
             workout_event = Event.create(label: "#{workout.label} #{workout_count}",
