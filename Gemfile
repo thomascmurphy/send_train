@@ -47,6 +47,7 @@ end
 gem 'redcarpet', '~> 3.1.2'
 gem 'devise'
 gem 'bootstrap-sass'
+gem 'pg'
 
 group :development, :test do
   gem 'pry'
