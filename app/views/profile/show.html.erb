@@ -31,11 +31,24 @@
             </div>
             <div class="panel-body">
               <%= event.start_date.strftime('%b %d %Y') %> - <%= event.end_date.strftime('%b %d %Y') %><br>
-              <hr/>
+
               <% if event.notes.present? %>
+                <hr/>
                 <%= simple_format(truncate(event.notes, length: 50, separator: ' ')) %>
               <% elsif event.workout.present? %>
+                <hr/>
                 <%= simple_format(truncate(event.workout.description, length: 50, separator: ' ')) %>
+              <% end %>
+
+              <% if event.child_events.present? %>
+                <hr/>
+                <ul>
+                  <% event.child_events.each do |child_event| %>
+                    <li class="<% if child_event.completed.present? %>translucent<% end %>">
+                      <%= child_event.label %>
+                    </li>
+                  <% end %>
+                </ul>
               <% end %>
             </div>
           </div>

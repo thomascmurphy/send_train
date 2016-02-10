@@ -5,10 +5,12 @@
     </div>
     <div class="panel-body">
       <%= event.start_date.strftime('%b %d %Y') %> - <%= event.end_date.strftime('%b %d %Y') %><br>
-      <hr/>
+
       <% if event.notes.present? %>
+        <hr/>
         <%= simple_format(truncate(event.notes, length: 50, separator: ' ')) %>
       <% elsif event.workout.present? %>
+        <hr/>
         <%= simple_format(truncate(event.workout.description, length: 50, separator: ' ')) %>
       <% end %>
 
