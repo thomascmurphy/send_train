@@ -1,0 +1,31 @@
+<%= form_tag("comment", method: :post, remote: true) do %>
+  <div class="modal-body">
+    <ul class="errors"></ul>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= label_tag :subject, "Subject" %><br>
+          <%= text_field_tag :subject, nil, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= label_tag :from_email, "Return Email" %><br>
+          <%= text_field_tag :from_email, nil, class: "form-control" %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="form-group">
+          <%= label_tag :comment, "Comment" %><br>
+          <%= text_area_tag :comment, nil, class: "form-control", size: "60x12" %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <input type="submit" class="btn btn-primary" value="Send">
+  </div>
+<% end %>
