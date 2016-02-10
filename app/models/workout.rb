@@ -70,6 +70,7 @@ class Workout < ActiveRecord::Base
     if efficacy != 0
       efficacy_nice = efficacy
     end
+    return efficacy_nice
   end
 
 end
