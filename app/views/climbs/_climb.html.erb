@@ -4,7 +4,7 @@
   <td><%= climb.climb_type %></td>
   <td><%= climb.grade_string %></td>
   <td><%= climb.attempts.length %></td>
-  <td><%= climb.length %> <%= climb.length_unit_short %></td>
+  <td><% unless climb.length.blank? %><%= climb.length %> <%= climb.length_unit_short %><% end %></td>
   <td><%= climb.redpoint_text %></td>
   <td class="text-right">
     <%= link_to "Add Attempt", new_climb_attempt_path(climb), remote: true, class: "btn btn-success" %>

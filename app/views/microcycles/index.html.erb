@@ -9,14 +9,13 @@
     <%= form_tag("/microcycles", method: "get", remote: true, class: "form-inline margin_top" ) do %>
       <strong>Filter by:</strong>
       <div class="form-group margin_left">
-        <%= label_tag(:microcycle_type, "Type:") %>
-        <%= select_tag(:microcycle_type, options_for_select([['All', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']]), class: "form-control") %>
+        <%= select_tag(:microcycle_type, options_for_select([['Type', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']]), class: "form-control") %>
       </div>
       <%= submit_tag("Filter", class: "btn btn-default margin_left") %>
     <% end %>
   </div>
   <div class="col-xs-4 text-right">
-    <%= link_to "Add Microcycle", new_microcycle_path, remote: true, class: "btn btn-success btn-lg" %>
+    <%= link_to raw("<span class='glyphicon glyphicon-plus'></span> Add Microcycle"), new_microcycle_path, remote: true, class: "btn btn-success btn-lg" %>
   </div>
 </div>
 

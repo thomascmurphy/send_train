@@ -8,12 +8,10 @@
     <%= form_tag("/climbs", method: "get", remote: true, class: "form-inline margin_top" ) do %>
       <strong>Filter by:</strong>
       <div class="form-group margin_left">
-        <%= label_tag(:climb_type, "Type:") %>
-        <%= select_tag(:climb_type, options_for_select([['All', ''], ['Boulder', 'boulder'], ['Sport', 'sport'], ['Trad', 'trad']]), class: "form-control") %>
+        <%= select_tag(:climb_type, options_for_select([['Type', ''], ['Boulder', 'boulder'], ['Sport', 'sport'], ['Trad', 'trad']]), class: "form-control") %>
       </div>
       <div class="form-group margin_left">
-        <%= label_tag(:outdoor, "Location:") %>
-        <%= select_tag(:outdoor, options_for_select([['All', ''], ['Outdoor', true], ['Indoor', false]]), class: "form-control") %>
+        <%= select_tag(:outdoor, options_for_select([['Location', ''], ['Outdoor', true], ['Indoor', false]]), class: "form-control") %>
       </div>
 
       <%= submit_tag("Filter", class: "btn btn-default margin_left") %>
