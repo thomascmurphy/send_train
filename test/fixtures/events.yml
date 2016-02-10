@@ -1,29 +1,185 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  start_date: 2016-02-04 18:00:43
-  end_date: 2016-02-04 18:00:43
+hangboard1:
+  start_date: 2016-01-11 18:00:43
+  end_date: 2016-01-11 18:00:43
   label: MyString
-  user_id:
-  event_type:
+  user_id: 1
+  event_type: strength
   perception: 1
-  workout_id:
+  workout: hangboard
   microcycle_id:
   mesocycle_id:
   macrocycle_id:
   notes:
-  completed:
+  completed: true
+  parent_event_id: 21
 
-two:
-  start_date: 2016-02-04 18:00:43
-  end_date: 2016-02-04 18:00:43
+hangboard2:
+  start_date: 2016-01-12 18:00:43
+  end_date: 2016-01-12 18:00:43
   label: MyString
-  user_id:
-  event_type:
+  user_id: 1
+  event_type: strength
   perception: 1
-  workout_id:
+  workout: hangboard
   microcycle_id:
   mesocycle_id:
   macrocycle_id:
   notes:
-  completed:
+  completed: true
+  parent_event_id: 21
+
+hangboard3:
+  start_date: 2016-01-13 18:00:43
+  end_date: 2016-01-13 18:00:43
+  label: MyString
+  user_id: 1
+  event_type: strength
+  perception: 1
+  workout: hangboard
+  microcycle_id:
+  mesocycle_id:
+  macrocycle_id:
+  notes:
+  completed: true
+  parent_event_id: 21
+
+hangboard4:
+  start_date: 2016-01-14 18:00:43
+  end_date: 2016-01-14 18:00:43
+  label: MyString
+  user_id: 1
+  event_type: strength
+  perception: 1
+  workout: hangboard
+  microcycle_id:
+  mesocycle_id:
+  macrocycle_id:
+  notes:
+  completed: true
+  parent_event_id: 21
+
+campusboard1:
+  start_date: 2016-01-15 18:00:43
+  end_date: 2016-01-15 18:00:43
+  label: MyString
+  user_id: 1
+  event_type: power
+  perception: 1
+  workout: campusboard
+  microcycle_id:
+  mesocycle_id:
+  macrocycle_id:
+  notes:
+  completed: true
+  parent_event_id: 22
+
+campusboard2:
+  start_date: 2016-01-16 18:00:43
+  end_date: 2016-01-16 18:00:43
+  label: MyString
+  user_id: 1
+  event_type: power
+  perception: 1
+  workout: campusboard
+  microcycle_id:
+  mesocycle_id:
+  macrocycle_id:
+  notes:
+  completed: true
+  parent_event_id: 22
+
+campusboard3:
+  start_date: 2016-01-17 18:00:43
+  end_date: 2016-01-17 18:00:43
+  label: MyString
+  user_id: 1
+  event_type: power
+  perception: 1
+  workout: campusboard
+  microcycle_id:
+  mesocycle_id:
+  macrocycle_id:
+  notes:
+  completed: true
+  parent_event_id: 22
+
+strengthmicroevent:
+  id: 21
+  start_date: 2016-01-11 18:00:43
+  end_date: 2016-01-14 18:00:43
+  label: strengthmicroevent
+  user_id: 1
+  event_type: strength
+  perception: 1
+  workout_id:
+  microcycle: strengthmicro
+  mesocycle_id:
+  macrocycle_id:
+  notes:
+  completed: true
+  parent_event_id: 31
+
+powermicroevent:
+  id: 22
+  start_date: 2016-01-14 18:00:43
+  end_date: 2016-01-17 18:00:43
+  label: powermicroevent
+  user_id: 1
+  event_type: power
+  perception: 1
+  workout_id:
+  microcycle: powermicro
+  mesocycle_id:
+  macrocycle_id:
+  notes:
+  completed: true
+  parent_event_id: 32
+
+strengthmesoevent:
+  id: 31
+  start_date: 2016-01-11 18:00:43
+  end_date: 2016-01-14 18:00:43
+  label: strengthmesoevent
+  user_id: 1
+  event_type: strength
+  perception: 1
+  workout_id:
+  microcycle_id:
+  mesocycle: strengthmeso
+  macrocycle_id:
+  notes:
+  completed: true
+  parent_event_id: 41
+
+powermesoevent:
+  id: 32
+  start_date: 2016-01-14 18:00:43
+  end_date: 2016-01-17 18:00:43
+  label: powermesoevent
+  user_id: 1
+  event_type: power
+  perception: 1
+  workout_id:
+  microcycle_id:
+  mesocycle: powermeso
+  macrocycle_id:
+  notes:
+  completed: true
+  parent_event_id: 41
+
+macroevent:
+  id: 41
+  start_date: 2016-01-11 18:00:43
+  end_date: 2016-01-17 18:00:43
+  label: macroevent
+  user_id: 1
+  event_type: boulder
+  perception: 1
+  workout_id:
+  microcycle_id:
+  mesocycle_id:
+  macrocycle: macro
+  notes:
+  completed: true

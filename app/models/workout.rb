@@ -34,17 +34,27 @@ class Workout < ActiveRecord::Base
         mesocycle_event_ids << microcycle_event.parent_event_id
       end
     end
-    mesocycle_events = self.user.events.where(mesocycle_id: mesocycle_event_ids)
+    mesocycle_events = self.user.events.where(id: mesocycle_event_ids)
     mesocycle_events.each do |event|
       duration = event.end_date - event.start_date
-      event_scores << self.user.climb_score_difference_for_periods(event.start_date,
-                                                                   event.end_date + duration,
-                                                                   event.start_date - 2 * duration,
-                                                                   event.start_date,
-                                                                   type)
+      user_score = self.user.climb_score_for_period(event.end_date + duration - 1.year, event.end_date + duration, type)
+      score_difference = self.user.climb_score_difference_for_periods(event.start_date,
+                                                                      event.end_date + duration,
+                                                                      event.start_date - 2 * duration,
+                                                                      event.start_date,
+                                                                      type)
+      if user_score > 0
+        event_scores << (score_difference / user_score)
+      else
+        if score_difference > 0
+          event_scores << 100.0
+        else
+          event_scores << 0.0
+        end
+      end
     end
     if event_scores.size > 0
-      efficacy = (event_scores.inject{ |sum, el| sum + el }.to_f / event_scores.size) * 100
+      efficacy = ((event_scores.inject{ |sum, el| sum + el }.to_f / event_scores.size) * 100).round
     else
       efficacy = 0
     end

@@ -1,13 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  label: MyString
-  workout_type:
+hangboard:
+  label: Hangboard
+  workout_type: strength
   description:
-  user_id:
+  user_id: 1
 
-two:
-  label: MyString
-  workout_type:
+campusboard:
+  label: Campusboard
+  workout_type: power
   description:
-  user_id:
+  user_id: 1

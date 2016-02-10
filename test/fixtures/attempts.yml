@@ -1,7 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  date: 2016-01-04 17:47:38
+  date: 2016-01-01 17:47:38
   completion: 100
   climb: one
 
@@ -11,32 +11,32 @@ two:
   climb: two
 
 three:
-  date: 2016-01-04 17:47:38
+  date: 2016-01-07 17:47:38
   completion: 100
   climb: three
 
 four:
-  date: 2016-01-04 17:47:38
+  date: 2016-01-10 17:47:38
   completion: 100
   climb: four
 
 five:
-  date: 2016-01-04 17:47:38
+  date: 2016-01-13 17:47:38
   completion: 100
   climb: five
 
 six:
-  date: 2016-01-04 17:47:38
+  date: 2016-01-16 17:47:38
   completion: 100
   climb: six
 
 seven:
-  date: 2016-01-04 17:47:38
+  date: 2016-01-19 17:47:38
   completion: 100
   climb: seven
 
 eight:
-  date: 2016-01-04 17:47:38
+  date: 2016-01-22 17:47:38
   completion: 100
   climb: eight
 
@@ -46,6 +46,6 @@ nine:
   climb: nine
 
 ten:
-  date: 2016-02-04 17:47:38
+  date: 2016-02-07 17:47:38
   completion: 100
   climb: ten
