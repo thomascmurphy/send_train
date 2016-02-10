@@ -33,9 +33,9 @@
               <%= event.start_date.strftime('%b %d %Y') %> - <%= event.end_date.strftime('%b %d %Y') %><br>
               <hr/>
               <% if event.notes.present? %>
-                <%= truncate(event.notes, length: 50, separator: ' ') %>
+                <%= simple_format(truncate(event.notes, length: 50, separator: ' ')) %>
               <% elsif event.workout.present? %>
-                <%= truncate(event.workout.description, length: 50, separator: ' ') %>
+                <%= simple_format(truncate(event.workout.description, length: 50, separator: ' ')) %>
               <% end %>
             </div>
           </div>
@@ -56,7 +56,7 @@
               <h3 class="panel-title"><%= workout.label %></h3>
             </div>
             <div class="panel-body">
-              <%= truncate(workout.description, length: 50, separator: ' ') %>
+              <%= simple_format(truncate(workout.description, length: 50, separator: ' ')) %>
             </div>
             <div class="panel-footer text-right">
               <h3><small>Score:</small> <span class="alt_font"><%= workout.efficacy_nice("boulder") %></span></h3>
@@ -76,7 +76,7 @@
               <h3 class="panel-title"><%= workout.label %></h3>
             </div>
             <div class="panel-body">
-              <%= truncate(workout.description, length: 50, separator: ' ') %>
+              <%= simple_format(truncate(workout.description, length: 50, separator: ' ')) %>
             </div>
             <div class="panel-footer text-right">
               <h3><small>Score:</small> <span class="alt_font"><%= workout.efficacy_nice("sport") %></span></h3>
