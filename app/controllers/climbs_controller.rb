@@ -69,6 +69,7 @@ class ClimbsController < ApplicationController
   def create
     if user_signed_in?
       @climbs = current_user.climbs.order(created_at: :desc)
+      @climbs = @climbs.sort_by{|c| [c.redpointed ? 0 : 1, c.redpoint_date]}.reverse
       @climb = current_user.climbs.new(climb_params)
 
       respond_to do |format|
@@ -100,6 +101,7 @@ class ClimbsController < ApplicationController
   def update
     if user_signed_in?
       @climbs = current_user.climbs.order(created_at: :desc)
+      @climbs = @climbs.sort_by{|c| [c.redpointed ? 0 : 1, c.redpoint_date]}.reverse
       @climb = current_user.climbs.find_by_id(params[:id])
       respond_to do |format|
         if @climb.update_attributes(climb_params)
@@ -129,6 +131,7 @@ class ClimbsController < ApplicationController
   def destroy
     if user_signed_in?
       @climbs = current_user.climbs.order(created_at: :desc)
+      @climbs = @climbs.sort_by{|c| [c.redpointed ? 0 : 1, c.redpoint_date]}.reverse
       @climb = current_user.climbs.find_by_id(params[:id])
       @climb.destroy
     end
