@@ -77,10 +77,7 @@ TrainToSend::Application.configure do
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
-<<<<<<< HEAD
-=======
 
   config.action_mailer.delivery_method = :sendmail
 
->>>>>>> 825f5afb141fd4540ccc52e6566083ed4deb7017
 end
