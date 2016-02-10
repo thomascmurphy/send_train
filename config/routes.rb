@@ -4,34 +4,36 @@ TrainToSend::Application.routes.draw do
 
   devise_for :users, controllers: { sessions: "users/sessions" }
 
-  resources :climbs do
-    get "delete"
+  authenticate :user do
+    resources :climbs do
+      get "delete"
 
-    resources :attempts
+      resources :attempts
+    end
+
+    resources :workouts do
+      get "delete"
+    end
+
+    resources :microcycles do
+      get "delete"
+    end
+
+    resources :mesocycles do
+      get "delete"
+    end
+
+    resources :macrocycles do
+      get "delete"
+    end
+
+    resources :events do
+      get "delete"
+      get "complete"
+    end
+
+    get 'profile', to: 'profile#show'
   end
-
-  resources :workouts do
-    get "delete"
-  end
-
-  resources :microcycles do
-    get "delete"
-  end
-
-  resources :mesocycles do
-    get "delete"
-  end
-
-  resources :macrocycles do
-    get "delete"
-  end
-
-  resources :events do
-    get "delete"
-    get "complete"
-  end
-
-  get 'profile', to: 'profile#show'
 
   root to: "home#index"
   # The priority is based upon order of creation: first created -> highest priority.
