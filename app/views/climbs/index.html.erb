@@ -11,23 +11,36 @@
         <%= label_tag(:climb_type, "Type:") %>
         <%= select_tag(:climb_type, options_for_select([['All', ''], ['Boulder', 'boulder'], ['Sport', 'sport'], ['Trad', 'trad']]), class: "form-control") %>
       </div>
-      <% if @date_lower.present? %>
-        <div class="form-group margin_left">
-          <%= label_tag(:climb_type, "From:") %>
-          <%= select_month(@date_lower, {field_name: "month_lower"}, {class: "form-control"}) %>
-          <%= select_day(@date_lower, {field_name: "day_lower"}, {class: "form-control"}) %>
-          <%= select_year(@date_lower, {field_name: "year_lower"}, {class: "form-control"}) %>
-        </div>
-      <% end %>
-      <% if @date_upper.present? %>
-        <div class="form-group margin_left">
-          <%= label_tag(:climb_type, "To:") %>
-          <%= select_month(@date_upper, {field_name: "month_upper"}, {class: "form-control"}) %>
-          <%= select_day(@date_upper, {field_name: "day_upper"}, {class: "form-control"}) %>
-          <%= select_year(@date_upper, {field_name: "year_upper"}, {class: "form-control"}) %>
-        </div>
-      <% end %>
+      <div class="form-group margin_left">
+        <%= label_tag(:outdoor, "Location:") %>
+        <%= select_tag(:outdoor, options_for_select([['All', ''], ['Outdoor', true], ['Indoor', false]]), class: "form-control") %>
+      </div>
+
       <%= submit_tag("Filter", class: "btn btn-default margin_left") %>
+      <a class="btn" role="button" data-toggle="collapse" href="#advanced_filtering" aria-expanded="false" aria-controls="advanced_filtering">
+        More Filters <span class="caret"></span>
+      </a>
+
+      <div class="collapse" id="advanced_filtering">
+        <div class="margin_top margin_bottom">
+          <!-- <% if @date_lower.present? %>
+            <div class="form-group margin_left">
+              <%= label_tag(:climb_type, "From:") %>
+              <%= select_month(@date_lower, {field_name: "month_lower"}, {class: "form-control"}) %>
+              <%= select_day(@date_lower, {field_name: "day_lower"}, {class: "form-control"}) %>
+              <%= select_year(@date_lower, {field_name: "year_lower"}, {class: "form-control"}) %>
+            </div>
+          <% end %>
+          <% if @date_upper.present? %>
+            <div class="form-group margin_left">
+              <%= label_tag(:climb_type, "To:") %>
+              <%= select_month(@date_upper, {field_name: "month_upper"}, {class: "form-control"}) %>
+              <%= select_day(@date_upper, {field_name: "day_upper"}, {class: "form-control"}) %>
+              <%= select_year(@date_upper, {field_name: "year_upper"}, {class: "form-control"}) %>
+            </div>
+          <% end %> -->
+        </div>
+      </div>
     <% end %>
   </div>
   <div class="col-xs-4 text-right">

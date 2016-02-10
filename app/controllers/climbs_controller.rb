@@ -17,6 +17,10 @@ class ClimbsController < ApplicationController
         @climbs = @climbs.where(climb_type: params[:climb_type])
       end
 
+      if params[:outdoor].present?
+        @climbs = @climbs.where(outdoor: params[:outdoor] == "true")
+      end
+
       date = params[:date]
       if date.present?
         if date[:day_lower].present? && date[:month_lower].present? && date[:year_lower].present?
