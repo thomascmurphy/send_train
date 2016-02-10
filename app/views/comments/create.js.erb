@@ -1,1 +1,3 @@
-$("#comment_modal").modal("hide")
+$("#comment_modal").modal("hide");
+$("#notice_content").html("<%= flash[:notice] %>");
+$("#notice_container").toggleClass('hidden');

@@ -120,28 +120,24 @@
     </div>
   </div>
   <div id="notice_area">
-    <% if notice %>
-      <div class="alert alert-info" role="alert">
-        <div class="container">
-          <div class="row">
-            <div class="col-xs-12">
-              <%= notice %>
-            </div>
+    <div class="alert alert-info<% unless notice %> hidden<% end %>" id="notice_container" role="alert">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+            <span id="notice_content"><%= notice %></span>
           </div>
         </div>
       </div>
-    <% end %>
-    <% if alert %>
-      <div class="alert alert-danger" role="alert">
-        <div class="container">
-          <div class="row">
-            <div class="col-xs-12">
-              <%= alert %>
-            </div>
+    </div>
+    <div class="alert alert-danger<% unless alert %> hidden<% end %>" id="alert_container" role="alert">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+            <span id="alert_content"><%= alert %></span>
           </div>
         </div>
       </div>
-    <% end %>
+    </div>
   </div>
 
   <div id="content_area">

@@ -1,4 +1,6 @@
 class CommentsController < ApplicationController
+  after_filter :discard_flash, only: :create
+
   def new
 
   end
@@ -7,8 +9,14 @@ class CommentsController < ApplicationController
     UserMailer.comment_email(params[:subject], params[:comment], params[:from_email]).deliver_now
     respond_to do |format|
       format.html
-      format.js
+      format.js { flash[:notice] = "Thanks very much for your feedback!" }
       format.json
     end
+  end
+
+  private
+
+  def discard_flash
+    flash.discard if request.xhr?
   end
 end
