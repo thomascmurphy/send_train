@@ -31,7 +31,7 @@ class ClimbsController < ApplicationController
         @climbs = @climbs.where(id: lower_attempt_climb_ids && upper_attempt_climb_ids)
       end
 
-      @climbs = @climbs.sort_by{|c| [c.redpointed ? 1 : 0, c.redpoint_date]}
+      @climbs = @climbs.sort_by{|c| [c.redpointed ? 0 : 1, c.redpoint_date]}.reverse
       respond_to do |format|
         format.html
         format.js { render :reload }
