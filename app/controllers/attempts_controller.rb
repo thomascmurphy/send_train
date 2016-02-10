@@ -20,7 +20,6 @@ class AttemptsController < ApplicationController
 
   def create
     @climbs = current_user.climbs.order(created_at: :desc)
-    @climbs = @climbs.sort_by{|c| [c.redpointed ? 0 : 1, c.redpoint_date]}.reverse
     @climb = current_user.climbs.find_by_id(params[:climb_id])
     date = params[:date]
     if date.present?
@@ -33,6 +32,7 @@ class AttemptsController < ApplicationController
 
     respond_to do |format|
       if @attempt.save
+        @climbs = @climbs.sort_by{|c| [c.redpointed ? 0 : 1, c.redpoint_date]}.reverse
         format.html { redirect_to @attempt, notice: 'Attempt was successfully created.' }
         format.js
         format.json { render json: @attempt, status: :created, location: @attempt }

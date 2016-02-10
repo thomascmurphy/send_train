@@ -64,11 +64,11 @@ class ClimbsController < ApplicationController
 
   def create
     @climbs = current_user.climbs.order(created_at: :desc)
-    @climbs = @climbs.sort_by{|c| [c.redpointed ? 0 : 1, c.redpoint_date]}.reverse
     @climb = current_user.climbs.new(climb_params)
 
     respond_to do |format|
       if @climb.save
+        @climbs = @climbs.sort_by{|c| [c.redpointed ? 0 : 1, c.redpoint_date]}.reverse
         format.html { redirect_to @climb, notice: 'Climb was successfully created.' }
         format.js
         format.json { render json: @climb, status: :created, location: @climb }
@@ -92,10 +92,10 @@ class ClimbsController < ApplicationController
 
   def update
     @climbs = current_user.climbs.order(created_at: :desc)
-    @climbs = @climbs.sort_by{|c| [c.redpointed ? 0 : 1, c.redpoint_date]}.reverse
     @climb = current_user.climbs.find_by_id(params[:id])
     respond_to do |format|
       if @climb.update_attributes(climb_params)
+        @climbs = @climbs.sort_by{|c| [c.redpointed ? 0 : 1, c.redpoint_date]}.reverse
         format.html
         format.js
         format.json { render json: @climb, status: :ok, location: @climb }
@@ -118,9 +118,9 @@ class ClimbsController < ApplicationController
 
   def destroy
     @climbs = current_user.climbs.order(created_at: :desc)
-    @climbs = @climbs.sort_by{|c| [c.redpointed ? 0 : 1, c.redpoint_date]}.reverse
     @climb = current_user.climbs.find_by_id(params[:id])
     @climb.destroy
+    @climbs = @climbs.sort_by{|c| [c.redpointed ? 0 : 1, c.redpoint_date]}.reverse
   end
 
   private
