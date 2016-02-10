@@ -49,7 +49,7 @@ class Workout < ActiveRecord::Base
           event_scores << (score_difference / user_score)
         else
           if score_difference != 0
-            event_scores << 100.0
+            event_scores << 1.0
           else
             event_scores << 0.0
           end
