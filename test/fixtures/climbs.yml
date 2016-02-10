@@ -8,6 +8,7 @@ one:
   length: 1
   length_unit: MyString
   notes:
+  climb_type: boulder
 
 two:
   user_id: 1
@@ -17,6 +18,7 @@ two:
   length: 1
   length_unit: MyString
   notes:
+  climb_type: boulder
 
 three:
   user_id: 1
@@ -26,6 +28,7 @@ three:
   length: 1
   length_unit: MyString
   notes:
+  climb_type: boulder
 
 four:
   user_id: 1
@@ -35,6 +38,7 @@ four:
   length: 1
   length_unit: MyString
   notes:
+  climb_type: boulder
 
 five:
   user_id: 1
@@ -44,6 +48,7 @@ five:
   length: 1
   length_unit: MyString
   notes:
+  climb_type: boulder
 
 six:
   user_id: 1
@@ -53,6 +58,7 @@ six:
   length: 1
   length_unit: MyString
   notes:
+  climb_type: boulder
 
 seven:
   user_id: 1
@@ -62,6 +68,7 @@ seven:
   length: 1
   length_unit: MyString
   notes:
+  climb_type: boulder
 
 eight:
   user_id: 1
@@ -71,6 +78,7 @@ eight:
   length: 1
   length_unit: MyString
   notes:
+  climb_type: boulder
 
 nine:
   user_id: 1
@@ -80,6 +88,7 @@ nine:
   length: 1
   length_unit: MyString
   notes:
+  climb_type: boulder
 
 ten:
   user_id: 1
@@ -89,3 +98,4 @@ ten:
   length: 1
   length_unit: MyString
   notes:
+  climb_type: boulder
