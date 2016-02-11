@@ -155,7 +155,14 @@ $font_stack_alt: "Oswald", sans-serif;
   }
 }
 
+//Fixes zoom-in on ipad pro
+body {
+  padding-right: 0px !important
+}
 
+.modal-open {
+  overflow-y: auto;
+}
 
 /* ============ General Elements */
 body{
