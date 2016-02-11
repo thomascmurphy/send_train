@@ -53,6 +53,7 @@ class EventsController < ApplicationController
 
   def new
     @event = current_user.events.new
+    @event.set_dates_to_now
     respond_to do |format|
       format.html
       format.js
@@ -174,13 +175,56 @@ class EventsController < ApplicationController
     end
   end
 
+  def gym_session_new
+    @event = current_user.events.new
+    @event.set_dates_to_now
+    respond_to do |format|
+      format.html
+      format.js
+      format.json { render json: @event, status: :created, location: @event }
+    end
+  end
+
+  def gym_session_create
+    @events = current_user.events
+    @current_events = @events.where("start_date < ? AND end_date > ?", DateTime.now, DateTime.now).order(start_date: :asc)
+    @upcoming_events = @events.where("start_date > ?", DateTime.now).order(start_date: :asc)
+    @past_events = @events.where("end_date < ?", DateTime.now).order(start_date: :asc)
+    start_date_params = params[:start_date]
+    if start_date_params.present?
+      if start_date_params[:day].present? && start_date_params[:month].present? && start_date_params[:year].present?
+        start_date = DateTime.strptime("#{start_date_params[:year]} #{start_date_params[:month]} #{start_date_params[:day]}", "%Y %m %d")
+        params[:event][:start_date] = start_date
+
+        if params[:duration].present?
+          end_date = start_date + (params[:duration].to_i).hours
+          params[:event][:end_date] = end_date
+        end
+      end
+    end
+
+    @event = current_user.events.new(event_params)
+    @event.label = "Gym Session"
+
+    respond_to do |format|
+      if @event.save
+        format.html { redirect_to @event, notice: 'Event was successfully created.' }
+        format.js
+        format.json { render json: @event, status: :created, location: @event }
+      else
+        format.html { render action: "new" }
+        format.json { render json: @event.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
 
   private
     def event_params
       params.require(:event).permit(:label, :start_date, :end_date, :event_type,
                                     :perception, :completed, :user_id, :notes,
                                     :workout_id, :microcycle_id, :mesocycle_id,
-                                    :macrocycle_id, :parent_event_id)
+                                    :macrocycle_id, :parent_event_id, :gym_session)
     end
 
 end

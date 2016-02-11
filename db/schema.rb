@@ -11,22 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160208153048) do
-
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+ActiveRecord::Schema.define(version: 20160211175928) do
 
   create_table "attempts", force: :cascade do |t|
-    t.datetime "date",       default: '2016-02-10 03:57:50'
+    t.datetime "date"
     t.integer  "completion", default: 0
     t.integer  "climb_id"
     t.boolean  "onsight",    default: false
     t.boolean  "flash",      default: false
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
-  add_index "attempts", ["climb_id"], name: "index_attempts_on_climb_id", using: :btree
+  add_index "attempts", ["climb_id"], name: "index_attempts_on_climb_id"
 
   create_table "climbs", force: :cascade do |t|
     t.integer  "user_id"
@@ -47,13 +44,14 @@ ActiveRecord::Schema.define(version: 20160208153048) do
     t.text     "notes"
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
+    t.boolean  "dynamic",     default: false
   end
 
-  add_index "climbs", ["user_id"], name: "index_climbs_on_user_id", using: :btree
+  add_index "climbs", ["user_id"], name: "index_climbs_on_user_id"
 
   create_table "events", force: :cascade do |t|
-    t.datetime "start_date",      default: '2016-02-10 04:14:42'
-    t.datetime "end_date",        default: '2016-02-10 04:14:42'
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.string   "label"
     t.string   "event_type"
     t.integer  "perception"
@@ -65,16 +63,17 @@ ActiveRecord::Schema.define(version: 20160208153048) do
     t.integer  "microcycle_id"
     t.integer  "mesocycle_id"
     t.integer  "macrocycle_id"
-    t.datetime "created_at",                                      null: false
-    t.datetime "updated_at",                                      null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.string   "gym_session"
   end
 
-  add_index "events", ["macrocycle_id"], name: "index_events_on_macrocycle_id", using: :btree
-  add_index "events", ["mesocycle_id"], name: "index_events_on_mesocycle_id", using: :btree
-  add_index "events", ["microcycle_id"], name: "index_events_on_microcycle_id", using: :btree
-  add_index "events", ["parent_event_id"], name: "index_events_on_parent_event_id", using: :btree
-  add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
-  add_index "events", ["workout_id"], name: "index_events_on_workout_id", using: :btree
+  add_index "events", ["macrocycle_id"], name: "index_events_on_macrocycle_id"
+  add_index "events", ["mesocycle_id"], name: "index_events_on_mesocycle_id"
+  add_index "events", ["microcycle_id"], name: "index_events_on_microcycle_id"
+  add_index "events", ["parent_event_id"], name: "index_events_on_parent_event_id"
+  add_index "events", ["user_id"], name: "index_events_on_user_id"
+  add_index "events", ["workout_id"], name: "index_events_on_workout_id"
 
   create_table "macrocycles", force: :cascade do |t|
     t.string   "label"
@@ -84,15 +83,15 @@ ActiveRecord::Schema.define(version: 20160208153048) do
     t.datetime "updated_at",      null: false
   end
 
-  add_index "macrocycles", ["user_id"], name: "index_macrocycles_on_user_id", using: :btree
+  add_index "macrocycles", ["user_id"], name: "index_macrocycles_on_user_id"
 
   create_table "macrocycles_mesocycles", id: false, force: :cascade do |t|
     t.integer "macrocycle_id"
     t.integer "mesocycle_id"
   end
 
-  add_index "macrocycles_mesocycles", ["macrocycle_id"], name: "index_macrocycles_mesocycles_on_macrocycle_id", using: :btree
-  add_index "macrocycles_mesocycles", ["mesocycle_id"], name: "index_macrocycles_mesocycles_on_mesocycle_id", using: :btree
+  add_index "macrocycles_mesocycles", ["macrocycle_id"], name: "index_macrocycles_mesocycles_on_macrocycle_id"
+  add_index "macrocycles_mesocycles", ["mesocycle_id"], name: "index_macrocycles_mesocycles_on_mesocycle_id"
 
   create_table "mesocycles", force: :cascade do |t|
     t.string   "label"
@@ -102,15 +101,15 @@ ActiveRecord::Schema.define(version: 20160208153048) do
     t.datetime "updated_at",     null: false
   end
 
-  add_index "mesocycles", ["user_id"], name: "index_mesocycles_on_user_id", using: :btree
+  add_index "mesocycles", ["user_id"], name: "index_mesocycles_on_user_id"
 
   create_table "mesocycles_microcycles", id: false, force: :cascade do |t|
     t.integer "microcycle_id"
     t.integer "mesocycle_id"
   end
 
-  add_index "mesocycles_microcycles", ["mesocycle_id"], name: "index_mesocycles_microcycles_on_mesocycle_id", using: :btree
-  add_index "mesocycles_microcycles", ["microcycle_id"], name: "index_mesocycles_microcycles_on_microcycle_id", using: :btree
+  add_index "mesocycles_microcycles", ["mesocycle_id"], name: "index_mesocycles_microcycles_on_mesocycle_id"
+  add_index "mesocycles_microcycles", ["microcycle_id"], name: "index_mesocycles_microcycles_on_microcycle_id"
 
   create_table "microcycles", force: :cascade do |t|
     t.string   "label"
@@ -121,15 +120,15 @@ ActiveRecord::Schema.define(version: 20160208153048) do
     t.datetime "updated_at",                       null: false
   end
 
-  add_index "microcycles", ["user_id"], name: "index_microcycles_on_user_id", using: :btree
+  add_index "microcycles", ["user_id"], name: "index_microcycles_on_user_id"
 
   create_table "microcycles_workouts", id: false, force: :cascade do |t|
     t.integer "workout_id"
     t.integer "microcycle_id"
   end
 
-  add_index "microcycles_workouts", ["microcycle_id"], name: "index_microcycles_workouts_on_microcycle_id", using: :btree
-  add_index "microcycles_workouts", ["workout_id"], name: "index_microcycles_workouts_on_workout_id", using: :btree
+  add_index "microcycles_workouts", ["microcycle_id"], name: "index_microcycles_workouts_on_microcycle_id"
+  add_index "microcycles_workouts", ["workout_id"], name: "index_microcycles_workouts_on_workout_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -152,10 +151,13 @@ ActiveRecord::Schema.define(version: 20160208153048) do
     t.string   "last_name"
     t.string   "postcode"
     t.boolean  "is_admin"
+    t.string   "gym_name"
+    t.datetime "climbing_start_date"
+    t.string   "grade_format"
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["email"], name: "index_users_on_email", unique: true
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
 
   create_table "workouts", force: :cascade do |t|
     t.string   "label"
@@ -166,17 +168,6 @@ ActiveRecord::Schema.define(version: 20160208153048) do
     t.datetime "updated_at",   null: false
   end
 
-  add_index "workouts", ["user_id"], name: "index_workouts_on_user_id", using: :btree
+  add_index "workouts", ["user_id"], name: "index_workouts_on_user_id"
 
-  add_foreign_key "attempts", "climbs"
-  add_foreign_key "climbs", "users"
-  add_foreign_key "events", "macrocycles"
-  add_foreign_key "events", "mesocycles"
-  add_foreign_key "events", "microcycles"
-  add_foreign_key "events", "users"
-  add_foreign_key "events", "workouts"
-  add_foreign_key "macrocycles", "users"
-  add_foreign_key "mesocycles", "users"
-  add_foreign_key "microcycles", "users"
-  add_foreign_key "workouts", "users"
 end

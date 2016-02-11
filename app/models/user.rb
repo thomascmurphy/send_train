@@ -42,7 +42,7 @@ class User < ActiveRecord::Base
       score = self.climb_score_for_period(start_date, end_date)
       graph_data << {'name': name_string,
                      'value': score,
-                     'tooltip_value': Climb.convert_score_to_grades(score)}
+                     'tooltip_value': Climb.convert_score_to_grades(score, self.grade_format)}
       start_date = end_date
     end
     return graph_data

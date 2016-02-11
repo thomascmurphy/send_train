@@ -10,6 +10,8 @@ TrainToSend::Application.routes.draw do
 
       resources :attempts
     end
+    get 'quick_send', to: 'climbs#quick_new'
+    post 'quick_send', to: 'climbs#quick_create'
 
     resources :workouts do
       get "delete"
@@ -31,8 +33,12 @@ TrainToSend::Application.routes.draw do
       get "delete"
       get "complete"
     end
+    get 'gym_session', to: 'events#gym_session_new'
+    post 'gym_session', to: 'events#gym_session_create'
 
     get 'profile', to: 'profile#show'
+    get 'profile/edit', to: 'profile#edit'
+    patch 'profile', to: 'profile#update'
   end
 
   get 'comment', to: 'comments#new'

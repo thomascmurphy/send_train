@@ -52,8 +52,8 @@ class ClimbsController < ApplicationController
   end
 
   def new
-    @boulder_grades = Climb.bouldering_grades
-    @sport_grades = Climb.sport_grades
+    @boulder_grades = Climb.bouldering_grades(current_user.grade_format)
+    @sport_grades = Climb.sport_grades(current_user.grade_format)
     @climb = current_user.climbs.new
     respond_to do |format|
       format.html
@@ -79,9 +79,43 @@ class ClimbsController < ApplicationController
     end
   end
 
+  def quick_new
+    @boulder_grades = Climb.bouldering_grades(current_user.grade_format)
+    @sport_grades = Climb.sport_grades(current_user.grade_format)
+    @climb = current_user.climbs.new
+    respond_to do |format|
+      format.html
+      format.js
+      format.json { render json: @climb, status: :created, location: @climb }
+    end
+  end
+
+  def quick_create
+    @climbs = current_user.climbs.order(created_at: :desc)
+    @climb = current_user.climbs.new(climb_params)
+    @climb.name = "Gym Climb"
+    @climb.outdoor = false
+    @climb.location = current_user.gym_name
+    onsight = params[:onsight].present?
+    flash = params[:flash].present?
+
+    respond_to do |format|
+      if @climb.save
+        attempt = @climb.attempts.create(completion: 100, date: DateTime.now, onsight: onsight, flash: flash)
+        @climbs = @climbs.sort_by{|c| [c.redpointed ? 0 : 1, c.redpoint_date]}.reverse
+        format.html { redirect_to @climb, notice: 'Climb was successfully created.' }
+        format.js
+        format.json { render json: @climb, status: :created, location: @climb }
+      else
+        format.html { render action: "new" }
+        format.json { render json: @climb.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   def edit
-    @boulder_grades = Climb.bouldering_grades
-    @sport_grades = Climb.sport_grades
+    @boulder_grades = Climb.bouldering_grades(current_user.grade_format)
+    @sport_grades = Climb.sport_grades(current_user.grade_format)
     @climb = current_user.climbs.find_by_id(params[:id])
     respond_to do |format|
       format.html

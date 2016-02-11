@@ -11,6 +11,7 @@ class AttemptsController < ApplicationController
   def new
     @climb = current_user.climbs.find_by_id(params[:climb_id])
     @attempt = @climb.attempts.new
+    @attempt.set_date_to_now
     respond_to do |format|
       format.html
       format.js

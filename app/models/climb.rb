@@ -132,8 +132,8 @@ class Climb < ActiveRecord::Base
     return conversion
   end
 
-  def self.bouldering_grades(european=false)
-    if european
+  def self.bouldering_grades(format="western")
+    if format=="european"
       grade_conversion = self.climbing_grade_conversion_european
       useful_grades = [10, 15, 20, 30, 35, 40, 45, 50, 55, 65, 75, 80, 85, 95, 100, 105, 110, 115, 120, 125, 130]
     else
@@ -145,8 +145,8 @@ class Climb < ActiveRecord::Base
     return useful_conversions.map{ |key, value| [value[:boulder], key] }
   end
 
-  def self.sport_grades(european=false)
-    if european
+  def self.sport_grades(format="western")
+    if format=="european"
       grade_conversion = self.climbing_grade_conversion_european
       useful_grades = grade_conversion.map{ |key, value| key }
       useful_grades.delete(135)

@@ -5,8 +5,8 @@ class Event < ActiveRecord::Base
   belongs_to :mesocycle
   belongs_to :macrocycle
   belongs_to :parent_event, class_name: 'Event', foreign_key: 'parent_event_id'
-  before_destroy :destroy_child_events
   after_create :create_child_events
+  before_destroy :destroy_child_events
 
   def child_events
     return self.user.events.where(parent_event_id: self.id)
@@ -16,6 +16,11 @@ class Event < ActiveRecord::Base
     self.child_events.each do |child_event|
       child_event.destroy
     end
+  end
+
+  def set_dates_to_now
+    self.start_date = DateTime.now
+    self.end_date = DateTime.now
   end
 
   def panel_class
@@ -92,6 +97,50 @@ class Event < ActiveRecord::Base
         mesocycle_start_date = mesocycle_end_date
         mesocycle_count += 1
       end
+    end
+  end
+
+  def gym_session_string
+    case self.gym_session
+    when "boulder"
+      gym_session_string = "Bouldering"
+    when "sport"
+      gym_session_string = "Sport Climbing"
+    else
+      gym_session_string = ""
+    end
+  end
+
+  def duration_string(pluralize=false)
+    duration_length = ""
+    duration_unit = ""
+    if self.start_date.present? && self.end_date.present?
+      duration = (self.end_date - self.start_date).to_i
+      mm, ss = duration.divmod(60)
+      hh, mm = mm.divmod(60)
+      dd, hh = hh.divmod(24)
+      ww, dd = dd.divmod(7)
+      if ww > 0
+        duration_length = ww
+        duration_unit = "Week"
+      elsif dd > 0
+        duration_length = dd
+        duration_unit = "Day"
+      elsif hh > 0
+        duration_length = hh
+        duration_unit = "Hour"
+      elsif mm > 0
+        duration_length = mm
+        duration_unit = "Minute"
+      else
+        duration_length = 0
+        duration_unit = "Hour"
+      end
+    end
+    if pluralize.present?
+      return "#{ActionController::Base.helpers.pluralize(duration_length, duration_unit)}"
+    else
+      return "#{duration_length} #{duration_unit}"
     end
   end
 

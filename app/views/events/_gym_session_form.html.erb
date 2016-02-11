@@ -1,0 +1,34 @@
+<%= form_for(@event, url: '/gym_session', remote: true) do |f| %>
+  <div class="modal-body">
+    <ul class="errors"></ul>
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="form-group">
+          <%= f.label :start_date %><br>
+          <%= select_month(@event.start_date.month, {field_name: "month", prefix: "start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+          <%= select_day(@event.start_date.day, {field_name: "day", prefix: "start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+          <%= select_year(@event.start_date.year, {field_name: "year", prefix: "start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="form-group">
+          <%= f.label :gym_session %><br>
+          <%= f.select(:gym_session, [['Boulder', 'boulder'], ['Sport', 'sport']], {}, {class: "form-control type_select"}) %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="form-group">
+          <%= label_tag :duration %><br>
+          <div class="input-group">
+            <%= number_field_tag :duration, 1, {class: "form-control", maxlength: 3} %>
+            <div class="input-group-addon">hours</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <input type="submit" class="btn btn-primary" value="Save">
+  </div>
+<% end %>
