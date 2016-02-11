@@ -33,7 +33,7 @@ class EventsController < ApplicationController
 
     @current_events = @events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).order(start_date: :asc)
     @upcoming_events = @events.where("start_date > ?", DateTime.now.end_of_day).order(start_date: :asc)
-    @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :asc)
+    @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
 
     respond_to do |format|
       format.html
@@ -65,7 +65,7 @@ class EventsController < ApplicationController
     @events = current_user.events
     @current_events = @events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).order(start_date: :asc)
     @upcoming_events = @events.where("start_date > ?", DateTime.now.end_of_day).order(start_date: :asc)
-    @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :asc)
+    @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
     start_date_params = params[:start_date]
     if start_date_params.present?
       if start_date_params[:day].present? && start_date_params[:month].present? && start_date_params[:year].present?
@@ -117,7 +117,7 @@ class EventsController < ApplicationController
     @events = current_user.events
     @current_events = @events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).order(start_date: :asc)
     @upcoming_events = @events.where("start_date > ?", DateTime.now.end_of_day).order(start_date: :asc)
-    @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :asc)
+    @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
     start_date_params = params[:start_date]
     if start_date_params.present?
       if start_date_params[:day].present? && start_date_params[:month].present? && start_date_params[:year].present?
@@ -159,7 +159,7 @@ class EventsController < ApplicationController
     @events = current_user.events
     @current_events = @events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).order(start_date: :asc)
     @upcoming_events = @events.where("start_date > ?", DateTime.now.end_of_day).order(start_date: :asc)
-    @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :asc)
+    @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
     @event = current_user.events.find_by_id(params[:id])
     @event.destroy
   end
@@ -189,7 +189,7 @@ class EventsController < ApplicationController
     @events = current_user.events
     @current_events = @events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).order(start_date: :asc)
     @upcoming_events = @events.where("start_date > ?", DateTime.now.end_of_day).order(start_date: :asc)
-    @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :asc)
+    @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
     start_date = DateTime.now
     start_date_params = params[:start_date]
     if start_date_params.present?
