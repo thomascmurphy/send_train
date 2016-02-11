@@ -161,6 +161,6 @@ class ClimbsController < ApplicationController
     def climb_params
       params.require(:climb).permit(:name, :location, :climb_type, :grade, :length,
                                     :length_unit, :outdoor, :crimpy, :slopey, :pinchy,
-                                    :pockety, :powerful, :endurance, :technical, :notes)
+                                    :pockety, :powerful, :dynamic, :endurance, :technical, :notes)
     end
 end
