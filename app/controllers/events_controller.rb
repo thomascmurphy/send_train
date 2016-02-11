@@ -6,9 +6,10 @@ class EventsController < ApplicationController
     if params[:event_type].present?
       @events = @events.where(event_type: params[:event_type])
     end
-
     if params[:event_length].present?
       case params[:event_length]
+      when "all"
+
       when "workout"
         @events = @events.where.not(workout_id: nil)
       when "microcycle"
@@ -19,6 +20,8 @@ class EventsController < ApplicationController
         @events = @events.where.not(macrocycle_id: nil)
       else
       end
+    else
+      @events = @events.where.not(workout_id: nil)
     end
 
     if params[:event_status].present?
@@ -62,7 +65,7 @@ class EventsController < ApplicationController
   end
 
   def create
-    @events = current_user.events
+    @events = current_user.events.where.not(workout_id: nil)
     @current_events = @events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).order(start_date: :asc)
     @upcoming_events = @events.where("start_date > ?", DateTime.now.end_of_day).order(start_date: :asc)
     @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
@@ -114,7 +117,7 @@ class EventsController < ApplicationController
   end
 
   def update
-    @events = current_user.events
+    @events = current_user.events.where.not(workout_id: nil)
     @current_events = @events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).order(start_date: :asc)
     @upcoming_events = @events.where("start_date > ?", DateTime.now.end_of_day).order(start_date: :asc)
     @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
@@ -156,7 +159,7 @@ class EventsController < ApplicationController
   end
 
   def destroy
-    @events = current_user.events
+    @events = current_user.events.where.not(workout_id: nil)
     @current_events = @events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).order(start_date: :asc)
     @upcoming_events = @events.where("start_date > ?", DateTime.now.end_of_day).order(start_date: :asc)
     @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
@@ -186,7 +189,7 @@ class EventsController < ApplicationController
   end
 
   def gym_session_create
-    @events = current_user.events
+    @events = current_user.events.where.not(workout_id: nil)
     @current_events = @events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).order(start_date: :asc)
     @upcoming_events = @events.where("start_date > ?", DateTime.now.end_of_day).order(start_date: :asc)
     @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
