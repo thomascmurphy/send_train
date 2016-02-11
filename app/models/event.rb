@@ -62,8 +62,8 @@ class Event < ActiveRecord::Base
       self.macrocycle.mesocycles.each do |mesocycle|
         mesocycle_end_date = mesocycle_start_date + mesocycle.duration.seconds
         mesocycle_event = Event.create(label: "#{mesocycle.label} #{mesocycle_count}",
-                                       start_date: mesocycle_start_date,
-                                       end_date: mesocycle_end_date,
+                                       start_date: mesocycle_start_date.beginning_of_day,
+                                       end_date: mesocycle_end_date.end_of_day,
                                        mesocycle_id: mesocycle.id,
                                        parent_event_id: self.id,
                                        user_id: self.user_id,
@@ -72,8 +72,8 @@ class Event < ActiveRecord::Base
         mesocycle.microcycles.each do |microcycle|
           microcycle_end_date = microcycle_start_date + microcycle.duration.seconds
           microcycle_event = Event.create(label: "#{microcycle.label} #{microcycle_count}",
-                                          start_date: microcycle_start_date,
-                                          end_date: microcycle_end_date,
+                                          start_date: microcycle_start_date.beginning_of_day,
+                                          end_date: microcycle_end_date.end_of_day,
                                           microcycle_id: microcycle.id,
                                           parent_event_id: mesocycle_event.id,
                                           user_id: self.user_id,
@@ -82,8 +82,8 @@ class Event < ActiveRecord::Base
           microcycle.workouts.each do |workout|
             workout_end_date = workout_start_date + (microcycle.duration / microcycle.workouts.length)
             workout_event = Event.create(label: "#{workout.label} #{workout_count}",
-                                         start_date: workout_start_date,
-                                         end_date: workout_end_date,
+                                         start_date: workout_start_date.beginning_of_day,
+                                         end_date: workout_end_date.end_of_day,
                                          workout_id: workout.id,
                                          parent_event_id: microcycle_event.id,
                                          user_id: self.user_id,
