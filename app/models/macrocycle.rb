@@ -1,6 +1,8 @@
 class Macrocycle < ActiveRecord::Base
   belongs_to :user
   has_and_belongs_to_many :mesocycles
+  has_many :microcycles, through: :mesocycles
+  has_many :workouts, through: :microcycles
   has_many :events
 
   def panel_class
@@ -49,4 +51,5 @@ class Macrocycle < ActiveRecord::Base
     end
     return (event_scores.inject{ |sum, el| sum + el }.to_f / event_scores.size) * 100
   end
+
 end

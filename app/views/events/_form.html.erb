@@ -10,8 +10,8 @@
       </div>
       <div class="col-sm-6">
         <div class="form-group">
-          <%= f.label :macrocycle %><br>
-          <%= f.collection_select(:macrocycle_id, current_user.macrocycles.all, :id, :label_with_duration, {prompt: "None"}, {class: "form-control type_select"}) %>
+          <%= f.label :workout %><br>
+          <%= f.collection_select(:workout_id, current_user.workouts.all, :id, :label, {prompt: "None"}, {class: "form-control type_select"}) %>
         </div>
       </div>
     </div>

@@ -10,6 +10,7 @@
  *
  *= require_self
  *= require_tree .
+ *= require jquery-ui
  */
 
  // "bootstrap-sprockets" must be imported before "bootstrap" and "bootstrap/variables"
@@ -155,6 +156,17 @@ $font_stack_alt: "Oswald", sans-serif;
   }
 }
 
+.alert-orange {
+  color: #8A563B;
+  background-color: #FFE2C9;
+  border-color: #F9CBB2;
+}
+
+.btn.btn-wide{
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
 //Fixes zoom-in on ipad pro
 body {
   padding-right: 0px !important
@@ -162,6 +174,26 @@ body {
 
 .modal-open {
   overflow-y: auto;
+}
+
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display:         flex;
+}
+
+//calendar
+.col-xs-1.calendar_day{
+  width: 14.28571428%;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.calendar_day .alert{
+  padding-top: 8px;
+  padding-bottom: 8px;
+  margin-bottom: 5px;
 }
 
 /* ============ General Elements */
@@ -599,6 +631,35 @@ input[type=range]:focus::-ms-fill-upper {
   transition: opacity .25s ease-in-out;
   -moz-transition: opacity .25s ease-in-out;
   -webkit-transition: opacity .25s ease-in-out;
+}
+
+//calendar
+.calendar{
+  border-color: $text_light;
+  border-style: solid;
+  border-width: 1px 1px 0 0;
+
+  .calendar_day{
+    border-color: $text_light;
+    border-style: solid;
+    border-width: 0 0 1px 1px;
+  }
+
+  .calendar_week{
+
+    .calendar_day{
+      min-height: 100px;
+      padding-top: 5px;
+
+      .planner_workout .close{
+        display: block;
+      }
+    }
+  }
+}
+
+.planner_workout .close{
+  display: none;
 }
 
 

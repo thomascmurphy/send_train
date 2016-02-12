@@ -16,6 +16,9 @@ class MacrocyclesController < ApplicationController
 
   def show
     @macrocycle = current_user.macrocycles.find_by_id(params[:id])
+    @workouts = current_user.workouts
+    @event = @macrocycle.events.first
+    @wide_content = true
     respond_to do |format|
       format.html
       format.js
@@ -24,8 +27,10 @@ class MacrocyclesController < ApplicationController
   end
 
   def new
-    @mesocycles = current_user.mesocycles.order(created_at: :desc)
     @macrocycle = current_user.macrocycles.new
+    @workouts = current_user.workouts
+    @event = current_user.events.new
+    @wide_content = true
     respond_to do |format|
       format.html
       format.js
@@ -39,22 +44,36 @@ class MacrocyclesController < ApplicationController
       params[:macrocycle][:mesocycle_ids] = params[:macrocycle][:mesocycle_ids].strip().split(' ')
     end
     @macrocycle = current_user.macrocycles.new(macrocycle_params)
-
-    respond_to do |format|
-      if @macrocycle.save
-        format.html { redirect_to @macrocycle, notice: 'Macrocycle was successfully created.' }
+    if @macrocycle.save
+      @event = current_user.events.new(macrocycle_id: @macrocycle.id)
+      if params[:event][:nice_start_date].present?
+        start_date = DateTime.strptime(params[:event][:nice_start_date], '%Y-%m-%d')
+        weeks = params[:weeks].present? ? params[:weeks].sort.to_h.keys.last.to_i : 0
+        @event.start_date = start_date
+        @event.end_date = start_date.end_of_day + weeks.weeks
+        @event.save
+        Event.handle_workout_events(params[:weeks], @event, current_user)
+      end
+      respond_to do |format|
+        format.html { redirect_to @macrocycle, notice: 'Plan was successfully created.' }
         format.js
         format.json { render json: @macrocycle, status: :created, location: @macrocycle }
-      else
+      end
+    else
+      respond_to do |format|
         format.html { render action: "new" }
         format.json { render json: @macrocycle.errors, status: :unprocessable_entity }
       end
     end
+
+
   end
 
   def edit
-    @mesocycles = current_user.mesocycles.order(created_at: :desc)
     @macrocycle = current_user.macrocycles.find_by_id(params[:id])
+    @workouts = current_user.workouts
+    @event = @macrocycle.events.first
+    @wide_content = true
     respond_to do |format|
       format.html
       format.js

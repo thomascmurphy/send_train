@@ -5,7 +5,7 @@ class Event < ActiveRecord::Base
   belongs_to :mesocycle
   belongs_to :macrocycle
   belongs_to :parent_event, class_name: 'Event', foreign_key: 'parent_event_id'
-  after_create :create_child_events
+  #after_create :create_child_events
   before_destroy :destroy_child_events
 
   def child_events
@@ -23,11 +23,35 @@ class Event < ActiveRecord::Base
     self.end_date = DateTime.now
   end
 
+  def smart_label
+    if self.label.present?
+      self.label
+    elsif self.workout.present?
+      self.workout.label
+    elsif self.macrocycle.present?
+      self.macrocycle.label
+    else
+      self.label
+    end
+  end
+
+  def smart_event_type
+    if self.event_type.present?
+      self.label
+    elsif self.workout.present?
+      self.workout.workout_type
+    elsif self.macrocycle.present?
+      self.macrocycle.workout_type
+    else
+      self.label
+    end
+  end
+
   def panel_class
     if self.macrocycle.present?
       color_class = " panel-primary"
     else
-      case self.event_type
+      case self.smart_event_type
       when "strength"
         color_class = " panel-danger"
       when "power"
@@ -143,5 +167,42 @@ class Event < ActiveRecord::Base
       return "#{duration_length} #{duration_unit}"
     end
   end
+
+    def self.mondays(starts: nil, ends: nil)
+      starts ||= DateTime.now.beginning_of_day - 4.weeks
+      ends ||= DateTime.now.beginning_of_day + 1.year
+      (starts..ends).select {|d| d.monday? }
+    end
+
+    def nice_start_date
+      if self.start_date.present?
+        self.start_date.strftime("%Y-%m-%d")
+      end
+    end
+
+    def self.handle_workout_events(weeks, parent_event, user)
+      existing_event_ids = parent_event.child_events.pluck(:id)
+      updated_ids = []
+      weeks.each do |week_count, week|
+        week["days"].each do |day_count, day|
+          day["workouts"].each do |workout|
+            if workout["event_id"].present?
+              workout_event = user.events.find_by_id(workout["event_id"].to_i)
+              updated_ids << workout["event_id"].to_i
+            else
+              workout_event = user.events.new
+            end
+            if workout["id"].present? && parent_event.present?
+              workout_event.workout_id = workout["id"]
+              start_date = parent_event.start_date + (week_count.to_i - 1).weeks + (day_count.to_i - 1).days
+              workout_event.start_date = start_date.beginning_of_day
+              workout_event.end_date = start_date.end_of_day
+              workout_event.parent_event_id = parent_event.id
+              workout_event.save
+            end
+          end
+        end
+      end
+    end
 
 end

@@ -25,7 +25,7 @@ TrainToSend::Application.routes.draw do
       get "delete"
     end
 
-    resources :macrocycles do
+    resources :macrocycles, :path => "plans" do
       get "delete"
     end
 

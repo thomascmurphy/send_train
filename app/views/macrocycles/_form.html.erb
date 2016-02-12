@@ -1,68 +1,67 @@
-<%= form_for(@macrocycle, remote: true) do |f| %>
-  <div class="modal-body">
-    <ul class="errors"></ul>
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="form-group">
-          <%= f.label :name %><br>
-          <%= f.text_field :label, class: "form-control" %>
-        </div>
+<%= form_for(@macrocycle) do |f| %>
+  <h1 class="inline_block valign_middle margin_right">Create Plan</h1>
+  <%= f.text_field :label, {placeholder: "Name", class: "form-control valign_middle margin_top margin_right", style: "display: inline-block; width: auto;"} %>
+  <%= select :event, :nice_start_date, Event.mondays.map{|m| [m.strftime("(%a) %b %d, %Y"), m.strftime("%Y-%m-%d")]}, {include_blank: "Start Date"}, {class: "form-control valign_middle margin_top margin_right", style: "display: inline-block; width: auto;"} %>
+  <input type="submit" class="btn btn-success margin_top margin_right btn-wide" value="Create">
+  <p>Plan your long-term set of workouts and choose a start date to create events for each workout.</p>
+  <div class="col-xs-12 calendar margin_bottom">
+    <div class="row calendar_days_header">
+      <div class="col-xs-1 calendar_day">
+        <h5>Mon</h5>
       </div>
-      <div class="col-sm-6">
-        <div class="form-group">
-          <%= f.label :macrocycle_type %><br>
-          <%= f.select(:macrocycle_type, [['None', ''], ['Bouldering', 'boulder'], ['Sport Climbing', 'sport']], {}, {class: "form-control type_select"}) %>
-        </div>
+      <div class="col-xs-1 calendar_day">
+        <h5>Tue</h5>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-6">
-        <div class="form-group">
-          <label>Selected Mesocycles</label>
-          <table class="selected_items table table-striped">
-            <thead>
-              <th>Label</th>
-              <th>Type</th>
-              <th></th>
-            </thead>
-            <tbody>
-              <% @macrocycle.mesocycles.each do |mesocycle| %>
-                <tr>
-                  <td><%= mesocycle.label %></td>
-                  <td><%= mesocycle.mesocycle_type %></td>
-                  <td><a href="javascript:void(0);" class="remove_selected_item btn btn-danger" data-item-id="<%= mesocycle.id %>">Remove</a></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-          <%= f.hidden_field :mesocycle_ids, class: "selected_ids" %>
-        </div>
+      <div class="col-xs-1 calendar_day">
+        <h5>Wed</h5>
       </div>
-      <div class="col-xs-6">
-        <div class="form-group">
-          <label>Available Mesocycles</label>
-          <table class="selectable_items table table-striped">
-            <thead>
-              <th>Label</th>
-              <th>Type</th>
-              <th></th>
-            </thead>
-            <tbody>
-              <% @mesocycles.each do |mesocycle| %>
-                <tr>
-                  <td><%= mesocycle.label %></td>
-                  <td><%= mesocycle.mesocycle_type %></td>
-                  <td><a href="javascript:void(0);" class="add_selected_item btn btn-success" data-item-id="<%= mesocycle.id %>">Add</a></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
+      <div class="col-xs-1 calendar_day">
+        <h5>Thu</h5>
+      </div>
+      <div class="col-xs-1 calendar_day">
+        <h5>Fri</h5>
+      </div>
+      <div class="col-xs-1 calendar_day">
+        <h5>Sat</h5>
+      </div>
+      <div class="col-xs-1 calendar_day">
+        <h5>Sun</h5>
       </div>
     </div>
+
+    <div class="row row-eq-height calendar_week" data-week=1>
+      <div class="col-xs-1 calendar_day">
+        <%= hidden_field_tag 'weeks[1]days[1]workouts[][id]', '', class: "workout_ids" %>
+        <%= hidden_field_tag 'weeks[1]days[1]workouts[][event_id]', '', class: "workout_event_ids" %>
+      </div>
+      <div class="col-xs-1 calendar_day">
+        <%= hidden_field_tag 'weeks[1]days[2]workouts[][id]', '', class: "workout_ids" %>
+        <%= hidden_field_tag 'weeks[1]days[2]workouts[][event_id]', '', class: "workout_event_ids" %>
+      </div>
+      <div class="col-xs-1 calendar_day">
+        <%= hidden_field_tag 'weeks[1]days[3]workouts[][id]', '', class: "workout_ids" %>
+        <%= hidden_field_tag 'weeks[1]days[3]workouts[][event_id]', '', class: "workout_event_ids" %>
+      </div>
+      <div class="col-xs-1 calendar_day">
+        <%= hidden_field_tag 'weeks[1]days[4]workouts[][id]', '', class: "workout_ids" %>
+        <%= hidden_field_tag 'weeks[1]days[4]workouts[][event_id]', '', class: "workout_event_ids" %>
+      </div>
+      <div class="col-xs-1 calendar_day">
+        <%= hidden_field_tag 'weeks[1]days[5]workouts[][id]', '', class: "workout_ids" %>
+        <%= hidden_field_tag 'weeks[1]days[5]workouts[][event_id]', '', class: "workout_event_ids" %>
+      </div>
+      <div class="col-xs-1 calendar_day">
+        <%= hidden_field_tag 'weeks[1]days[6]workouts[][id]', '', class: "workout_ids" %>
+        <%= hidden_field_tag 'weeks[1]days[6]workouts[][event_id]', '', class: "workout_event_ids" %>
+      </div>
+      <div class="col-xs-1 calendar_day">
+        <%= hidden_field_tag 'weeks[1]days[7]workouts[][id]', '', class: "workout_ids" %>
+        <%= hidden_field_tag 'weeks[1]days[7]workouts[][event_id]', '', class: "workout_event_ids" %>
+      </div>
+    </div>
+
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-    <input type="submit" class="btn btn-primary" value="Save">
+  <div class="text-right">
+    <a href="javascript:void(0);" class="btn btn-default calendar_add_week">Add Week</a>
   </div>
 <% end %>

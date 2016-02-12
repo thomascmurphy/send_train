@@ -24,6 +24,27 @@ class Workout < ActiveRecord::Base
     return color_class
   end
 
+  def alert_class
+    case self.workout_type
+    when "strength"
+      color_class = " alert-danger"
+    when "power"
+      color_class = " alert-orange"
+    when "powerendurance"
+      color_class = " alert-warning"
+    when "endurance"
+      color_class = " alert-success"
+    when "technique"
+      color_class = " alert-info"
+    when "cardio"
+      color_class = " alert-info"
+    else
+      color_class = " alert-info"
+    end
+
+    return color_class
+  end
+
   def efficacy(type="all")
     event_scores = []
     completed_events = self.events.where(completed: true)

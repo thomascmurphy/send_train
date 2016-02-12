@@ -1,7 +1,7 @@
 <div class="col-md-3 col-sm-6 margin_bottom">
   <div class="panel<%= event.panel_class %> event_panel" data-event-id="<%= event.id %>">
     <div class="panel-heading">
-      <h3 class="panel-title"><%= event.label %></h3>
+      <h3 class="panel-title"><%= event.smart_label %></h3>
     </div>
     <div class="panel-body">
       <% if event.gym_session.present? %>
