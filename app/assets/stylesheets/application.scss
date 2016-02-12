@@ -165,6 +165,10 @@ body {
 }
 
 /* ============ General Elements */
+html, body{
+  height: 100%;
+}
+
 body{
     color: $text_dark;
     background-color: $background_light;
@@ -602,6 +606,13 @@ input[type=range]:focus::-ms-fill-upper {
 
 /* ============ Header Area */
 
+#wrapper{
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin-bottom: -40px;
+}
+
 #header_area{
   background-color: $cyan;
   border-bottom: 5px solid $cyan_dark;
@@ -645,6 +656,27 @@ input[type=range]:focus::-ms-fill-upper {
 
 #notice_area{
   margin-bottom: 50px;
+}
+
+#footer_push{
+  height: 40px;
+}
+
+#site_footer{
+  height: 40px;
+  background-color: $cyan;
+  color: $white;
+
+  a{
+    display: inline-block;
+    line-height: 40px;
+    color: $white;
+    margin: 0px 20px;
+  }
+
+  a:hover{
+    text-decoration: underline;
+  }
 }
 
 @media (min-width: $screen-sm-min) {

@@ -8,7 +8,7 @@ class CommentsController < ApplicationController
   def create
     UserMailer.comment_email(params[:subject], params[:comment], params[:from_email]).deliver_now
     respond_to do |format|
-      format.html
+      format.html {redirect_to root_path, notice: 'Thanks very much for your feedback!' }
       format.js { flash[:notice] = "Thanks very much for your feedback!" }
       format.json
     end

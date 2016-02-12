@@ -44,6 +44,9 @@ TrainToSend::Application.routes.draw do
   get 'comment', to: 'comments#new'
   post 'comment', to: 'comments#create'
 
+  get 'privacy_policy', to: 'home#privacy_policy'
+  get 'terms_of_service', to: 'home#terms_of_service'
+
   root to: "home#index"
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
