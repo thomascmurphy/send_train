@@ -2,35 +2,71 @@
 
 <%= form_for(@user, url: "/profile") do |f| %>
   <div class="row">
-    <div class="col-sm-6 col-sm-offset-3">
-      <div class="form-group">
-        <%= f.label :first_name %><br />
-        <%= f.text_field :first_name, class: "form-control" %>
+    <div class="col-sm-8 col-sm-offset-2">
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <%= f.label :first_name %><br />
+            <%= f.text_field :first_name, class: "form-control" %>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <%= f.label :last_name %><br />
+            <%= f.text_field :last_name, class: "form-control" %>
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <%= f.label :last_name %><br />
-        <%= f.text_field :last_name, class: "form-control" %>
+
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <%= f.label :birthdate %><br>
+            <%= select_month(@user.birthdate.present? ? @user.birthdate.month : DateTime.now, {field_name: "month", prefix: "birthdate"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+            <%= select_day(@user.birthdate.present? ? @user.birthdate.day : DateTime.now, {field_name: "day", prefix: "birthdate"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+            <%= select_year(@user.birthdate.present? ? @user.birthdate.year : DateTime.now, {start_year: 1920, end_year: DateTime.now.year, field_name: "year", prefix: "birthdate"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <%= f.label :climbing_start_date, "Date You Started Climbing (Approximate)" %><br>
+            <%= select_month(@user.climbing_start_date.present? ? @user.climbing_start_date.month : DateTime.now, {field_name: "month", prefix: "climbing_start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+            <%= select_day(@user.climbing_start_date.present? ? @user.climbing_start_date.day : DateTime.now, {field_name: "day", prefix: "climbing_start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+            <%= select_year(@user.climbing_start_date.present? ? @user.climbing_start_date.year : DateTime.now, {start_year: 1960, end_year: DateTime.now.year, field_name: "year", prefix: "climbing_start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <%= f.label :birthdate %><br>
-        <%= select_month(@user.birthdate.present? ? @user.birthdate.month : DateTime.now, {field_name: "month", prefix: "birthdate"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
-        <%= select_day(@user.birthdate.present? ? @user.birthdate.day : DateTime.now, {field_name: "day", prefix: "birthdate"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
-        <%= select_year(@user.birthdate.present? ? @user.birthdate.year : DateTime.now, {start_year: 1920, end_year: DateTime.now.year, field_name: "year", prefix: "birthdate"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <%= f.label :grade_format, "Preferred Grade Scales" %><br>
+            <%= f.select(:grade_format, [['Western (YDS, Vermin)', 'western'], ['European (French, Font)', 'european']], {}, {class: "form-control"}) %>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <%= f.label :gym_name %><br />
+            <%= f.text_field :gym_name, class: "form-control" %>
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <%= f.label :climbing_start_date, "Date You Started Climbing (Approximate)" %><br>
-        <%= select_month(@user.climbing_start_date.present? ? @user.climbing_start_date.month : DateTime.now, {field_name: "month", prefix: "climbing_start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
-        <%= select_day(@user.climbing_start_date.present? ? @user.climbing_start_date.day : DateTime.now, {field_name: "day", prefix: "climbing_start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
-        <%= select_year(@user.climbing_start_date.present? ? @user.climbing_start_date.year : DateTime.now, {start_year: 1960, end_year: DateTime.now.year, field_name: "year", prefix: "climbing_start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <%= f.label :default_length_unit, "Default Length Unit" %><br>
+            <%= f.select(:default_length_unit, [['Feet', 'ft'], ['Meters', 'm']], {}, {class: "form-control"}) %>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <%= f.label :default_weight_unit, "Default Weight Unit" %><br>
+            <%= f.select(:default_weight_unit, [['Pounds', 'lb'], ['Kilograms', 'kg']], {}, {class: "form-control"}) %>
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <%= f.label :grade_format, "Preferred Grade Scales" %><br>
-        <%= f.select(:grade_format, [['Western (YDS, Vermin)', 'western'], ['European (French, Font)', 'european']], {}, {class: "form-control type_select"}) %>
-      </div>
-      <div class="form-group">
-        <%= f.label :gym_name %><br />
-        <%= f.text_field :gym_name, class: "form-control" %>
-      </div>
+
       <div class="actions">
         <%= f.submit "Update", class: "btn btn-primary" %>
       </div>

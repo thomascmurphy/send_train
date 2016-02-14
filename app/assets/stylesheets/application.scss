@@ -676,6 +676,7 @@ input[type=range]:focus::-ms-fill-upper {
   height: auto !important;
   height: 100%;
   margin-bottom: -40px;
+  padding-bottom: 20px;
 }
 
 #header_area{
@@ -752,7 +753,7 @@ input[type=range]:focus::-ms-fill-upper {
     display: -ms-flexbox;
     display:         flex;
   }
-  
+
   .col-sm-1.calendar_day{
     width: 14.28571428%;
     padding-left: 5px;

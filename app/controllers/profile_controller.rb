@@ -16,20 +16,24 @@ class ProfileController < ApplicationController
     if birthdate_params.present?
       if birthdate_params[:day].present? && birthdate_params[:month].present? && birthdate_params[:year].present?
         birthdate = DateTime.strptime("#{birthdate_params[:year]} #{birthdate_params[:month]} #{birthdate_params[:day]}", "%Y %m %d")
-        params[:user][:birthdate] = birthdate
+        if DateTime.now - birthdate > 360
+          params[:user][:birthdate] = birthdate
+        end
       end
     end
     climbing_start_date_params = params[:climbing_start_date]
     if climbing_start_date_params.present?
       if climbing_start_date_params[:day].present? && climbing_start_date_params[:month].present? && climbing_start_date_params[:year].present?
         climbing_start_date = DateTime.strptime("#{climbing_start_date_params[:year]} #{climbing_start_date_params[:month]} #{climbing_start_date_params[:day]}", "%Y %m %d")
-        params[:user][:climbing_start_date] = climbing_start_date
+        if DateTime.now - climbing_start_date > 10
+          params[:user][:climbing_start_date] = climbing_start_date
+        end
       end
     end
 
     respond_to do |format|
       if @user.update_attributes(profile_params)
-        format.html { redirect_to root_path, notice: 'Profile was successfully updated.' }
+        format.html { redirect_to profile_path, notice: 'Profile was successfully updated.' }
         format.js
         format.json { render json: @user, status: :ok, location: @user }
       else
@@ -43,7 +47,8 @@ class ProfileController < ApplicationController
 
   def profile_params
     params.require(:user).permit(:first_name, :last_name, :grade_format,
-                                 :birthdate, :climbing_start_date, :gym_name)
+                                 :birthdate, :climbing_start_date, :default_length_unit,
+                                 :default_weight_unit, :gym_name)
   end
 
 end
