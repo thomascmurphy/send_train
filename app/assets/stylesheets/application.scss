@@ -659,8 +659,11 @@ input[type=range]:focus::-ms-fill-upper {
   }
 }
 
-.planner_workout .close{
-  display: none;
+.planner_workout{
+  cursor: pointer;
+  .close{
+    display: none;
+  }
 }
 
 
@@ -742,6 +745,20 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 @media (min-width: $screen-sm-min) {
+
+  .row-eq-height-sm {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display:         flex;
+  }
+  
+  .col-sm-1.calendar_day{
+    width: 14.28571428%;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
   #header_area{
     .navbar-default{
       margin: 5px 0 5px 0;

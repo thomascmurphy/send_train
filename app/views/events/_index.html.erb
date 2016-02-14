@@ -1,44 +1,6 @@
-<h3>Your Schedule</h3>
+<h3>Your Upcoming Schedule</h3>
 <div class="col-xs-12 calendar margin_bottom">
-  <div class="row calendar_days_header">
-    <div class="col-xs-1 calendar_day">
-      <h5>Mon</h5>
-    </div>
-    <div class="col-xs-1 calendar_day">
-      <h5>Tue</h5>
-    </div>
-    <div class="col-xs-1 calendar_day">
-      <h5>Wed</h5>
-    </div>
-    <div class="col-xs-1 calendar_day">
-      <h5>Thu</h5>
-    </div>
-    <div class="col-xs-1 calendar_day">
-      <h5>Fri</h5>
-    </div>
-    <div class="col-xs-1 calendar_day">
-      <h5>Sat</h5>
-    </div>
-    <div class="col-xs-1 calendar_day">
-      <h5>Sun</h5>
-    </div>
-  </div>
-
-  <% @upcoming_weeks.each do |week_count, week| %>
-    <div class="row row-eq-height calendar_week">
-      <% week.each do |date, day| %>
-        <div class="col-xs-1 calendar_day">
-          <%= date %>
-          <% if day.present? && day.count > 0%>
-            <% day.each do |event| %>
-              <%= link_to "#{event.smart_label}", edit_event_path(event), remote: true, class: "block planner_workout alert#{event.workout.alert_class} #{event.alert_class}" %>
-            <% end %>
-          <% end %>
-        </div>
-      <% end %>
-    </div>
-  <% end %>
-
+  <%= render "calendar" %>
 </div>
 
 <div class="panel-group" id="events" role="tablist" aria-multiselectable="true">
@@ -49,15 +11,8 @@
       </h4>
     </div>
     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-      <div class="panel-body">
-        <div class="row">
-          <% @current_events.each_with_index do |event, index| %>
-            <%= render event %>
-            <% if index % 4 == 3 %>
-          </div><div class="row">
-            <% end %>
-          <% end %>
-        </div>
+      <div class="panel-body current_events">
+        <%= render "current_events" %>
       </div>
     </div>
   </div>
@@ -70,15 +25,8 @@
       </h4>
     </div>
     <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-      <div class="panel-body">
-        <div class="row">
-          <% @upcoming_events.each_with_index do |event, index| %>
-            <%= render event %>
-            <% if index % 4 == 3 %>
-          </div><div class="row margin_bottom">
-            <% end %>
-          <% end %>
-        </div>
+      <div class="panel-body upcoming_events">
+        <%= render "upcoming_events" %>
       </div>
     </div>
   </div>
@@ -91,15 +39,8 @@
       </h4>
     </div>
     <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-      <div class="panel-body">
-        <div class="row">
-          <% @past_events.each_with_index do |event, index| %>
-            <%= render event %>
-            <% if index % 4 == 3 %>
-          </div><div class="row margin_bottom">
-            <% end %>
-          <% end %>
-        </div>
+      <div class="panel-body past_events">
+        <%= render "past_events" %>
       </div>
     </div>
   </div>

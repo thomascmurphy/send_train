@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_filter :set_events, :except => [:show, :new, :edit, :delete, :complete, :gym_session_new]
+  before_filter :set_events, :except => [:show, :new, :edit, :delete, :gym_session_new]
 
   def set_events
     @events = current_user.events
@@ -9,7 +9,7 @@ class EventsController < ApplicationController
     for week in 0..1
       for day in 0..6
         date = monday + (day + week * 7).days
-        @upcoming_weeks[week][date.strftime("%e")] = @events.where("start_date >= ? AND start_date < ? AND end_date <= ?", date.beginning_of_day, date.end_of_day, date.end_of_day).order(start_date: :asc)
+        @upcoming_weeks[week][date.strftime("%b %e")] = @events.where("start_date >= ? AND start_date < ? AND end_date <= ?", date.beginning_of_day, date.end_of_day, date.end_of_day).order(start_date: :asc)
       end
     end
 

@@ -78,6 +78,7 @@ ActiveRecord::Schema.define(version: 20160208153048) do
   create_table "macrocycle_workouts", force: :cascade do |t|
     t.integer "macrocycle_id"
     t.integer "workout_id"
+    t.integer "order_in_day"
     t.integer "day_in_cycle"
   end
 
@@ -143,18 +144,18 @@ ActiveRecord::Schema.define(version: 20160208153048) do
   add_index "microcycles_workouts", ["workout_id"], name: "index_microcycles_workouts_on_workout_id"
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "email",                  default: "",   null: false
+    t.string   "encrypted_password",     default: "",   null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",          default: 0,    null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.date     "birthdate"
     t.string   "gender"
     t.integer  "weight"
@@ -163,8 +164,8 @@ ActiveRecord::Schema.define(version: 20160208153048) do
     t.string   "last_name"
     t.string   "postcode"
     t.boolean  "is_admin"
-    t.string   "default_weight_unit"
-    t.string   "default_length_unit"
+    t.string   "default_weight_unit",    default: "lb"
+    t.string   "default_length_unit",    default: "ft"
     t.string   "gym_name"
     t.datetime "climbing_start_date"
     t.string   "grade_format"

@@ -1,8 +1,16 @@
 class Macrocycle < ActiveRecord::Base
   belongs_to :user
-  has_many :macrocycle_workouts
+  has_many :macrocycle_workouts, dependent: :destroy
   has_many :workouts, through: :macrocycle_workouts
   has_many :events, dependent: :destroy
+  after_create :set_reference_id
+
+  def set_reference_id
+    if self.reference_id.blank?
+      self[:reference_id] = self.id
+      self.save
+    end
+  end
 
   def panel_class
     return " panel-primary"
@@ -29,7 +37,7 @@ class Macrocycle < ActiveRecord::Base
 
   def workouts_by_day
     workouts_by_day = {}
-    self.macrocycle_workouts.each do |macrocycle_workout|
+    self.macrocycle_workouts.order(:day_in_cycle, :order_in_day).each do |macrocycle_workout|
       if workouts_by_day[macrocycle_workout.day_in_cycle].present?
         workouts_by_day[macrocycle_workout.day_in_cycle] << macrocycle_workout
       else
@@ -39,45 +47,26 @@ class Macrocycle < ActiveRecord::Base
     return workouts_by_day
   end
 
-  def handle_workouts_and_events(weeks, parent_event)
+  def handle_workouts(weeks)
       existing_macrocycle_workout_ids = self.macrocycle_workouts.pluck(:id)
       updated_macrocycle_workout_ids = []
-      existing_event_ids = parent_event.present? ? parent_event.child_events.pluck(:id) : nil
-      updated_event_ids = []
       if weeks.present?
         weeks.each do |week_count, week|
           week["days"].each do |day_count, day|
-            day["workouts"].each do |workout|
-
-              if workout["macrocycle_workout_id"].present?
-                macrocycle_workout = self.macrocycle_workouts.find_by_id(workout["macrocycle_workout_id"].to_i)
-                updated_macrocycle_workout_ids << workout["macrocycle_workout_id"].to_i
+            workout_ids = day["workout_ids"].split(' ')
+            macrocycle_workout_ids = day["macrocycle_workout_ids"].split(' ')
+            workout_ids.each_with_index do |workout_id, index|
+              macrocycle_workout_id = macrocycle_workout_ids[index].to_i
+              if macrocycle_workout_id.present? && macrocycle_workout_id != 0
+                macrocycle_workout = self.macrocycle_workouts.find_by_id(macrocycle_workout_id)
+                updated_macrocycle_workout_ids << macrocycle_workout_id
               else
                 macrocycle_workout = self.macrocycle_workouts.new
               end
-              if workout["id"].present?
-                macrocycle_workout.day_in_cycle = day_count.to_i + (week_count.to_i - 1)*7
-                macrocycle_workout.workout_id = workout["id"].to_i
-                macrocycle_workout.save
-              end
-
-              if parent_event.present?
-                if workout["event_id"].present?
-                  workout_event = user.events.find_by_id(workout["event_id"].to_i)
-                  updated_event_ids << workout["event_id"].to_i
-                else
-                  workout_event = user.events.new
-                end
-                if workout["id"].present?
-                  workout_event.workout_id = workout["id"].to_i
-                  start_date = parent_event.start_date + (week_count.to_i - 1).weeks + (day_count.to_i - 1).days
-                  workout_event.start_date = start_date.beginning_of_day
-                  workout_event.end_date = start_date.end_of_day
-                  workout_event.parent_event_id = parent_event.id
-                  workout_event.save
-                end
-              end
-
+              macrocycle_workout.order_in_day = index
+              macrocycle_workout.day_in_cycle = day_count.to_i + (week_count.to_i - 1)*7
+              macrocycle_workout.workout_id = workout_id.to_i
+              macrocycle_workout.save
             end
           end
         end
@@ -85,9 +74,6 @@ class Macrocycle < ActiveRecord::Base
 
       if existing_macrocycle_workout_ids.present?
         MacrocycleWorkout.where(id: existing_macrocycle_workout_ids - updated_macrocycle_workout_ids).destroy_all
-      end
-      if existing_event_ids.present?
-        Event.where(id: existing_event_ids - updated_event_ids).destroy_all
       end
     end
 

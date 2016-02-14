@@ -16,6 +16,7 @@ macrocycles_ready = function() {
   var draggable_options = {
     appendTo: "body",
     helper: "clone",
+    cursor: "pointer",
     start : function(event, ui) {
        ui.helper.width($('.calendar .calendar_day').width());
     }

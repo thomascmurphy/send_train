@@ -6,8 +6,9 @@
   </div>
   <div class="col-xs-3" id="my_workouts">
     <h2>My Workouts</h2>
+    <p>(you can drag your workouts to the calendar and rearrange them)</p>
     <% @workouts.each do |workout| %>
-      <div class="planner_workout alert<%= workout.alert_class %>" data-workout-id="<%= workout.id %>">
+      <div class="planner_workout alert<%= workout.alert_class %>" data-workout-id="<%= workout.id %>" data-macrocycle-workout-id="0" data-event-id="0">
         <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <%= workout.label %>
       </div>

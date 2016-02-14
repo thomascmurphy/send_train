@@ -18,6 +18,7 @@ class AddManyToManyRelationships < ActiveRecord::Migration
     create_table :macrocycle_workouts do |t|
       t.belongs_to :macrocycle, index: true
       t.belongs_to :workout, index: true
+      t.integer :order_in_day
       t.integer :day_in_cycle
     end
   end
