@@ -1,7 +1,7 @@
 class CreateAttempts < ActiveRecord::Migration
   def change
     create_table :attempts do |t|
-      t.datetime :date, default: DateTime.now
+      t.datetime :date
       t.integer :completion, default: 0
       t.references :climb, index: true, foreign_key: true
       t.boolean :onsight, default: false

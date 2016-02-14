@@ -39,21 +39,18 @@ class MacrocyclesController < ApplicationController
   end
 
   def create
-    @macrocycles = current_user.macrocycles.order(created_at: :desc)
-    if params[:macrocycle][:mesocycle_ids].present?
-      params[:macrocycle][:mesocycle_ids] = params[:macrocycle][:mesocycle_ids].strip().split(' ')
-    end
     @macrocycle = current_user.macrocycles.new(macrocycle_params)
+    @event = nil
     if @macrocycle.save
-      @event = current_user.events.new(macrocycle_id: @macrocycle.id)
       if params[:event][:nice_start_date].present?
+        @event = current_user.events.new(macrocycle_id: @macrocycle.id)
         start_date = DateTime.strptime(params[:event][:nice_start_date], '%Y-%m-%d')
         weeks = params[:weeks].present? ? params[:weeks].sort.to_h.keys.last.to_i : 0
         @event.start_date = start_date
         @event.end_date = start_date.end_of_day + weeks.weeks
         @event.save
-        Event.handle_workout_events(params[:weeks], @event, current_user)
       end
+      @macrocycle.handle_workouts_and_events(params[:weeks], @event)
       respond_to do |format|
         format.html { redirect_to @macrocycle, notice: 'Plan was successfully created.' }
         format.js
@@ -65,14 +62,12 @@ class MacrocyclesController < ApplicationController
         format.json { render json: @macrocycle.errors, status: :unprocessable_entity }
       end
     end
-
-
   end
 
   def edit
     @macrocycle = current_user.macrocycles.find_by_id(params[:id])
     @workouts = current_user.workouts
-    @event = @macrocycle.events.first
+    @event = @macrocycle.events.new
     @wide_content = true
     respond_to do |format|
       format.html
@@ -82,19 +77,26 @@ class MacrocyclesController < ApplicationController
   end
 
   def update
-    @macrocycles = current_user.macrocycles.order(created_at: :desc)
-    if params[:macrocycle][:mesocycle_ids].present?
-      params[:macrocycle][:mesocycle_ids] = params[:macrocycle][:mesocycle_ids].strip().split(' ')
-    end
     @macrocycle = current_user.macrocycles.find_by_id(params[:id])
-    respond_to do |format|
-      if @macrocycle.update_attributes(macrocycle_params)
-        format.html
+    @event = nil
+    if @macrocycle.update_attributes(macrocycle_params)
+      if params[:event][:nice_start_date].present?
+        @event = current_user.events.new(macrocycle_id: @macrocycle.id)
+        start_date = DateTime.strptime(params[:event][:nice_start_date], '%Y-%m-%d')
+        weeks = params[:weeks].present? ? params[:weeks].sort.to_h.keys.last.to_i : 0
+        @event.start_date = start_date
+        @event.end_date = start_date.end_of_day + weeks.weeks
+        @event.save
+      end
+      @macrocycle.handle_workouts_and_events(params[:weeks], @event)
+      respond_to do |format|
+        format.html { redirect_to @macrocycle, notice: 'Plan was successfully updated.' }
         format.js
-        format.json { render json: @macrocycle, status: :ok, location: @macrocycle }
-      else
-        format.html
-        format.js
+        format.json { render json: @macrocycle, status: :created, location: @macrocycle }
+      end
+    else
+      respond_to do |format|
+        format.html { render action: "new" }
         format.json { render json: @macrocycle.errors, status: :unprocessable_entity }
       end
     end

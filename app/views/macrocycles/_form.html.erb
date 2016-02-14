@@ -1,64 +1,59 @@
 <%= form_for(@macrocycle) do |f| %>
-  <h1 class="inline_block valign_middle margin_right">Create Plan</h1>
-  <%= f.text_field :label, {placeholder: "Name", class: "form-control valign_middle margin_top margin_right", style: "display: inline-block; width: auto;"} %>
-  <%= select :event, :nice_start_date, Event.mondays.map{|m| [m.strftime("(%a) %b %d, %Y"), m.strftime("%Y-%m-%d")]}, {include_blank: "Start Date"}, {class: "form-control valign_middle margin_top margin_right", style: "display: inline-block; width: auto;"} %>
-  <input type="submit" class="btn btn-success margin_top margin_right btn-wide" value="Create">
-  <p>Plan your long-term set of workouts and choose a start date to create events for each workout.</p>
+  <div class="row margin_bottom">
+    <div class="col-sm-6">
+      <%= f.text_field :label, {placeholder: "Name", class: "form-control margin_right", style: "display: inline-block; width: auto;"} %>
+      <input type="submit" class="btn btn-primary" value="<% if @macrocycle.id.present? %>Update<% else %>Create<% end %> Template">
+    </div>
+    <div class="col-sm-6">
+      <%= select :event, :nice_start_date, Event.mondays.map{|m| [m.strftime("(%a) %b %d, %Y"), m.strftime("%Y-%m-%d")]}, {include_blank: "Start Date"}, {class: "form-control margin_right", style: "display: inline-block; width: auto;"} %>
+      <input type="submit" class="btn btn-success" value="<% if @macrocycle.id.present? %>Update<% else %>Create<% end %> and Add to Schedule">
+    </div>
+
+  </div>
   <div class="col-xs-12 calendar margin_bottom">
     <div class="row calendar_days_header">
       <div class="col-xs-1 calendar_day">
-        <h5>Mon</h5>
+        <h5>Day 1</h5>
       </div>
       <div class="col-xs-1 calendar_day">
-        <h5>Tue</h5>
+        <h5>Day 2</h5>
       </div>
       <div class="col-xs-1 calendar_day">
-        <h5>Wed</h5>
+        <h5>Day 3</h5>
       </div>
       <div class="col-xs-1 calendar_day">
-        <h5>Thu</h5>
+        <h5>Day 4</h5>
       </div>
       <div class="col-xs-1 calendar_day">
-        <h5>Fri</h5>
+        <h5>Day 5</h5>
       </div>
       <div class="col-xs-1 calendar_day">
-        <h5>Sat</h5>
+        <h5>Day 6</h5>
       </div>
       <div class="col-xs-1 calendar_day">
-        <h5>Sun</h5>
+        <h5>Day 7</h5>
       </div>
     </div>
 
-    <div class="row row-eq-height calendar_week" data-week=1>
-      <div class="col-xs-1 calendar_day">
-        <%= hidden_field_tag 'weeks[1]days[1]workouts[][id]', '', class: "workout_ids" %>
-        <%= hidden_field_tag 'weeks[1]days[1]workouts[][event_id]', '', class: "workout_event_ids" %>
+    <% for week in 1..@macrocycle.duration_weeks %>
+      <div class="row row-eq-height calendar_week" data-week=1>
+        <% for day in 1..7 %>
+          <div class="col-xs-1 calendar_day">
+            <% if @macrocycle.workouts_by_day[(week-1)*7 + day].present? %>
+              <% @macrocycle.workouts_by_day[(week-1)*7 + day].each do |macrocycle_workout| %>
+                <div class="planner_workout alert<%= macrocycle_workout.workout.alert_class %>" data-workout-id="<%= macrocycle_workout.workout.id %>" data-macrocycle-workout-id="<%= macrocycle_workout.id %>">
+                  <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <%= macrocycle_workout.workout.label %>
+                </div>
+              <% end %>
+            <% end %>
+            <%= hidden_field_tag "weeks[#{week}]days[#{day}]workouts[][id]", '', class: "workout_ids" %>
+            <%= hidden_field_tag "weeks[#{week}]days[#{day}]workouts[][macrocycle_workout_id]", '', class: "macrocycle_workout_ids" %>
+            <%= hidden_field_tag "weeks[#{week}]days[#{day}]workouts[][event_id]", '', class: "workout_event_ids" %>
+          </div>
+        <% end %>
       </div>
-      <div class="col-xs-1 calendar_day">
-        <%= hidden_field_tag 'weeks[1]days[2]workouts[][id]', '', class: "workout_ids" %>
-        <%= hidden_field_tag 'weeks[1]days[2]workouts[][event_id]', '', class: "workout_event_ids" %>
-      </div>
-      <div class="col-xs-1 calendar_day">
-        <%= hidden_field_tag 'weeks[1]days[3]workouts[][id]', '', class: "workout_ids" %>
-        <%= hidden_field_tag 'weeks[1]days[3]workouts[][event_id]', '', class: "workout_event_ids" %>
-      </div>
-      <div class="col-xs-1 calendar_day">
-        <%= hidden_field_tag 'weeks[1]days[4]workouts[][id]', '', class: "workout_ids" %>
-        <%= hidden_field_tag 'weeks[1]days[4]workouts[][event_id]', '', class: "workout_event_ids" %>
-      </div>
-      <div class="col-xs-1 calendar_day">
-        <%= hidden_field_tag 'weeks[1]days[5]workouts[][id]', '', class: "workout_ids" %>
-        <%= hidden_field_tag 'weeks[1]days[5]workouts[][event_id]', '', class: "workout_event_ids" %>
-      </div>
-      <div class="col-xs-1 calendar_day">
-        <%= hidden_field_tag 'weeks[1]days[6]workouts[][id]', '', class: "workout_ids" %>
-        <%= hidden_field_tag 'weeks[1]days[6]workouts[][event_id]', '', class: "workout_event_ids" %>
-      </div>
-      <div class="col-xs-1 calendar_day">
-        <%= hidden_field_tag 'weeks[1]days[7]workouts[][id]', '', class: "workout_ids" %>
-        <%= hidden_field_tag 'weeks[1]days[7]workouts[][event_id]', '', class: "workout_event_ids" %>
-      </div>
-    </div>
+    <% end %>
 
   </div>
   <div class="text-right">

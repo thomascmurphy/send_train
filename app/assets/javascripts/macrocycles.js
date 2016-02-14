@@ -1,6 +1,18 @@
 var macrocycles_ready;
 macrocycles_ready = function() {
 
+  var update_workout_ids = function(day) {
+    var workout_ids = day.find('.planner_workout').map(function(){
+      return $(this).data('workout-id');
+    }).get();
+    day.find('.workout_ids').val(workout_ids.join(" "));
+
+    var macrocycle_workout_ids = day.find('.planner_workout').map(function(){
+      return $(this).data('macrocycle-workout-id');
+    }).get();
+    day.find('.macrocycle_workout_ids').val(macrocycle_workout_ids.join(" "));
+  };
+
   var draggable_options = {
     appendTo: "body",
     helper: "clone",
@@ -16,10 +28,7 @@ macrocycles_ready = function() {
     drop: function( event, ui ) {
       var workout_block = ui.draggable[0];
       $(workout_block.outerHTML).appendTo( this );
-      var workout_ids = $(this).find('.planner_workout').map(function(){
-        return $(this).data('workout-id');
-      }).get();
-      $(this).find('.workout_ids').val(workout_ids.join(" "));
+      update_workout_ids($(this));
     }
   };
 
@@ -32,22 +41,13 @@ macrocycles_ready = function() {
       //$( this ).removeClass( "" );
     },
     stop: function( event, ui ) {
-      var workout_ids = $(this).find('.planner_workout').map(function(){
-        return $(this).data('workout-id');
-      }).get();
-      $(this).find('.workout_ids').val(workout_ids.join(" "));
+      update_workout_ids($(this));
     },
     remove: function( event, ui ) {
-      var workout_ids = $(this).find('.planner_workout').map(function(){
-        return $(this).data('workout-id');
-      }).get();
-      $(this).find('.workout_ids').val(workout_ids.join(" "));
+      update_workout_ids($(this));
     },
     receive: function( event, ui ) {
-      var workout_ids = $(this).find('.planner_workout').map(function(){
-        return $(this).data('workout-id');
-      }).get();
-      $(this).find('.workout_ids').val(workout_ids.join(" "));
+      update_workout_ids($(this));
     }
   };
 
@@ -55,15 +55,16 @@ macrocycles_ready = function() {
     var calendar_day = $(this).closest('.calendar_day');
     var planner_workout = $(this).closest('.planner_workout');
     planner_workout.remove();
-    var workout_ids = calendar_day.find('.planner_workout').map(function(){
-      return $(this).data('workout-id');
-    }).get();
-    calendar_day.find('.workout_ids').val(workout_ids.join(" "));
+    update_workout_ids(calendar_day);
   });
 
   $('.calendar .calendar_week .calendar_day').droppable(droppable_options).sortable(sortable_options);
 
   $('#my_workouts .planner_workout').draggable(draggable_options);
+
+  $('.calendar .calendar_week .calendar_day').each(function() {
+    update_workout_ids($(this));
+  });
 
   $('.calendar_add_week').click(function() {
     var count = $('.calendar .calendar_week').length + 1;

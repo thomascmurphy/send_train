@@ -8,5 +8,10 @@ class AddFieldsToUser < ActiveRecord::Migration
     add_column :users, :last_name, :string
     add_column :users, :postcode, :string
     add_column :users, :is_admin, :boolean
+    add_column :users, :default_weight_unit, :string
+    add_column :users, :default_length_unit, :string
+    add_column :users, :gym_name, :string
+    add_column :users, :climbing_start_date, :datetime
+    add_column :users, :grade_format, :string
   end
 end

@@ -1,8 +1,8 @@
 class CreateEvents < ActiveRecord::Migration
   def change
     create_table :events do |t|
-      t.datetime :start_date, default: DateTime.now
-      t.datetime :end_date, default: DateTime.now
+      t.datetime :start_date
+      t.datetime :end_date
       t.string :label
       t.string :event_type
       t.integer :perception
@@ -14,6 +14,7 @@ class CreateEvents < ActiveRecord::Migration
       t.references :microcycle, index: true, foreign_key: true
       t.references :mesocycle, index: true, foreign_key: true
       t.references :macrocycle, index: true, foreign_key: true
+      t.string :gym_session
 
       t.timestamps null: false
     end

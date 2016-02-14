@@ -180,29 +180,5 @@ class Event < ActiveRecord::Base
       end
     end
 
-    def self.handle_workout_events(weeks, parent_event, user)
-      existing_event_ids = parent_event.child_events.pluck(:id)
-      updated_ids = []
-      weeks.each do |week_count, week|
-        week["days"].each do |day_count, day|
-          day["workouts"].each do |workout|
-            if workout["event_id"].present?
-              workout_event = user.events.find_by_id(workout["event_id"].to_i)
-              updated_ids << workout["event_id"].to_i
-            else
-              workout_event = user.events.new
-            end
-            if workout["id"].present? && parent_event.present?
-              workout_event.workout_id = workout["id"]
-              start_date = parent_event.start_date + (week_count.to_i - 1).weeks + (day_count.to_i - 1).days
-              workout_event.start_date = start_date.beginning_of_day
-              workout_event.end_date = start_date.end_of_day
-              workout_event.parent_event_id = parent_event.id
-              workout_event.save
-            end
-          end
-        end
-      end
-    end
 
 end

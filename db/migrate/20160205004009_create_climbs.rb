@@ -14,6 +14,7 @@ class CreateClimbs < ActiveRecord::Migration
       t.boolean :pinchy, default: false
       t.boolean :pockety, default: false
       t.boolean :powerful, default: false
+      t.boolean :dynamic, default: false
       t.boolean :endurance, default: false
       t.boolean :technical, default: false
       t.text :notes
