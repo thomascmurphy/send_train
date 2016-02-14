@@ -1,43 +1,24 @@
 class EventsController < ApplicationController
+  before_filter :set_events, :except => [:show, :new, :edit, :delete, :complete, :gym_session_new]
 
-  def index
+  def set_events
     @events = current_user.events
 
-    if params[:event_type].present?
-      @events = @events.where(event_type: params[:event_type])
-    end
-    if params[:event_length].present?
-      case params[:event_length]
-      when "all"
-
-      when "workout"
-        @events = @events.where.not(workout_id: nil)
-      when "microcycle"
-        @events = @events.where.not(microcycle_id: nil)
-      when "mesocycle"
-        @events = @events.where.not(mesocycle_id: nil)
-      when "macrocycle"
-        @events = @events.where.not(macrocycle_id: nil)
-      else
-      end
-    else
-      @events = @events.where.not(workout_id: nil)
-    end
-
-    if params[:event_status].present?
-      case params[:event_status]
-      when "uncompleted"
-        @events = @events.where(completed: false)
-      when "completed"
-        @events = @events.where(completed: true)
-      else
+    monday = DateTime.now.utc.beginning_of_week
+    @upcoming_weeks = {0=>{}, 1=>{}}
+    for week in 0..1
+      for day in 0..6
+        date = monday + (day + week * 7).days
+        @upcoming_weeks[week][date.strftime("%e")] = @events.where("start_date >= ? AND start_date < ? AND end_date <= ?", date.beginning_of_day, date.end_of_day, date.end_of_day).order(start_date: :asc)
       end
     end
 
     @current_events = @events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).order(start_date: :asc)
     @upcoming_events = @events.where("start_date > ?", DateTime.now.end_of_day).order(start_date: :asc)
     @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
+  end
 
+  def index
     respond_to do |format|
       format.html
       format.js { render :reload }
@@ -65,10 +46,6 @@ class EventsController < ApplicationController
   end
 
   def create
-    @events = current_user.events.where.not(workout_id: nil)
-    @current_events = @events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).order(start_date: :asc)
-    @upcoming_events = @events.where("start_date > ?", DateTime.now.end_of_day).order(start_date: :asc)
-    @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
     start_date_params = params[:start_date]
     if start_date_params.present?
       if start_date_params[:day].present? && start_date_params[:month].present? && start_date_params[:year].present?
@@ -84,15 +61,6 @@ class EventsController < ApplicationController
       end
     end
 
-    if event_params[:macrocycle_id].present?
-      macrocycle = Macrocycle.find_by_id(event_params[:macrocycle_id])
-      if macrocycle.present?
-        if macrocycle.duration.present? && start_date.present?
-          end_date = start_date + macrocycle.duration.seconds
-          params[:event][:end_date] = end_date.end_of_day
-        end
-      end
-    end
     @event = current_user.events.new(event_params)
 
     respond_to do |format|
@@ -117,10 +85,7 @@ class EventsController < ApplicationController
   end
 
   def update
-    @events = current_user.events.where.not(workout_id: nil)
-    @current_events = @events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).order(start_date: :asc)
-    @upcoming_events = @events.where("start_date > ?", DateTime.now.end_of_day).order(start_date: :asc)
-    @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
+    @event = current_user.events.find_by_id(params[:id])
     start_date_params = params[:start_date]
     if start_date_params.present?
       if start_date_params[:day].present? && start_date_params[:month].present? && start_date_params[:year].present?
@@ -134,8 +99,10 @@ class EventsController < ApplicationController
         end_date = DateTime.strptime("#{end_date_params[:year]} #{end_date_params[:month]} #{end_date_params[:day]}", "%Y %m %d")
         params[:event][:end_date] = end_date
       end
+    elsif start_date.present? && start_date > @event.end_date
+      @event.end_date = start_date
     end
-    @event = current_user.events.find_by_id(params[:id])
+
     respond_to do |format|
       if @event.update_attributes(event_params)
         format.html
@@ -159,10 +126,6 @@ class EventsController < ApplicationController
   end
 
   def destroy
-    @events = current_user.events.where.not(workout_id: nil)
-    @current_events = @events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).order(start_date: :asc)
-    @upcoming_events = @events.where("start_date > ?", DateTime.now.end_of_day).order(start_date: :asc)
-    @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
     @event = current_user.events.find_by_id(params[:id])
     @event.destroy
   end
@@ -189,10 +152,6 @@ class EventsController < ApplicationController
   end
 
   def gym_session_create
-    @events = current_user.events.where.not(workout_id: nil)
-    @current_events = @events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).order(start_date: :asc)
-    @upcoming_events = @events.where("start_date > ?", DateTime.now.end_of_day).order(start_date: :asc)
-    @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
     start_date = DateTime.now
     start_date_params = params[:start_date]
     if start_date_params.present?

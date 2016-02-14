@@ -638,6 +638,7 @@ input[type=range]:focus::-ms-fill-upper {
   border-color: $text_light;
   border-style: solid;
   border-width: 1px 1px 0 0;
+  float: none;
 
   .calendar_day{
     border-color: $text_light;

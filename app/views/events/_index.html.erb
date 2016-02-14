@@ -1,3 +1,46 @@
+<h3>Your Schedule</h3>
+<div class="col-xs-12 calendar margin_bottom">
+  <div class="row calendar_days_header">
+    <div class="col-xs-1 calendar_day">
+      <h5>Mon</h5>
+    </div>
+    <div class="col-xs-1 calendar_day">
+      <h5>Tue</h5>
+    </div>
+    <div class="col-xs-1 calendar_day">
+      <h5>Wed</h5>
+    </div>
+    <div class="col-xs-1 calendar_day">
+      <h5>Thu</h5>
+    </div>
+    <div class="col-xs-1 calendar_day">
+      <h5>Fri</h5>
+    </div>
+    <div class="col-xs-1 calendar_day">
+      <h5>Sat</h5>
+    </div>
+    <div class="col-xs-1 calendar_day">
+      <h5>Sun</h5>
+    </div>
+  </div>
+
+  <% @upcoming_weeks.each do |week_count, week| %>
+    <div class="row row-eq-height calendar_week">
+      <% week.each do |date, day| %>
+        <div class="col-xs-1 calendar_day">
+          <%= date %>
+          <% if day.present? && day.count > 0%>
+            <% day.each do |event| %>
+              <%= link_to "#{event.smart_label}", edit_event_path(event), remote: true, class: "block planner_workout alert#{event.workout.alert_class} #{event.alert_class}" %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+</div>
+
 <div class="panel-group" id="events" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">
     <div class="panel-heading pointer" role="tab" data-toggle="collapse" data-parent="#events" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">

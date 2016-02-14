@@ -5,12 +5,14 @@
       <input type="submit" class="btn btn-primary" value="<% if @macrocycle.id.present? %>Update<% else %>Create<% end %> Template">
     </div>
     <div class="col-sm-6">
-      <%= select :event, :nice_start_date, Event.mondays.map{|m| [m.strftime("(%a) %b %d, %Y"), m.strftime("%Y-%m-%d")]}, {include_blank: "Start Date"}, {class: "form-control margin_right", style: "display: inline-block; width: auto;"} %>
-      <input type="submit" class="btn btn-success" value="<% if @macrocycle.id.present? %>Update<% else %>Create<% end %> and Add to Schedule">
+      <%= select_month(Date.today, {field_name: "month", prefix: "start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+      <%= select_day(Date.today, {field_name: "day", prefix: "start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+      <%= select_year(Date.today, {field_name: "year", prefix: "start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+      <input type="submit" name="add_events" class="btn btn-success" value="<% if @macrocycle.id.present? %>Update<% else %>Create<% end %> and Add to Schedule">
     </div>
 
   </div>
-  <div class="col-xs-12 calendar margin_bottom">
+  <div class="col-xs-12 calendar droppable margin_bottom">
     <div class="row calendar_days_header">
       <div class="col-xs-1 calendar_day">
         <h5>Day 1</h5>

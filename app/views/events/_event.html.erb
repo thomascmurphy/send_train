@@ -21,13 +21,11 @@
 
         <% if event.child_events.present? %>
           <hr/>
-          <ul>
-            <% event.child_events.each do |child_event| %>
-              <li class="<% if child_event.completed.present? %>translucent<% end %>">
-                <%= child_event.label %>
-              </li>
-            <% end %>
-          </ul>
+          <div class="progress">
+            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="<%= event.completed_child_events.count %>" aria-valuemin="0" aria-valuemax="<%= event.child_events.count %>" style="width: <%= event.percent_complete %>%">
+              <span class="sr-only"><%= event.percent_complete %>% Complete (success)</span>
+            </div>
+          </div>
         <% end %>
       <% end %>
     </div>

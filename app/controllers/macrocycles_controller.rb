@@ -42,13 +42,16 @@ class MacrocyclesController < ApplicationController
     @macrocycle = current_user.macrocycles.new(macrocycle_params)
     @event = nil
     if @macrocycle.save
-      if params[:event][:nice_start_date].present?
-        @event = current_user.events.new(macrocycle_id: @macrocycle.id)
-        start_date = DateTime.strptime(params[:event][:nice_start_date], '%Y-%m-%d')
-        weeks = params[:weeks].present? ? params[:weeks].sort.to_h.keys.last.to_i : 0
-        @event.start_date = start_date
-        @event.end_date = start_date.end_of_day + weeks.weeks
-        @event.save
+      start_date_params = params[:start_date]
+      if params[:add_events].present? && start_date_params.present?
+        if start_date_params[:day].present? && start_date_params[:month].present? && start_date_params[:year].present?
+          start_date = DateTime.strptime("#{start_date_params[:year]} #{start_date_params[:month]} #{start_date_params[:day]}", "%Y %m %d")
+          @event = current_user.events.new(macrocycle_id: @macrocycle.id)
+          weeks = params[:weeks].present? ? params[:weeks].sort.to_h.keys.last.to_i : 0
+          @event.start_date = start_date
+          @event.end_date = start_date.end_of_day + weeks.weeks
+          @event.save
+        end
       end
       @macrocycle.handle_workouts_and_events(params[:weeks], @event)
       respond_to do |format|
@@ -80,13 +83,16 @@ class MacrocyclesController < ApplicationController
     @macrocycle = current_user.macrocycles.find_by_id(params[:id])
     @event = nil
     if @macrocycle.update_attributes(macrocycle_params)
-      if params[:event][:nice_start_date].present?
-        @event = current_user.events.new(macrocycle_id: @macrocycle.id)
-        start_date = DateTime.strptime(params[:event][:nice_start_date], '%Y-%m-%d')
-        weeks = params[:weeks].present? ? params[:weeks].sort.to_h.keys.last.to_i : 0
-        @event.start_date = start_date
-        @event.end_date = start_date.end_of_day + weeks.weeks
-        @event.save
+      start_date_params = params[:start_date]
+      if params[:add_events].present? && start_date_params.present?
+        if start_date_params[:day].present? && start_date_params[:month].present? && start_date_params[:year].present?
+          start_date = DateTime.strptime("#{start_date_params[:year]} #{start_date_params[:month]} #{start_date_params[:day]}", "%Y %m %d")
+          @event = current_user.events.new(macrocycle_id: @macrocycle.id)
+          weeks = params[:weeks].present? ? params[:weeks].sort.to_h.keys.last.to_i : 0
+          @event.start_date = start_date
+          @event.end_date = start_date.end_of_day + weeks.weeks
+          @event.save
+        end
       end
       @macrocycle.handle_workouts_and_events(params[:weeks], @event)
       respond_to do |format|

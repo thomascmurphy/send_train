@@ -2,16 +2,22 @@
   <div class="modal-body">
     <ul class="errors"></ul>
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-4">
         <div class="form-group">
           <%= f.label :name %><br>
           <%= f.text_field :label, class: "form-control" %>
         </div>
       </div>
-      <div class="col-sm-6">
+      <div class="col-sm-4">
         <div class="form-group">
           <%= f.label :workout %><br>
           <%= f.collection_select(:workout_id, current_user.workouts.all, :id, :label, {prompt: "None"}, {class: "form-control type_select"}) %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="form-group">
+          <%= f.label :macrocycle, "Plan" %><br>
+          <%= f.collection_select(:macrocycle_id, current_user.macrocycles.all, :id, :label, {prompt: "None"}, {class: "form-control type_select", disabled: @event.id.present?}) %>
         </div>
       </div>
     </div>

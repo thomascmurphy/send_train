@@ -51,18 +51,18 @@ macrocycles_ready = function() {
     }
   };
 
-  $('.calendar').on('click', '.calendar_day .planner_workout .close', function() {
+  $('.calendar.droppable').on('click', '.calendar_day .planner_workout .close', function() {
     var calendar_day = $(this).closest('.calendar_day');
     var planner_workout = $(this).closest('.planner_workout');
     planner_workout.remove();
     update_workout_ids(calendar_day);
   });
 
-  $('.calendar .calendar_week .calendar_day').droppable(droppable_options).sortable(sortable_options);
+  $('.calendar.droppable .calendar_week .calendar_day').droppable(droppable_options).sortable(sortable_options);
 
   $('#my_workouts .planner_workout').draggable(draggable_options);
 
-  $('.calendar .calendar_week .calendar_day').each(function() {
+  $('.calendar.droppable .calendar_week .calendar_day').each(function() {
     update_workout_ids($(this));
   });
 
