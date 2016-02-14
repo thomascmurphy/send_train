@@ -1,68 +1,64 @@
-<%= form_for(@macrocycle, remote: true) do |f| %>
-  <div class="modal-body">
-    <ul class="errors"></ul>
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="form-group">
-          <%= f.label :name %><br>
-          <%= f.text_field :label, class: "form-control" %>
-        </div>
-      </div>
-      <div class="col-sm-6">
-        <div class="form-group">
-          <%= f.label :macrocycle_type %><br>
-          <%= f.select(:macrocycle_type, [['None', ''], ['Bouldering', 'boulder'], ['Sport Climbing', 'sport']], {}, {class: "form-control type_select"}) %>
-        </div>
-      </div>
+<%= form_for(@macrocycle) do |f| %>
+  <div class="row margin_bottom large_margin_top">
+    <div class="col-sm-6">
+      <%= f.text_field :label, {placeholder: "Name", class: "form-control margin_right", style: "display: inline-block; width: auto;"} %>
+      <input type="submit" class="btn btn-primary" value="<% if @macrocycle.id.present? %>Update<% else %>Create<% end %> Template">
     </div>
-    <div class="row">
-      <div class="col-xs-6">
-        <div class="form-group">
-          <label>Selected Mesocycles</label>
-          <table class="selected_items table table-striped">
-            <thead>
-              <th>Label</th>
-              <th>Type</th>
-              <th></th>
-            </thead>
-            <tbody>
-              <% @macrocycle.mesocycles.each do |mesocycle| %>
-                <tr>
-                  <td><%= mesocycle.label %></td>
-                  <td><%= mesocycle.mesocycle_type %></td>
-                  <td><a href="javascript:void(0);" class="remove_selected_item btn btn-danger" data-item-id="<%= mesocycle.id %>">Remove</a></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-          <%= f.hidden_field :mesocycle_ids, class: "selected_ids" %>
-        </div>
-      </div>
-      <div class="col-xs-6">
-        <div class="form-group">
-          <label>Available Mesocycles</label>
-          <table class="selectable_items table table-striped">
-            <thead>
-              <th>Label</th>
-              <th>Type</th>
-              <th></th>
-            </thead>
-            <tbody>
-              <% @mesocycles.each do |mesocycle| %>
-                <tr>
-                  <td><%= mesocycle.label %></td>
-                  <td><%= mesocycle.mesocycle_type %></td>
-                  <td><a href="javascript:void(0);" class="add_selected_item btn btn-success" data-item-id="<%= mesocycle.id %>">Add</a></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div class="col-sm-6">
+      <%= select_month(Date.today, {field_name: "month", prefix: "start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+      <%= select_day(Date.today, {field_name: "day", prefix: "start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+      <%= select_year(Date.today, {field_name: "year", prefix: "start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+      <input type="submit" name="add_events" class="btn btn-success" value="<% if @macrocycle.id.present? %>Update<% else %>Create<% end %> and Add to Schedule">
     </div>
+
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-    <input type="submit" class="btn btn-primary" value="Save">
+  <div class="col-xs-12 calendar droppable margin_bottom">
+    <div class="row calendar_days_header hidden-xs">
+      <div class="col-sm-1 calendar_day">
+        <h5>Day 1</h5>
+      </div>
+      <div class="col-sm-1 calendar_day">
+        <h5>Day 2</h5>
+      </div>
+      <div class="col-sm-1 calendar_day">
+        <h5>Day 3</h5>
+      </div>
+      <div class="col-sm-1 calendar_day">
+        <h5>Day 4</h5>
+      </div>
+      <div class="col-sm-1 calendar_day">
+        <h5>Day 5</h5>
+      </div>
+      <div class="col-sm-1 calendar_day">
+        <h5>Day 6</h5>
+      </div>
+      <div class="col-sm-1 calendar_day">
+        <h5>Day 7</h5>
+      </div>
+    </div>
+
+    <% for week in 1..@macrocycle.duration_weeks %>
+      <div class="row row-eq-height-sm calendar_week" data-week=1>
+        <% for day in 1..7 %>
+          <div class="col-sm-1 calendar_day">
+            <% if @macrocycle.workouts_by_day[(week-1)*7 + day].present? %>
+              <% @macrocycle.workouts_by_day[(week-1)*7 + day].each do |macrocycle_workout| %>
+                <div class="planner_workout alert<%= macrocycle_workout.workout.alert_class %>" data-workout-id="<%= macrocycle_workout.workout.id %>" data-macrocycle-workout-id="<%= macrocycle_workout.id %>" data-event-id=0>
+                  <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <%= macrocycle_workout.workout.label %>
+                </div>
+              <% end %>
+            <% end %>
+            <%= hidden_field_tag "weeks[#{week}]days[#{day}]workout_ids", '', class: "workout_ids" %>
+            <%= hidden_field_tag "weeks[#{week}]days[#{day}]macrocycle_workout_ids", '', class: "macrocycle_workout_ids" %>
+            <%= hidden_field_tag "weeks[#{week}]days[#{day}]event_ids", '', class: "workout_event_ids" %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+  </div>
+  <div class="text-right">
+    <a href="javascript:void(0);" class="btn btn-default calendar_add_week">Add Week</a>
   </div>
 <% end %>

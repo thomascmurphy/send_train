@@ -1,7 +1,16 @@
 class Workout < ActiveRecord::Base
   belongs_to :user
-  has_and_belongs_to_many :microcycles
-  has_many :events
+  has_many :macrocycle_workouts, dependent: :destroy
+  has_many :macrocycles, through: :macrocycle_workouts
+  has_many :events, dependent: :destroy
+  after_create :set_reference_id
+
+  def set_reference_id
+    if self.reference_id.blank?
+      self[:reference_id] = self.id
+      self.save
+    end
+  end
 
   def panel_class
     case self.workout_type
@@ -19,6 +28,27 @@ class Workout < ActiveRecord::Base
       color_class = " panel-default"
     else
       color_class = " panel-default"
+    end
+
+    return color_class
+  end
+
+  def alert_class
+    case self.workout_type
+    when "strength"
+      color_class = " alert-danger"
+    when "power"
+      color_class = " alert-orange"
+    when "powerendurance"
+      color_class = " alert-warning"
+    when "endurance"
+      color_class = " alert-success"
+    when "technique"
+      color_class = " alert-info"
+    when "cardio"
+      color_class = " alert-info"
+    else
+      color_class = " alert-info"
     end
 
     return color_class

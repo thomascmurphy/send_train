@@ -4,6 +4,7 @@ class CreateMesocycles < ActiveRecord::Migration
       t.string :label
       t.string :mesocycle_type
       t.references :user, index: true, foreign_key: true
+      t.integer :reference_id
 
       t.timestamps null: false
     end

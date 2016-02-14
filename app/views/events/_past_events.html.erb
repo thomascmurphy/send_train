@@ -1,0 +1,8 @@
+<div class="row">
+  <% @past_events.each_with_index do |event, index| %>
+    <%= render event %>
+    <% if index % 4 == 3 %>
+  </div><div class="row margin_bottom">
+    <% end %>
+  <% end %>
+</div>

@@ -1,7 +1,7 @@
 <div class="col-md-3 col-sm-6 margin_bottom">
   <div class="panel<%= event.panel_class %> event_panel" data-event-id="<%= event.id %>">
     <div class="panel-heading">
-      <h3 class="panel-title"><%= event.label %></h3>
+      <h3 class="panel-title"><%= event.smart_label %></h3>
     </div>
     <div class="panel-body">
       <% if event.gym_session.present? %>
@@ -21,13 +21,11 @@
 
         <% if event.child_events.present? %>
           <hr/>
-          <ul>
-            <% event.child_events.each do |child_event| %>
-              <li class="<% if child_event.completed.present? %>translucent<% end %>">
-                <%= child_event.label %>
-              </li>
-            <% end %>
-          </ul>
+          <div class="progress">
+            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="<%= event.completed_child_events.count %>" aria-valuemin="0" aria-valuemax="<%= event.child_events.count %>" style="width: <%= event.percent_complete %>%">
+              <span class="sr-only"><%= event.percent_complete %>% Complete (success)</span>
+            </div>
+          </div>
         <% end %>
       <% end %>
     </div>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160211175928) do
+ActiveRecord::Schema.define(version: 20160208153048) do
 
   create_table "attempts", force: :cascade do |t|
     t.datetime "date"
@@ -39,12 +39,12 @@ ActiveRecord::Schema.define(version: 20160211175928) do
     t.boolean  "pinchy",      default: false
     t.boolean  "pockety",     default: false
     t.boolean  "powerful",    default: false
+    t.boolean  "dynamic",     default: false
     t.boolean  "endurance",   default: false
     t.boolean  "technical",   default: false
     t.text     "notes"
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
-    t.boolean  "dynamic",     default: false
   end
 
   add_index "climbs", ["user_id"], name: "index_climbs_on_user_id"
@@ -63,9 +63,9 @@ ActiveRecord::Schema.define(version: 20160211175928) do
     t.integer  "microcycle_id"
     t.integer  "mesocycle_id"
     t.integer  "macrocycle_id"
+    t.string   "gym_session"
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
-    t.string   "gym_session"
   end
 
   add_index "events", ["macrocycle_id"], name: "index_events_on_macrocycle_id"
@@ -75,10 +75,21 @@ ActiveRecord::Schema.define(version: 20160211175928) do
   add_index "events", ["user_id"], name: "index_events_on_user_id"
   add_index "events", ["workout_id"], name: "index_events_on_workout_id"
 
+  create_table "macrocycle_workouts", force: :cascade do |t|
+    t.integer "macrocycle_id"
+    t.integer "workout_id"
+    t.integer "order_in_day"
+    t.integer "day_in_cycle"
+  end
+
+  add_index "macrocycle_workouts", ["macrocycle_id"], name: "index_macrocycle_workouts_on_macrocycle_id"
+  add_index "macrocycle_workouts", ["workout_id"], name: "index_macrocycle_workouts_on_workout_id"
+
   create_table "macrocycles", force: :cascade do |t|
     t.string   "label"
     t.string   "macrocycle_type"
     t.integer  "user_id"
+    t.integer  "reference_id"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
   end
@@ -97,6 +108,7 @@ ActiveRecord::Schema.define(version: 20160211175928) do
     t.string   "label"
     t.string   "mesocycle_type"
     t.integer  "user_id"
+    t.integer  "reference_id"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
   end
@@ -116,6 +128,7 @@ ActiveRecord::Schema.define(version: 20160211175928) do
     t.string   "microcycle_type"
     t.integer  "user_id"
     t.integer  "duration",        default: 604800
+    t.integer  "reference_id"
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
   end
@@ -131,18 +144,18 @@ ActiveRecord::Schema.define(version: 20160211175928) do
   add_index "microcycles_workouts", ["workout_id"], name: "index_microcycles_workouts_on_workout_id"
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "email",                  default: "",   null: false
+    t.string   "encrypted_password",     default: "",   null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",          default: 0,    null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.date     "birthdate"
     t.string   "gender"
     t.integer  "weight"
@@ -151,6 +164,8 @@ ActiveRecord::Schema.define(version: 20160211175928) do
     t.string   "last_name"
     t.string   "postcode"
     t.boolean  "is_admin"
+    t.string   "default_weight_unit",    default: "lb"
+    t.string   "default_length_unit",    default: "ft"
     t.string   "gym_name"
     t.datetime "climbing_start_date"
     t.string   "grade_format"
@@ -164,6 +179,7 @@ ActiveRecord::Schema.define(version: 20160211175928) do
     t.string   "workout_type"
     t.integer  "user_id"
     t.text     "description"
+    t.integer  "reference_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end

@@ -1,42 +1,81 @@
 class Macrocycle < ActiveRecord::Base
   belongs_to :user
-  has_and_belongs_to_many :mesocycles
-  has_many :events
+  has_many :macrocycle_workouts, dependent: :destroy
+  has_many :workouts, through: :macrocycle_workouts
+  has_many :events, dependent: :destroy
+  after_create :set_reference_id
+
+  def set_reference_id
+    if self.reference_id.blank?
+      self[:reference_id] = self.id
+      self.save
+    end
+  end
 
   def panel_class
     return " panel-primary"
   end
 
-  def duration
-    duration = 0
-    self.mesocycles.each do |mesocycle|
-      duration += mesocycle.duration
-    end
-    return duration
+  def duration_days
+    return self.macrocycle_workouts.pluck(:day_in_cycle).max
   end
 
-  def duration_string
-    duration_length = ""
-    duration_unit = ""
-    if self.duration.present?
-      mm, ss = self.duration.divmod(60)
-      hh, mm = mm.divmod(60)
-      dd, hh = hh.divmod(24)
-      ww, dd = dd.divmod(7)
-      if ww > 0
-        duration_length = ww
-        duration_unit = "Week"
-      elsif dd > 0
-        duration_length = dd
-        duration_unit = "Day"
-      end
+  def duration_weeks
+    days = self.duration_days
+    if days.present?
+      weeks, dd = days.divmod(7)
+    else
+      weeks = 0
     end
-    return "#{ActionController::Base.helpers.pluralize(duration_length, duration_unit)}"
+    weeks = weeks + 1
+    return weeks
   end
 
   def label_with_duration
-    return "#{self.label} (#{self.duration_string})"
+    return "#{self.label} (#{self.duration_weeks} Weeks)"
   end
+
+  def workouts_by_day
+    workouts_by_day = {}
+    self.macrocycle_workouts.order(:day_in_cycle, :order_in_day).each do |macrocycle_workout|
+      if workouts_by_day[macrocycle_workout.day_in_cycle].present?
+        workouts_by_day[macrocycle_workout.day_in_cycle] << macrocycle_workout
+      else
+        workouts_by_day[macrocycle_workout.day_in_cycle] = [macrocycle_workout]
+      end
+    end
+    return workouts_by_day
+  end
+
+  def handle_workouts(weeks)
+      existing_macrocycle_workout_ids = self.macrocycle_workouts.pluck(:id)
+      updated_macrocycle_workout_ids = []
+      if weeks.present?
+        weeks.each do |week_count, week|
+          week["days"].each do |day_count, day|
+            workout_ids = day["workout_ids"].split(' ')
+            macrocycle_workout_ids = day["macrocycle_workout_ids"].split(' ')
+            workout_ids.each_with_index do |workout_id, index|
+              macrocycle_workout_id = macrocycle_workout_ids[index].to_i
+              if macrocycle_workout_id.present? && macrocycle_workout_id != 0
+                macrocycle_workout = self.macrocycle_workouts.find_by_id(macrocycle_workout_id)
+                updated_macrocycle_workout_ids << macrocycle_workout_id
+              else
+                macrocycle_workout = self.macrocycle_workouts.new
+              end
+              macrocycle_workout.order_in_day = index
+              macrocycle_workout.day_in_cycle = day_count.to_i + (week_count.to_i - 1)*7
+              macrocycle_workout.workout_id = workout_id.to_i
+              macrocycle_workout.save
+            end
+          end
+        end
+      end
+
+      if existing_macrocycle_workout_ids.present?
+        MacrocycleWorkout.where(id: existing_macrocycle_workout_ids - updated_macrocycle_workout_ids).destroy_all
+      end
+    end
 
   def efficacy(type)
     event_scores = []
@@ -49,4 +88,5 @@ class Macrocycle < ActiveRecord::Base
     end
     return (event_scores.inject{ |sum, el| sum + el }.to_f / event_scores.size) * 100
   end
+
 end

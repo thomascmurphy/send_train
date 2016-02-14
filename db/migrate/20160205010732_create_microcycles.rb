@@ -5,6 +5,7 @@ class CreateMicrocycles < ActiveRecord::Migration
       t.string :microcycle_type
       t.references :user, index: true, foreign_key: true
       t.integer :duration, default: 604800
+      t.integer :reference_id
 
       t.timestamps null: false
     end

@@ -43,7 +43,7 @@
           <div class="col-xs-5 col-md-4">
             <a href="/" class="white" id="home_link">
               <!-- <%= image_tag("lolevation_logo.png", id: "logo", class: "valign_middle") %> -->
-              <h1 id="site_title" class="inline_block valign_middle alt_font">Plan/Train/Climb</h1>
+              <h1 id="site_title" class="inline_block valign_middle alt_font"><e>Plan/Train/Climb</e></h1>
             </a>
           </div>
           <div class="col-xs-7 col-md-8">
@@ -84,9 +84,8 @@
                         </a>
                         <ul class="dropdown-menu">
                           <li><a href="<%= url_for controller: '/workouts', action: 'index' %>">Workouts</a></li>
-                          <li><a href="<%= url_for controller: '/microcycles', action: 'index' %>">Microcycles</a></li>
-                          <li><a href="<%= url_for controller: '/mesocycles', action: 'index' %>">Mesocycles</a></li>
-                          <li><a href="<%= url_for controller: '/macrocycles', action: 'index' %>">Macrocycles</a></li>
+                          <li><a href="<%= url_for controller: '/macrocycles', action: 'new' %>">New Plan</a></li>
+                          <li><a href="<%= url_for controller: '/macrocycles', action: 'index' %>">My Plans</a></li>
                         </ul>
                       </li>
 
