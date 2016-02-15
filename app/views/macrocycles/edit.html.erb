@@ -1,10 +1,14 @@
 <div class="row">
-  <div class="col-xs-9">
+  <div class="col-xs-12">
     <h1 class="inline_block valign_middle margin_right">Update Plan Template</h1>
     <p>Create a training cycle template that can be reused multiple times and optionally set a start date to add all the workouts directly to your schedule.</p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-9 col-xs-6">
     <%= render "form" %>
   </div>
-  <div class="col-xs-3" id="my_workouts">
+  <div class="col-sm-3 col-xs-6" id="my_workouts">
     <h2>My Workouts</h2>
     <p>(you can drag your workouts to the calendar and rearrange them)</p>
     <% @workouts.each do |workout| %>

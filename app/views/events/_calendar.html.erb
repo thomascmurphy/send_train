@@ -1,31 +1,31 @@
-<div class="row calendar_days_header">
-  <div class="col-xs-1 calendar_day">
+<div class="row calendar_days_header hidden-xs">
+  <div class="col-sm-1 calendar_day">
     <h5>Mon</h5>
   </div>
-  <div class="col-xs-1 calendar_day">
+  <div class="col-sm-1 calendar_day">
     <h5>Tue</h5>
   </div>
-  <div class="col-xs-1 calendar_day">
+  <div class="col-sm-1 calendar_day">
     <h5>Wed</h5>
   </div>
-  <div class="col-xs-1 calendar_day">
+  <div class="col-sm-1 calendar_day">
     <h5>Thu</h5>
   </div>
-  <div class="col-xs-1 calendar_day">
+  <div class="col-sm-1 calendar_day">
     <h5>Fri</h5>
   </div>
-  <div class="col-xs-1 calendar_day">
+  <div class="col-sm-1 calendar_day">
     <h5>Sat</h5>
   </div>
-  <div class="col-xs-1 calendar_day">
+  <div class="col-sm-1 calendar_day">
     <h5>Sun</h5>
   </div>
 </div>
 
 <% @upcoming_weeks.each do |week_count, week| %>
-  <div class="row row-eq-height calendar_week">
+  <div class="row row-eq-height-sm calendar_week">
     <% week.each do |date, day| %>
-      <div class="col-xs-1 calendar_day">
+      <div class="col-sm-1 calendar_day">
         <%= date %>
         <% if day.present?%>
           <% day.each do |event| %>
