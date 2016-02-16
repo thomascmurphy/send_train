@@ -13,6 +13,14 @@ TrainToSend::Application.routes.draw do
     get 'quick_send', to: 'climbs#quick_new'
     post 'quick_send', to: 'climbs#quick_create'
 
+    resources :exercise_metrics do
+      get "delete"
+    end
+
+    resources :exercises do
+      get "delete"
+    end
+
     resources :workouts do
       get "delete"
     end
@@ -39,6 +47,12 @@ TrainToSend::Application.routes.draw do
     get 'profile', to: 'profile#show'
     get 'profile/edit', to: 'profile#edit'
     patch 'profile', to: 'profile#update'
+
+
+    resources :users, only: [:index, :show] do
+      get "impersonate"
+    end
+    get "stop_impersonating", to: 'users#stop_impersonating'
   end
 
   get 'comment', to: 'comments#new'

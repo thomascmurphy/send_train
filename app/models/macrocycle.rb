@@ -52,13 +52,16 @@ class Macrocycle < ActiveRecord::Base
       updated_macrocycle_workout_ids = []
       if weeks.present?
         weeks.each do |week_count, week|
-          week["days"].each do |day_count, day|
-            workout_ids = day["workout_ids"].split(' ')
-            macrocycle_workout_ids = day["macrocycle_workout_ids"].split(' ')
+          week.with_indifferent_access["days"].each do |day_count, day|
+            workout_ids = day.with_indifferent_access["workout_ids"].split(' ')
+            macrocycle_workout_ids = day.with_indifferent_access["macrocycle_workout_ids"].split(' ')
             workout_ids.each_with_index do |workout_id, index|
               macrocycle_workout_id = macrocycle_workout_ids[index].to_i
               if macrocycle_workout_id.present? && macrocycle_workout_id != 0
                 macrocycle_workout = self.macrocycle_workouts.find_by_id(macrocycle_workout_id)
+                if macrocycle_workout.blank?
+                  next
+                end
                 updated_macrocycle_workout_ids << macrocycle_workout_id
               else
                 macrocycle_workout = self.macrocycle_workouts.new
@@ -72,7 +75,7 @@ class Macrocycle < ActiveRecord::Base
         end
       end
 
-      if existing_macrocycle_workout_ids.present?
+      if (existing_macrocycle_workout_ids - updated_macrocycle_workout_ids).present?
         MacrocycleWorkout.where(id: existing_macrocycle_workout_ids - updated_macrocycle_workout_ids).destroy_all
       end
     end

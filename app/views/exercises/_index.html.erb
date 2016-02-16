@@ -1,0 +1,8 @@
+<div class="row">
+  <% @exercises.each_with_index do |exercise, index| %>
+    <%= render exercise %>
+    <% if index % 4 == 3 %>
+  </div><div class="row">
+    <% end %>
+  <% end %>
+</div>

@@ -1,16 +1,52 @@
 class User < ActiveRecord::Base
-  has_many :climbs
+  has_many :climbs, dependent: :destroy
   has_many :attempts, through: :climbs
-  has_many :events
+  has_many :events, dependent: :destroy
   has_many :macrocycles
-  has_many :mesocycles
-  has_many :microcycles
+  has_many :mesocycles, dependent: :destroy
+  has_many :microcycles, dependent: :destroy
   has_many :workouts
+  has_many :exercises
+  has_many :exercise_metrics
+  after_create :seed_exercises
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
+
+  def seed_exercises
+    deadhang = self.exercises.create(
+      label: "Deadhang",
+      exercise_type: "strength",
+      description: "Hang"
+    )
+    deadhang_metric_hold = deadhang.exercise_metrics.create(
+      label: "Hold",
+      exercise_metric_type_id: 5
+    )
+    hold_options = deadhang_metric_hold.exercise_metric_options.create([
+      {label: "Crimp", value: "crimp"},
+      {label: "Sloper", value: "sloper"},
+      {label: "Pinch", value: "pinch"},
+      {label: "Front Two Fingers", value: "front-two-fingers"},
+      {label: "Middle Two Fingers", value: "middle-two-fingers"},
+      {label: "Back Two Fingers", value: "back-two-fingers"},
+      {label: "Front Three Fingers", value: "front-three-fingers"}
+    ])
+    deadhang_metric_weight = deadhang.exercise_metrics.create(
+      label: "Weight",
+      exercise_metric_type_id: 1
+    )
+    deadhang_metric_hang_time = deadhang.exercise_metrics.create(
+      label: "Hang Time",
+      exercise_metric_type_id: 3
+    )
+    deadhang_metric_rest_time = deadhang.exercise_metrics.create(
+      label: "Rest Time",
+      exercise_metric_type_id: 3
+    )
+  end
 
   def climb_score_for_period(start_date, end_date, type="all")
     climb_ids = self.attempts.where("completion = 100 AND date > ? AND date < ?", start_date, end_date).map(&:climb_id)

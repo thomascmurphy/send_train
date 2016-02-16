@@ -5,6 +5,7 @@ class Event < ActiveRecord::Base
   belongs_to :mesocycle
   belongs_to :macrocycle
   belongs_to :parent_event, class_name: 'Event', foreign_key: 'parent_event_id'
+  has_many :exercise_performances
   after_create :create_child_events
   before_destroy :destroy_child_events
   after_save :check_child_completion

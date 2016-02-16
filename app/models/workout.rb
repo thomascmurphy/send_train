@@ -3,6 +3,7 @@ class Workout < ActiveRecord::Base
   has_many :macrocycle_workouts, dependent: :destroy
   has_many :macrocycles, through: :macrocycle_workouts
   has_many :events, dependent: :destroy
+  has_many :exercises, through: :workout_exercises
   after_create :set_reference_id
 
   def set_reference_id

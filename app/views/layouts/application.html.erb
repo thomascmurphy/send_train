@@ -83,6 +83,7 @@
                           <% if current_page?(url_for controller: '/workouts', action: 'index') || current_page?(url_for controller: '/microcycles', action: 'index') || current_page?(url_for controller: '/mesocycles', action: 'index') || current_page?(url_for controller: '/macrocycles', action: 'index') %> <span class="sr-only">(current)</span><% end %>
                         </a>
                         <ul class="dropdown-menu">
+                          <li><a href="<%= url_for controller: '/exercises', action: 'index' %>">Exercises</a></li>
                           <li><a href="<%= url_for controller: '/workouts', action: 'index' %>">Workouts</a></li>
                           <li><a href="<%= url_for controller: '/macrocycles', action: 'new' %>">New Plan</a></li>
                           <li><a href="<%= url_for controller: '/macrocycles', action: 'index' %>">My Plans</a></li>
@@ -107,6 +108,14 @@
                           <li><%= link_to('Edit Password/Email', edit_user_registration_path, class: "no_bg") %></li>
                           <li role="separator" class="divider"></li>
                           <li><%= link_to('Logout', destroy_user_session_path, method: :delete, class: "no_bg") %></li>
+                          <% if true_user.is_admin? %>
+                            <li role="separator" class="divider"></li>
+                            <% if current_user != true_user %>
+                              <li><%= link_to "Switch Back", stop_impersonating_path %></li>
+                            <% else %>
+                              <li><%= link_to "Users", users_path %></li>
+                            <% end %>
+                          <% end %>
                         </ul>
                       </li>
                     <% else %>

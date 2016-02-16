@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160208153048) do
+ActiveRecord::Schema.define(version: 20160215174420) do
 
   create_table "attempts", force: :cascade do |t|
     t.datetime "date"
@@ -74,6 +74,63 @@ ActiveRecord::Schema.define(version: 20160208153048) do
   add_index "events", ["parent_event_id"], name: "index_events_on_parent_event_id"
   add_index "events", ["user_id"], name: "index_events_on_user_id"
   add_index "events", ["workout_id"], name: "index_events_on_workout_id"
+
+  create_table "exercise_metric_options", force: :cascade do |t|
+    t.string   "label"
+    t.string   "value"
+    t.integer  "exercise_metric_id"
+    t.integer  "order"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "exercise_metric_options", ["exercise_metric_id"], name: "index_exercise_metric_options_on_exercise_metric_id"
+
+  create_table "exercise_metric_types", force: :cascade do |t|
+    t.string   "label"
+    t.string   "input_field"
+    t.string   "slug"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  create_table "exercise_metrics", force: :cascade do |t|
+    t.string   "label"
+    t.integer  "exercise_metric_type_id"
+    t.integer  "exercise_id"
+    t.integer  "order"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  add_index "exercise_metrics", ["exercise_id"], name: "index_exercise_metrics_on_exercise_id"
+  add_index "exercise_metrics", ["exercise_metric_type_id"], name: "index_exercise_metrics_on_exercise_metric_type_id"
+
+  create_table "exercise_performances", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "exercise_id"
+    t.string   "value"
+    t.integer  "event_id"
+    t.datetime "date"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "exercise_performances", ["event_id"], name: "index_exercise_performances_on_event_id"
+  add_index "exercise_performances", ["exercise_id"], name: "index_exercise_performances_on_exercise_id"
+  add_index "exercise_performances", ["user_id"], name: "index_exercise_performances_on_user_id"
+
+  create_table "exercises", force: :cascade do |t|
+    t.string   "label"
+    t.string   "exercise_type"
+    t.text     "description"
+    t.integer  "user_id"
+    t.integer  "reference_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "exercises", ["user_id"], name: "index_exercises_on_user_id"
 
   create_table "macrocycle_workouts", force: :cascade do |t|
     t.integer "macrocycle_id"
@@ -173,6 +230,15 @@ ActiveRecord::Schema.define(version: 20160208153048) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+
+  create_table "workout_exercises", force: :cascade do |t|
+    t.integer "workout_id"
+    t.integer "exercise_id"
+    t.integer "order_in_workout"
+  end
+
+  add_index "workout_exercises", ["exercise_id"], name: "index_workout_exercises_on_exercise_id"
+  add_index "workout_exercises", ["workout_id"], name: "index_workout_exercises_on_workout_id"
 
   create_table "workouts", force: :cascade do |t|
     t.string   "label"

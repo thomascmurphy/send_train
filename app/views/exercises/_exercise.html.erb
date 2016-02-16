@@ -1,0 +1,14 @@
+<div class="col-md-3 col-sm-6 margin_bottom">
+  <div class="panel<%= exercise.panel_class %>">
+    <div class="panel-heading">
+      <h3 class="panel-title"><%= exercise.label %></h3>
+    </div>
+    <div class="panel-body">
+      <%= simple_format(truncate(exercise.description, length: 50, separator: ' ')) %>
+    </div>
+    <div class="panel-footer">
+      <%= link_to "Edit", edit_exercise_path(exercise), remote: true, class: "btn btn-info" %>
+      <%= link_to "Delete", exercise_delete_path(exercise), remote: true, class: "btn btn-danger" %>
+    </div>
+  </div>
+</div>

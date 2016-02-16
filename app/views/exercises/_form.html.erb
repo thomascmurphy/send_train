@@ -1,4 +1,4 @@
-<%= form_for(@workout, remote: true) do |f| %>
+<%= form_for(@exercise, remote: true) do |f| %>
   <div class="modal-body">
     <ul class="errors"></ul>
     <div class="row">
@@ -10,8 +10,8 @@
       </div>
       <div class="col-sm-6">
         <div class="form-group">
-          <%= f.label :workout_type %><br>
-          <%= f.select(:workout_type, [['None', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']], {}, {class: "form-control type_select"}) %>
+          <%= f.label :exercise_type %><br>
+          <%= f.select(:exercise_type, [['None', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']], {}, {class: "form-control type_select"}) %>
         </div>
       </div>
     </div>
@@ -25,12 +25,12 @@
     </div>
     <div class="row">
       <div class="col-xs-12">
-        <h4>Exercises</h4>
+        <h4>Metrics</h4>
         <table class="table table-hover">
           <thead>
             <tr>
-              <th>Exercise</th>
-              <th>Reps</th>
+              <th>Label</th>
+              <th>Metric Type</th>
               <th></th>
             </tr>
           </thead>

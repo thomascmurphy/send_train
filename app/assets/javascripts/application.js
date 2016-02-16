@@ -81,6 +81,12 @@ ready = function() {
     }
   });
 
+  $('body').on('click', '.remove_table_row', function(){
+    $(this).closest('tr').hide(400, function(){
+      $(this).remove();
+    });
+  });
+
 }
 
 $(document).ready(ready);
