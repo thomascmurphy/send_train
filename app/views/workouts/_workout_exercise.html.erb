@@ -1,0 +1,18 @@
+<div class="planner_exercise alert<%= exercise.alert_class %> draggable" data-exercise-id="<%= exercise.id %>">
+  <span class="exercise_label"><%= exercise.label %><input name="workout_exercises[][exercise_id]" type="hidden" value="<%= exercise.id %>"/></span>
+  <div class="hidden exercise_metrics">
+    <% exercise.exercise_metrics.each do |exercise_metric| %>
+      <div class="form-goup text-right">
+        <label><%= exercise_metric.label %></label>
+        <input type="hidden" name="workout_exercises[][workout_metrics][][exercise_metric_id]" value="<%= exercise_metric.id %>"/>
+        <% if exercise_metric.exercise_metric_type.input_field == "select" %>
+          <select name="workout_exercises[][workout_metrics][][value]" class="form-control inline_block" >
+            <%= options_from_collection_for_select(exercise_metric.exercise_metric_options, :value, :label) %>
+          </select>
+        <% else %>
+          <input class="form-control inline_block" name="workout_exercises[][workout_metrics][][value]" type="<%= exercise_metric.exercise_metric_type.input_field %>"/>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

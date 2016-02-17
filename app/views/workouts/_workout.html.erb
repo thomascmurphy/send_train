@@ -7,7 +7,7 @@
       <%= simple_format(truncate(workout.description, length: 50, separator: ' ')) %>
     </div>
     <div class="panel-footer">
-      <%= link_to "Edit", edit_workout_path(workout), remote: true, class: "btn btn-info" %>
+      <%= link_to "Edit", edit_workout_path(workout), class: "btn btn-info" %>
       <%= link_to "Delete", workout_delete_path(workout), remote: true, class: "btn btn-danger" %>
     </div>
   </div>

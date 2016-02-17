@@ -46,6 +46,56 @@ class User < ActiveRecord::Base
       label: "Rest Time",
       exercise_metric_type_id: 3
     )
+
+    campus = self.exercises.create(
+      label: "Campus",
+      exercise_type: "power",
+      description: "Campus moves"
+    )
+    campus_metric_campus_rungs = campus.exercise_metrics.create(
+      label: "Rungs",
+      exercise_metric_type_id: 4
+    )
+    campus_metric_rest_time = campus.exercise_metrics.create(
+      label: "Rest Time",
+      exercise_metric_type_id: 3
+    )
+
+    rest = self.exercises.create(
+      label: "Rest",
+      exercise_type: "",
+      description: "Rest time in between sets"
+    )
+    rest_metric_rest_time = rest.exercise_metrics.create(
+      label: "Rest Time",
+      exercise_metric_type_id: 3
+    )
+  end
+
+  def advance_onboarding
+    self.onboarding_step += 1
+    self.save
+  end
+
+  def onboarding_message
+    case self.onboarding_step
+    when 0
+      "You can personalize your account by setting some of these preferences."
+    when 1
+      "We've added a few common exercises to get you started, you can use these as a guide for additional exercises."
+    when 2
+      "You can use these exercises to build workouts such as a hangboard or campusboard routine."
+    when 3
+      "You can create a long-term plan by arranging these workouts onto specific days."
+    when 4
+      "After you have a plan template created, you can schedule a set of events based on this template and start training!"
+    when 5
+      "You can also track your climbing progress so that we can try to determine the effectiveness of each individual workout."
+    when 6
+      "Thanks so much for taking the tour! I hope this is a helpful tool for everyone."
+    else
+      nil
+    end
   end
 
   def climb_score_for_period(start_date, end_date, type="all")

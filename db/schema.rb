@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160215174420) do
+ActiveRecord::Schema.define(version: 20160217190429) do
 
   create_table "attempts", force: :cascade do |t|
     t.datetime "date"
@@ -108,17 +108,17 @@ ActiveRecord::Schema.define(version: 20160215174420) do
 
   create_table "exercise_performances", force: :cascade do |t|
     t.integer  "user_id"
-    t.integer  "exercise_id"
+    t.integer  "workout_metric_id"
     t.string   "value"
     t.integer  "event_id"
     t.datetime "date"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
   end
 
   add_index "exercise_performances", ["event_id"], name: "index_exercise_performances_on_event_id"
-  add_index "exercise_performances", ["exercise_id"], name: "index_exercise_performances_on_exercise_id"
   add_index "exercise_performances", ["user_id"], name: "index_exercise_performances_on_user_id"
+  add_index "exercise_performances", ["workout_metric_id"], name: "index_exercise_performances_on_workout_metric_id"
 
   create_table "exercises", force: :cascade do |t|
     t.string   "label"
@@ -226,6 +226,7 @@ ActiveRecord::Schema.define(version: 20160215174420) do
     t.string   "gym_name"
     t.datetime "climbing_start_date"
     t.string   "grade_format"
+    t.integer  "onboarding_step",        default: 0
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
@@ -235,10 +236,20 @@ ActiveRecord::Schema.define(version: 20160215174420) do
     t.integer "workout_id"
     t.integer "exercise_id"
     t.integer "order_in_workout"
+    t.integer "reps"
   end
 
   add_index "workout_exercises", ["exercise_id"], name: "index_workout_exercises_on_exercise_id"
   add_index "workout_exercises", ["workout_id"], name: "index_workout_exercises_on_workout_id"
+
+  create_table "workout_metrics", force: :cascade do |t|
+    t.integer "workout_exercise_id"
+    t.integer "exercise_metric_id"
+    t.string  "value"
+  end
+
+  add_index "workout_metrics", ["exercise_metric_id"], name: "index_workout_metrics_on_exercise_metric_id"
+  add_index "workout_metrics", ["workout_exercise_id"], name: "index_workout_metrics_on_workout_exercise_id"
 
   create_table "workouts", force: :cascade do |t|
     t.string   "label"

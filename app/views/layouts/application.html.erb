@@ -148,6 +148,19 @@
           </div>
         </div>
       </div>
+      <% if user_signed_in? %>
+        <div class="alert alert-success<% unless current_user.onboarding_message %> hidden<% end %>" id="onboarding_container" role="alert">
+          <div class="container">
+            <div class="row">
+              <div class="col-xs-12">
+                <%= current_user.onboarding_message %> &nbsp;&nbsp;&nbsp;
+                <%= link_to('Take me there!', onboarding_path) %> &nbsp;&nbsp;&nbsp;
+                <%= link_to('Skip this one.', onboarding_skip_path, remote: true) %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
     </div>
 
     <div id="content_area">

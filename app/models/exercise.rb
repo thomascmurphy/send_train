@@ -34,6 +34,27 @@ class Exercise < ActiveRecord::Base
     return color_class
   end
 
+  def alert_class
+    case self.exercise_type
+    when "strength"
+      color_class = " alert-danger"
+    when "power"
+      color_class = " alert-orange"
+    when "powerendurance"
+      color_class = " alert-warning"
+    when "endurance"
+      color_class = " alert-success"
+    when "technique"
+      color_class = " alert-info"
+    when "cardio"
+      color_class = " alert-info"
+    else
+      color_class = " alert-info"
+    end
+
+    return color_class
+  end
+
   def handle_exercise_metrics(exercise_metrics_params)
     existing_exercise_metric_ids = self.exercise_metrics.pluck(:id)
     updated_exercise_metric_ids = []
@@ -42,7 +63,7 @@ class Exercise < ActiveRecord::Base
     if exercise_metrics_params.present?
       exercise_metrics_params.each_with_index do |exercise_metric_params, metric_index|
         exercise_metric_id = exercise_metric_params.with_indifferent_access["id"].to_i
-        if exercise_metric_id.present?
+        if exercise_metric_id.present? && exercise_metric_id != 0
           exercise_metric = self.exercise_metrics.find_by_id(exercise_metric_id)
           if exercise_metric.blank?
             next

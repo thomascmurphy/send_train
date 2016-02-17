@@ -16,6 +16,7 @@ class WorkoutsController < ApplicationController
 
   def show
     @workout = current_user.workouts.find_by_id(params[:id])
+    @exercises = current_user.exercises
     respond_to do |format|
       format.html
       format.js
@@ -25,6 +26,7 @@ class WorkoutsController < ApplicationController
 
   def new
     @workout = current_user.workouts.new
+    @exercises = current_user.exercises
     respond_to do |format|
       format.html
       format.js
@@ -38,6 +40,7 @@ class WorkoutsController < ApplicationController
 
     respond_to do |format|
       if @workout.save
+        @workout.handle_workout_exercises(params[:workout_exercises])
         format.html { redirect_to @workout, notice: 'Workout was successfully created.' }
         format.js
         format.json { render json: @workout, status: :created, location: @workout }
@@ -50,6 +53,7 @@ class WorkoutsController < ApplicationController
 
   def edit
     @workout = current_user.workouts.find_by_id(params[:id])
+    @exercises = current_user.exercises
     respond_to do |format|
       format.html
       format.js
@@ -58,10 +62,11 @@ class WorkoutsController < ApplicationController
   end
 
   def update
-    @workouts = current_user.workouts.order(created_at: :desc)
     @workout = current_user.workouts.find_by_id(params[:id])
+    @exercises = current_user.exercises
     respond_to do |format|
       if @workout.update_attributes(workout_params)
+        @workout.handle_workout_exercises(params[:workout_exercises])
         format.html
         format.js
         format.json { render json: @workout, status: :ok, location: @workout }
@@ -90,7 +95,7 @@ class WorkoutsController < ApplicationController
 
 
   private
-  
+
   def workout_params
     params.require(:workout).permit(:label, :workout_type, :description)
   end

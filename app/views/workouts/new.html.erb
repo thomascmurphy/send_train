@@ -1,0 +1,17 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h1 class="inline_block valign_middle margin_right">Create Workout</h1>
+    <p>Create a workout.</p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-9 col-xs-6">
+    <%= render "form" %>
+  </div>
+  <div class="col-sm-3 col-xs-6" id="my_exercises">
+    <h2>My Exercises</h2>
+    <% @exercises.each do |exercise| %>
+      <%= render partial: 'workout_exercise', locals: {exercise: exercise} %>
+    <% end %>
+  </div>
+</div>

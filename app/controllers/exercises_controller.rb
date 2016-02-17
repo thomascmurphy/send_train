@@ -38,6 +38,7 @@ class ExercisesController < ApplicationController
 
     respond_to do |format|
       if @exercise.save
+        @exercise.handle_exercise_metrics(params[:exercise_metrics])
         format.html { redirect_to @exercise, notice: 'Exercise was successfully created.' }
         format.js
         format.json { render json: @exercise, status: :created, location: @exercise }
