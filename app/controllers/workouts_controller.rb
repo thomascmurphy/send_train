@@ -1,4 +1,10 @@
 class WorkoutsController < ApplicationController
+  before_filter :set_exercises, :only => [:show, :new, :edit, :update]
+
+  def set_exercises
+    @exercises = current_user.exercises
+    @all_grades = Climb.all_grades(current_user.grade_format)
+  end
 
   def index
     @workouts = current_user.workouts.order(created_at: :desc)
@@ -33,12 +39,12 @@ class WorkoutsController < ApplicationController
   end
 
   def create
-    @workouts = current_user.workouts.order(created_at: :desc)
     @workout = current_user.workouts.new(workout_params)
 
     respond_to do |format|
       if @workout.save
-        format.html { redirect_to @workout, notice: 'Workout was successfully created.' }
+        @workout.handle_workout_exercises(params[:workout_exercises])
+        format.html { redirect_to workouts_path, notice: 'Workout was successfully created.' }
         format.js
         format.json { render json: @workout, status: :created, location: @workout }
       else
@@ -58,11 +64,11 @@ class WorkoutsController < ApplicationController
   end
 
   def update
-    @workouts = current_user.workouts.order(created_at: :desc)
     @workout = current_user.workouts.find_by_id(params[:id])
     respond_to do |format|
       if @workout.update_attributes(workout_params)
-        format.html
+        @workout.handle_workout_exercises(params[:workout_exercises])
+        format.html { redirect_to workouts_path, notice: 'Workout was successfully updated.' }
         format.js
         format.json { render json: @workout, status: :ok, location: @workout }
       else
@@ -90,7 +96,7 @@ class WorkoutsController < ApplicationController
 
 
   private
-  
+
   def workout_params
     params.require(:workout).permit(:label, :workout_type, :description)
   end

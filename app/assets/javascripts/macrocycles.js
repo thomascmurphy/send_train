@@ -16,7 +16,7 @@ macrocycles_ready = function() {
   var draggable_options = {
     appendTo: "body",
     helper: "clone",
-    cursor: "pointer",
+    cursor: "-webkit-grabbing",
     start : function(event, ui) {
        ui.helper.width($('.calendar .calendar_day').width());
     }
@@ -71,7 +71,11 @@ macrocycles_ready = function() {
     var count = $('.calendar .calendar_week').length + 1;
     var new_week = $('<div class="row row-eq-height calendar_week" data-week=' + count + '></div>');
     for (i=1; i<=7; i++) {
-      var day = $('<div class="col-xs-1 calendar_day"><input type="hidden" name="weeks[' + count + ']days[' + i + ']workouts[][id]" class="workout_ids"/></div>');
+      var day_html = '<div class="col-xs-1 calendar_day">'
+      + '<input type="hidden" name="weeks[' + count + ']days[' + i + ']workout_ids" class="workout_ids"/>'
+      + '<input type="hidden" name="weeks[' + count + ']days[' + i + ']macrocycle_workout_ids" class="macrocycle_workout_ids"/>'
+      + '</div>';
+      var day = $(day_html);
       day.droppable(droppable_options).sortable(sortable_options).appendTo(new_week);
     }
 

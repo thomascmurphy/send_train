@@ -32,21 +32,6 @@ ready = function() {
 		slider_container.find('span.slider_value').text(show_value);
 	});
 
-  $('body').on('change', '.type_select', function(e){
-    var boulder_grades = $(this).closest('form').find('.boulder_grades');
-    var sport_grades = $(this).closest('form').find('.sport_grades');
-    if ($(this).val() == "boulder" && boulder_grades.prop('disabled')) {
-      boulder_grades.toggleClass('hidden').prop('disabled', false);
-      sport_grades.toggleClass('hidden').prop('disabled', true);
-    } else if ($(this).val() == "sport" && sport_grades.prop('disabled')) {
-      boulder_grades.toggleClass('hidden').prop('disabled', true);
-      sport_grades.toggleClass('hidden').prop('disabled', false);
-    } else if ($(this).val() == "trad" && sport_grades.prop('disabled')) {
-      boulder_grades.toggleClass('hidden').prop('disabled', true);
-      sport_grades.toggleClass('hidden').prop('disabled', false);
-    }
-  });
-
   $('body').on('click', '.selectable_items .add_selected_item', function() {
     var selectable_form = $(this).closest('form');
     var add_html = (
@@ -79,6 +64,12 @@ ready = function() {
       var attempt_form = $(this).closest('form');
       attempt_form.find('.completion_slider').val(100).trigger('input');
     }
+  });
+
+  $('body').on('click', '.remove_table_row', function(){
+    $(this).closest('tr').hide(400, function(){
+      $(this).remove();
+    });
   });
 
 }

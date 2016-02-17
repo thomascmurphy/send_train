@@ -13,6 +13,14 @@ TrainToSend::Application.routes.draw do
     get 'quick_send', to: 'climbs#quick_new'
     post 'quick_send', to: 'climbs#quick_create'
 
+    resources :exercise_metrics do
+      get "delete"
+    end
+
+    resources :exercises do
+      get "delete"
+    end
+
     resources :workouts do
       get "delete"
     end
@@ -39,6 +47,12 @@ TrainToSend::Application.routes.draw do
     get 'profile', to: 'profile#show'
     get 'profile/edit', to: 'profile#edit'
     patch 'profile', to: 'profile#update'
+
+
+    resources :users, only: [:index, :show] do
+      get "impersonate"
+    end
+    get "stop_impersonating", to: 'users#stop_impersonating'
   end
 
   get 'comment', to: 'comments#new'
@@ -46,6 +60,9 @@ TrainToSend::Application.routes.draw do
 
   get 'privacy_policy', to: 'home#privacy_policy'
   get 'terms_of_service', to: 'home#terms_of_service'
+
+  get 'onboarding', to: 'users#onboarding'
+  get 'onboarding_skip', to: 'users#onboarding_skip'
 
   root to: "home#index"
   # The priority is based upon order of creation: first created -> highest priority.

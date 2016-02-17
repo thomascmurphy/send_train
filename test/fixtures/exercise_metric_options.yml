@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  label: MyString
+  value: MyString
+  exercise_metric_id: 
+  order: 1
+
+two:
+  label: MyString
+  value: MyString
+  exercise_metric_id: 
+  order: 1

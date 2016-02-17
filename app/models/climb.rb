@@ -100,36 +100,40 @@ class Climb < ActiveRecord::Base
   end
 
   def self.climbing_grade_conversion_european
-    conversion = {1 => {"boulder": "1", "sport": "4b", "trad": "4b"},
-                  5 => {"boulder": "2", "sport": "4c", "trad": "4c"},
-                  10 => {"boulder": "3", "sport": "5a", "trad": "5a"},
-                  15 => {"boulder": "4", "sport": "5b", "trad": "5b"},
-                  20 => {"boulder": "5", "sport": "5c", "trad": "5c"},
-                  25 => {"boulder": "5+", "sport": "6a", "trad": "6a"},
-                  30 => {"boulder": "6A", "sport": "6a+", "trad": "6a+"},
-                  35 => {"boulder": "6A+", "sport": "6b", "trad": "6b"},
-                  40 => {"boulder": "6B", "sport": "6b+", "trad": "6b+"},
-                  45 => {"boulder": "6B+", "sport": "6b+", "trad": "6b+"},
-                  50 => {"boulder": "6C", "sport": "6c", "trad": "6c"},
-                  55 => {"boulder": "6C+", "sport": "6c+", "trad": "6c+"},
-                  60 => {"boulder": "6C+", "sport": "7a", "trad": "7a"},
-                  65 => {"boulder": "7A", "sport": "7a+", "trad": "7a+"},
-                  70 => {"boulder": "7A", "sport": "7b", "trad": "7b"},
-                  75 => {"boulder": "7A+", "sport": "7b+", "trad": "7b+"},
-                  80 => {"boulder": "7B", "sport": "7c", "trad": "7c"},
-                  85 => {"boulder": "7B+", "sport": "7c+", "trad": "7c+"},
-                  90 => {"boulder": "7B+", "sport": "8a", "trad": "8a"},
-                  95 => {"boulder": "7C", "sport": "8a+", "trad": "8a+"},
-                  100 => {"boulder": "7C+", "sport": "8b", "trad": "8b"},
-                  105 => {"boulder": "8A", "sport": "8b+", "trad": "8b+"},
-                  110 => {"boulder": "8A+", "sport": "8c", "trad": "8c"},
-                  115 => {"boulder": "8B", "sport": "8c+", "trad": "8c+"},
-                  120 => {"boulder": "8B+", "sport": "9a", "trad": "9a"},
-                  125 => {"boulder": "8C", "sport": "9a+", "trad": "9a+"},
-                  130 => {"boulder": "8C+", "sport": "9b", "trad": "9b"},
-                  135 => {"boulder": "9A", "sport": "9b+", "trad": "9b+"},
-                  140 => {"boulder": "9A+", "sport": "9c", "trad": "9c"}}
+    conversion = {1 => {"boulder": "Font 1", "sport": "4b", "trad": "4b"},
+                  5 => {"boulder": "Font 2", "sport": "4c", "trad": "4c"},
+                  10 => {"boulder": "Font 3", "sport": "5a", "trad": "5a"},
+                  15 => {"boulder": "Font 4", "sport": "5b", "trad": "5b"},
+                  20 => {"boulder": "Font 5", "sport": "5c", "trad": "5c"},
+                  25 => {"boulder": "Font 5+", "sport": "6a", "trad": "6a"},
+                  30 => {"boulder": "Font 6A", "sport": "6a+", "trad": "6a+"},
+                  35 => {"boulder": "Font 6A+", "sport": "6b", "trad": "6b"},
+                  40 => {"boulder": "Font 6B", "sport": "6b+", "trad": "6b+"},
+                  45 => {"boulder": "Font 6B+", "sport": "6b+", "trad": "6b+"},
+                  50 => {"boulder": "Font 6C", "sport": "6c", "trad": "6c"},
+                  55 => {"boulder": "Font 6C+", "sport": "6c+", "trad": "6c+"},
+                  60 => {"boulder": "Font 6C+", "sport": "7a", "trad": "7a"},
+                  65 => {"boulder": "Font 7A", "sport": "7a+", "trad": "7a+"},
+                  70 => {"boulder": "Font 7A", "sport": "7b", "trad": "7b"},
+                  75 => {"boulder": "Font 7A+", "sport": "7b+", "trad": "7b+"},
+                  80 => {"boulder": "Font 7B", "sport": "7c", "trad": "7c"},
+                  85 => {"boulder": "Font 7B+", "sport": "7c+", "trad": "7c+"},
+                  90 => {"boulder": "Font 7B+", "sport": "8a", "trad": "8a"},
+                  95 => {"boulder": "Font 7C", "sport": "8a+", "trad": "8a+"},
+                  100 => {"boulder": "Font 7C+", "sport": "8b", "trad": "8b"},
+                  105 => {"boulder": "Font 8A", "sport": "8b+", "trad": "8b+"},
+                  110 => {"boulder": "Font 8A+", "sport": "8c", "trad": "8c"},
+                  115 => {"boulder": "Font 8B", "sport": "8c+", "trad": "8c+"},
+                  120 => {"boulder": "Font 8B+", "sport": "9a", "trad": "9a"},
+                  125 => {"boulder": "Font 8C", "sport": "9a+", "trad": "9a+"},
+                  130 => {"boulder": "Font 8C+", "sport": "9b", "trad": "9b"},
+                  135 => {"boulder": "Font 9A", "sport": "9b+", "trad": "9b+"},
+                  140 => {"boulder": "Font 9A+", "sport": "9c", "trad": "9c"}}
     return conversion
+  end
+
+  def self.all_grades(format="western")
+    return self.bouldering_grades(format) + self.sport_grades(format)
   end
 
   def self.bouldering_grades(format="western")

@@ -1,16 +1,102 @@
 class User < ActiveRecord::Base
-  has_many :climbs
+  has_many :climbs, dependent: :destroy
   has_many :attempts, through: :climbs
-  has_many :events
+  has_many :events, dependent: :destroy
   has_many :macrocycles
-  has_many :mesocycles
-  has_many :microcycles
+  has_many :mesocycles, dependent: :destroy
+  has_many :microcycles, dependent: :destroy
   has_many :workouts
+  has_many :exercises
+  has_many :exercise_metrics
+  after_create :seed_exercises
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
+
+  def seed_exercises
+    deadhang = self.exercises.create(
+      label: "Deadhang",
+      exercise_type: "strength",
+      description: "Hang"
+    )
+    deadhang_metric_hold = deadhang.exercise_metrics.create(
+      label: "Hold",
+      exercise_metric_type_id: 5
+    )
+    hold_options = deadhang_metric_hold.exercise_metric_options.create([
+      {label: "Crimp", value: "crimp"},
+      {label: "Sloper", value: "sloper"},
+      {label: "Pinch", value: "pinch"},
+      {label: "Front Two Fingers", value: "front-two-fingers"},
+      {label: "Middle Two Fingers", value: "middle-two-fingers"},
+      {label: "Back Two Fingers", value: "back-two-fingers"},
+      {label: "Front Three Fingers", value: "front-three-fingers"}
+    ])
+    deadhang_metric_weight = deadhang.exercise_metrics.create(
+      label: "Weight",
+      exercise_metric_type_id: 1
+    )
+    deadhang_metric_hang_time = deadhang.exercise_metrics.create(
+      label: "Hang Time",
+      exercise_metric_type_id: 3
+    )
+    deadhang_metric_rest_time = deadhang.exercise_metrics.create(
+      label: "Rest Time",
+      exercise_metric_type_id: 3
+    )
+
+    campus = self.exercises.create(
+      label: "Campus",
+      exercise_type: "power",
+      description: "Campus moves"
+    )
+    campus_metric_campus_rungs = campus.exercise_metrics.create(
+      label: "Rungs",
+      exercise_metric_type_id: 4
+    )
+    campus_metric_rest_time = campus.exercise_metrics.create(
+      label: "Rest Time",
+      exercise_metric_type_id: 3
+    )
+
+    rest = self.exercises.create(
+      label: "Rest",
+      exercise_type: "",
+      description: "Rest time in between sets"
+    )
+    rest_metric_rest_time = rest.exercise_metrics.create(
+      label: "Rest Time",
+      exercise_metric_type_id: 3
+    )
+  end
+
+  def advance_onboarding
+    self.onboarding_step += 1
+    self.save
+  end
+
+  def onboarding_message
+    case self.onboarding_step
+    when 0
+      "You can personalize your account by setting some of these preferences."
+    when 1
+      "We've added a few common exercises to get you started, you can use these as a guide for additional exercises."
+    when 2
+      "You can use these exercises to build workouts such as a hangboard or campusboard routine."
+    when 3
+      "You can create a long-term plan by arranging these workouts onto specific days."
+    when 4
+      "After you have a plan template created, you can schedule a set of events based on this template and start training!"
+    when 5
+      "You can also track your climbing progress so that we can try to determine the effectiveness of each individual workout."
+    when 6
+      "Thanks so much for taking the tour! I hope this is a helpful tool for everyone."
+    else
+      nil
+    end
+  end
 
   def climb_score_for_period(start_date, end_date, type="all")
     climb_ids = self.attempts.where("completion = 100 AND date > ? AND date < ?", start_date, end_date).map(&:climb_id)
@@ -49,26 +135,28 @@ class User < ActiveRecord::Base
   end
 
 
-  def line_data(start_date, end_date)
-    return [{'name': "name 1", 'value': 50},
-            {'name': "name 2", 'value': 55},
-            {'name': "name 3", 'value': 70},
-            {'name': "name 4", 'value': 80}]
-  end
-
-  def line_data_test(start_date, end_date)
-    return [{'name': "test name 1", 'value': 30},
-            {'name': "test name 2", 'value': 40},
-            {'name': "test name 3", 'value': 35},
-            {'name': "test name 4", 'value': 60}]
-  end
-
-  def line_data_string_test(start_date, end_date, prefix)
-    line_data_string = ""
-    self.line_data_test(start_date, end_date).each_with_index do |point_data, index|
-      line_data_string << "data-#{prefix}-name-#{index}='#{point_data[:name]}' data-#{prefix}-value-#{index}='#{point_data[:value]}' ".html_safe
+  def should_show_climb_data
+    should_show = false
+    climb_count = self.climbs.count
+    oldest_attempt = self.attempts.order(date: :asc).first
+    if oldest_attempt.present?
+      if climb_count > 20 && oldest_attempt.date < DateTime.now - 6.weeks
+        should_show = true
+      end
     end
-    return line_data_string
+    return should_show
+  end
+
+  def should_show_workout_data
+    should_show = false
+    completed_macrocycles_count = self.events.where.not(macrocycle_id: nil).count
+    oldest_completed = self.events.where.not(macrocycle_id: nil).order(start_date: :asc)
+    if oldest_completed.present?
+      if completed_macrocycles_count > 2 && oldest_completed.date < DateTime.now - 6.weeks
+        should_show = true
+      end
+    end
+    return should_show
   end
 
 end

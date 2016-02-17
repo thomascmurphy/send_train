@@ -1,31 +1,61 @@
-<%= form_for(@workout, remote: true) do |f| %>
-  <div class="modal-body">
-    <ul class="errors"></ul>
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="form-group">
-          <%= f.label :name %><br>
-          <%= f.text_field :label, class: "form-control" %>
-        </div>
-      </div>
-      <div class="col-sm-6">
-        <div class="form-group">
-          <%= f.label :workout_type %><br>
-          <%= f.select(:workout_type, [['None', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']], {}, {class: "form-control type_select"}) %>
-        </div>
+<%= form_for(@workout) do |f| %>
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="form-group">
+        <%= f.text_field :label, {placeholder: "Name", class: "form-control"} %>
       </div>
     </div>
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="form-group">
-          <%= f.label :description %><br>
-          <%= f.text_area :description, class: "form-control", size: "60x12" %>
-        </div>
+    <div class="col-sm-4">
+      <div class="form-group">
+        <%= f.select(:workout_type, [['Type', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']], {}, {class: "form-control"}) %>
+      </div>
+    </div>
+    <div class="col-xs-4 text-right">
+      <input type="submit" class="btn btn-success margin_bottom" value="<% if @workout.id.present? %>Update<% else %>Create<% end %> Workout">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <%= f.text_area :description, {placeholder:"Description", class: "form-control", size: "60x3"} %>
       </div>
     </div>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-    <input type="submit" class="btn btn-primary" value="Save">
+  <div class="row">
+    <div class="col-xs-12">
+      <h4>Exercises</h4>
+      <table class="table table-striped exercise_list droppable_table sortable_table">
+        <thead>
+          <tr>
+            <th>Exercise</th>
+            <th class="text-right">Options</th>
+            <th class="text-right">Reps</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @workout.workout_exercises_ordered.each do |workout_exercise| %>
+            <tr>
+              <td>
+                <%= workout_exercise.exercise.label %>
+                <input name="workout_exercises[][id]" type="hidden" value="<%= workout_exercise.id %>"/>
+              </td>
+              <td>
+                <% workout_exercise.workout_metrics.each do |workout_metric| %>
+                  <%= render partial: 'workout_metric', locals: {workout_metric: workout_metric} %>
+                <% end %>
+              </td>
+              <td class="text-right">
+                <input class="form-control inline_block" type="number" name="workout_exercises[][reps]" value="<%= workout_exercise.reps %>"/>
+              </td>
+              <td class="text-right">
+                <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
+              </td>
+            </tr>
+          <% end %>
+          <tr class="push_row" style="height: 100px"></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 <% end %>

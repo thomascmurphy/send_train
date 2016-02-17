@@ -196,6 +196,10 @@ body {
   margin-bottom: 5px;
 }
 
+.form-control.inline_block{
+  width: auto;
+}
+
 /* ============ General Elements */
 html, body{
   height: 100%;
@@ -664,6 +668,14 @@ input[type=range]:focus::-ms-fill-upper {
   .close{
     display: none;
   }
+}
+
+.draggable{
+  cursor: -webkit-grab;
+}
+
+.sortable_table tbody tr{
+  cursor: move;
 }
 
 

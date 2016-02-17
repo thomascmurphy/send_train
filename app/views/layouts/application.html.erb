@@ -83,8 +83,8 @@
                           <% if current_page?(url_for controller: '/workouts', action: 'index') || current_page?(url_for controller: '/microcycles', action: 'index') || current_page?(url_for controller: '/mesocycles', action: 'index') || current_page?(url_for controller: '/macrocycles', action: 'index') %> <span class="sr-only">(current)</span><% end %>
                         </a>
                         <ul class="dropdown-menu">
-                          <li><a href="<%= url_for controller: '/workouts', action: 'index' %>">Workouts</a></li>
-                          <li><a href="<%= url_for controller: '/macrocycles', action: 'new' %>">New Plan</a></li>
+                          <li><a href="<%= url_for controller: '/exercises', action: 'index' %>">My Exercises</a></li>
+                          <li><a href="<%= url_for controller: '/workouts', action: 'index' %>">My Workouts</a></li>
                           <li><a href="<%= url_for controller: '/macrocycles', action: 'index' %>">My Plans</a></li>
                         </ul>
                       </li>
@@ -107,6 +107,14 @@
                           <li><%= link_to('Edit Password/Email', edit_user_registration_path, class: "no_bg") %></li>
                           <li role="separator" class="divider"></li>
                           <li><%= link_to('Logout', destroy_user_session_path, method: :delete, class: "no_bg") %></li>
+                          <% if true_user.is_admin? %>
+                            <li role="separator" class="divider"></li>
+                            <% if current_user != true_user %>
+                              <li><%= link_to "Switch Back", stop_impersonating_path %></li>
+                            <% else %>
+                              <li><%= link_to "Users", users_path %></li>
+                            <% end %>
+                          <% end %>
                         </ul>
                       </li>
                     <% else %>
@@ -139,6 +147,23 @@
           </div>
         </div>
       </div>
+      <% if user_signed_in? %>
+        <div class="alert alert-success<% unless current_user.onboarding_message %> hidden<% end %>" id="onboarding_container" role="alert">
+          <div class="container">
+            <div class="row">
+              <div class="col-xs-12">
+                <%= current_user.onboarding_message %> &nbsp;&nbsp;&nbsp;
+                <% if current_user.onboarding_step < 6 %>
+                  <%= link_to('Take me there!', onboarding_path) %> &nbsp;&nbsp;&nbsp;
+                  <%= link_to('Skip this one.', onboarding_skip_path, remote: true) %>
+                <% else %>
+                  <%= link_to('Ok, ok, just let me use it!', onboarding_skip_path, remote: true) %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
     </div>
 
     <div id="content_area">
