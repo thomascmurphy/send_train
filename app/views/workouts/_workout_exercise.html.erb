@@ -3,7 +3,14 @@
   <div class="hidden exercise_metrics">
     <% exercise.exercise_metrics.each do |exercise_metric| %>
       <div class="form-goup text-right">
-        <label><%= exercise_metric.label %></label>
+        <label>
+          <%= exercise_metric.label %>
+          <% if exercise_metric.exercise_metric_type.slug == "weight" %>
+            (<%= current_user.default_weight_unit %>s)
+          <% elsif exercise_metric.exercise_metric_type.slug == "time" %>
+            (seconds)
+          <% end %>
+        </label>
         <input type="hidden" name="workout_exercises[][workout_metrics][][exercise_metric_id]" value="<%= exercise_metric.id %>"/>
         <% if exercise_metric.exercise_metric_type.input_field == "select" %>
           <select name="workout_exercises[][workout_metrics][][value]" class="form-control inline_block" >

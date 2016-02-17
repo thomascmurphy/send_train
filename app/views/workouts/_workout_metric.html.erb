@@ -1,5 +1,12 @@
 <div class="form-goup text-right">
-  <label><%= workout_metric.exercise_metric.label %></label>
+  <label>
+    <%= workout_metric.exercise_metric.label %>
+    <% if workout_metric.exercise_metric.exercise_metric_type.slug == "weight" %>
+      (<%= current_user.default_weight_unit %>s)
+    <% elsif workout_metric.exercise_metric.exercise_metric_type.slug == "time" %>
+      (seconds)
+    <% end %>
+  </label>
   <input name="workout_exercises[][workout_metrics][][id]" type="hidden" value="<%= workout_metric.id %>"/>
   <% if workout_metric.exercise_metric.exercise_metric_type.input_field == "select" %>
 
@@ -12,6 +19,6 @@
     </select>
 
   <% else %>
-    <input class="form-control inline_block" name="workout_exercises[][workout_metrics][][value]" type="<%= workout_metric.exercise_metric.exercise_metric_type.input_field %>" value="<%= workout_metric.value %>"/>
+      <input class="form-control inline_block" name="workout_exercises[][workout_metrics][][value]" type="<%= workout_metric.exercise_metric.exercise_metric_type.input_field %>" value="<%= workout_metric.value %>"/>
   <% end %>
 </div>
