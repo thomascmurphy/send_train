@@ -1,4 +1,10 @@
 class WorkoutsController < ApplicationController
+  before_filter :set_exercises, :only => [:show, :new, :edit, :update]
+
+  def set_exercises
+    @exercises = current_user.exercises
+    @all_grades = Climb.all_grades(current_user.grade_format)
+  end
 
   def index
     @workouts = current_user.workouts.order(created_at: :desc)
@@ -16,7 +22,6 @@ class WorkoutsController < ApplicationController
 
   def show
     @workout = current_user.workouts.find_by_id(params[:id])
-    @exercises = current_user.exercises
     respond_to do |format|
       format.html
       format.js
@@ -26,7 +31,6 @@ class WorkoutsController < ApplicationController
 
   def new
     @workout = current_user.workouts.new
-    @exercises = current_user.exercises
     respond_to do |format|
       format.html
       format.js
@@ -35,7 +39,6 @@ class WorkoutsController < ApplicationController
   end
 
   def create
-    @workouts = current_user.workouts.order(created_at: :desc)
     @workout = current_user.workouts.new(workout_params)
 
     respond_to do |format|
@@ -53,7 +56,6 @@ class WorkoutsController < ApplicationController
 
   def edit
     @workout = current_user.workouts.find_by_id(params[:id])
-    @exercises = current_user.exercises
     respond_to do |format|
       format.html
       format.js
@@ -63,7 +65,6 @@ class WorkoutsController < ApplicationController
 
   def update
     @workout = current_user.workouts.find_by_id(params[:id])
-    @exercises = current_user.exercises
     respond_to do |format|
       if @workout.update_attributes(workout_params)
         @workout.handle_workout_exercises(params[:workout_exercises])

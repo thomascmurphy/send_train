@@ -7,7 +7,11 @@
         <input type="hidden" name="workout_exercises[][workout_metrics][][exercise_metric_id]" value="<%= exercise_metric.id %>"/>
         <% if exercise_metric.exercise_metric_type.input_field == "select" %>
           <select name="workout_exercises[][workout_metrics][][value]" class="form-control inline_block" >
-            <%= options_from_collection_for_select(exercise_metric.exercise_metric_options, :value, :label) %>
+            <% if exercise_metric.exercise_metric_type.slug == "hold-type" %>
+              <%= options_from_collection_for_select(exercise_metric.exercise_metric_options, :value, :label) %>
+            <% elsif exercise_metric.exercise_metric_type.slug == "climb-grade" %>
+              <%= options_for_select(@all_grades) %>
+            <% end %>
           </select>
         <% else %>
           <input class="form-control inline_block" name="workout_exercises[][workout_metrics][][value]" type="<%= exercise_metric.exercise_metric_type.input_field %>"/>

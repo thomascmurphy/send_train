@@ -154,8 +154,12 @@
             <div class="row">
               <div class="col-xs-12">
                 <%= current_user.onboarding_message %> &nbsp;&nbsp;&nbsp;
-                <%= link_to('Take me there!', onboarding_path) %> &nbsp;&nbsp;&nbsp;
-                <%= link_to('Skip this one.', onboarding_skip_path, remote: true) %>
+                <% if current_user.onboarding_step < 6 %>
+                  <%= link_to('Take me there!', onboarding_path) %> &nbsp;&nbsp;&nbsp;
+                  <%= link_to('Skip this one.', onboarding_skip_path, remote: true) %>
+                <% else %>
+                  <%= link_to('Ok, ok, just let me use it!', onboarding_skip_path, remote: true) %>
+                <% end %>
               </div>
             </div>
           </div>

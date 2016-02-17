@@ -72,10 +72,15 @@ class Exercise < ActiveRecord::Base
         else
           exercise_metric = self.exercise_metrics.new
         end
-        exercise_metric.label = exercise_metric_params.with_indifferent_access["label"]
-        exercise_metric.exercise_metric_type_id = exercise_metric_params.with_indifferent_access["exercise_metric_type_id"].to_i
-        exercise_metric.order = metric_index
-        exercise_metric.save
+        exercise_metric_label = exercise_metric_params.with_indifferent_access["label"]
+        if exercise_metric_label.present?
+          exercise_metric.label = exercise_metric_label
+          exercise_metric.exercise_metric_type_id = exercise_metric_params.with_indifferent_access["exercise_metric_type_id"].to_i
+          exercise_metric.order = metric_index
+          exercise_metric.save
+        else
+          next
+        end
         exercise_metric_options = exercise_metric_params.with_indifferent_access["exercise_metric_options"]
         if exercise_metric_options.present?
           exercise_metric_options.each_with_index do |exercise_metric_option_params, option_index|
