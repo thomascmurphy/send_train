@@ -8,5 +8,11 @@ class CreateExerciseMetrics < ActiveRecord::Migration
 
       t.timestamps null: false
     end
+
+    create_table :workout_exercise_exercise_metrics do |t|
+      t.belongs_to :workout_exercise, index: true
+      t.belongs_to :exercise_metric, index: true
+      t.string :value
+    end
   end
 end
