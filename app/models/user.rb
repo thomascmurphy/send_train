@@ -135,26 +135,28 @@ class User < ActiveRecord::Base
   end
 
 
-  def line_data(start_date, end_date)
-    return [{'name': "name 1", 'value': 50},
-            {'name': "name 2", 'value': 55},
-            {'name': "name 3", 'value': 70},
-            {'name': "name 4", 'value': 80}]
-  end
-
-  def line_data_test(start_date, end_date)
-    return [{'name': "test name 1", 'value': 30},
-            {'name': "test name 2", 'value': 40},
-            {'name': "test name 3", 'value': 35},
-            {'name': "test name 4", 'value': 60}]
-  end
-
-  def line_data_string_test(start_date, end_date, prefix)
-    line_data_string = ""
-    self.line_data_test(start_date, end_date).each_with_index do |point_data, index|
-      line_data_string << "data-#{prefix}-name-#{index}='#{point_data[:name]}' data-#{prefix}-value-#{index}='#{point_data[:value]}' ".html_safe
+  def should_show_climb_data
+    should_show = false
+    climb_count = self.climbs.count
+    oldest_attempt = self.attempts.order(date: :asc).first
+    if oldest_attempt.present?
+      if climb_count > 20 && oldest_attempt.date < DateTime.now - 6.weeks
+        should_show = true
+      end
     end
-    return line_data_string
+    return should_show
+  end
+
+  def should_show_workout_data
+    should_show = false
+    completed_macrocycles_count = self.events.where.not(macrocycle_id: nil).count
+    oldest_completed = self.events.where.not(macrocycle_id: nil).order(start_date: :asc)
+    if oldest_completed.present?
+      if completed_macrocycles_count > 2 && oldest_completed.date < DateTime.now - 6.weeks
+        should_show = true
+      end
+    end
+    return should_show
   end
 
 end

@@ -11,7 +11,7 @@
       <div class="col-sm-6">
         <div class="form-group">
           <%= f.label :exercise_type %><br>
-          <%= f.select(:exercise_type, [['None', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']], {}, {class: "form-control type_select"}) %>
+          <%= f.select(:exercise_type, [['None', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']], {}, {class: "form-control"}) %>
         </div>
       </div>
     </div>
@@ -42,7 +42,7 @@
                   <input type="text" name="exercise_metrics[][label]" value="<%= exercise_metric.label %>" class="form-control"/>
                 </td>
                 <td>
-                  <select name="exercise_metrics[][exercise_metric_type_id]" class="form-control type_select">
+                  <select name="exercise_metrics[][exercise_metric_type_id]" class="form-control metric_type_select">
                     <%= options_from_collection_for_select(ExerciseMetricType.all, :id, :label, exercise_metric.exercise_metric_type_id) %>
                   </select>
                 </td>
@@ -69,15 +69,7 @@
                   <a href="javascript:void(0);" class="add_expense_metric_option btn btn-success">Add Option</a>
                 </td>
               </tr>
-              <tr class="option_template_row hidden">
-                <td class="text-right small text-muted" style="border-width: 0;">Option for dropdown field:</td>
-                <td style="border-top-style: dashed;">
-                  <input type="text" name="exercise_metrics[][exercise_metric_options][][label]" value="" class="form-control"/>
-                </td>
-                <td class="text-right" style="border-top-style: dashed;">
-                  <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
-                </td>
-              </tr>
+
             <% end %>
 
 
@@ -92,12 +84,26 @@
                 <input type="text" name="exercise_metrics[][label]" value="" class="form-control"/>
               </td>
               <td>
-                <select name="exercise_metrics[][exercise_metric_type_id]" class="form-control type_select">
+                <select name="exercise_metrics[][exercise_metric_type_id]" class="form-control metric_type_select">
                   <%= options_from_collection_for_select(ExerciseMetricType.all, :id, :label) %>
                 </select>
               </td>
               <td class="text-right">
                 <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
+              </td>
+            </tr>
+            <tr class="option_template_row hidden">
+              <td class="text-right small text-muted" style="border-width: 0;">Option for dropdown field:</td>
+              <td style="border-top-style: dashed;">
+                <input type="text" name="exercise_metrics[][exercise_metric_options][][label]" value="" class="form-control"/>
+              </td>
+              <td class="text-right" style="border-top-style: dashed;">
+                <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
+              </td>
+            </tr>
+            <tr class="add_option_button_template_row" style="display:none;">
+              <td colspan="3" class="text-right" style="border-top-width: 0;">
+                <a href="javascript:void(0);" class="add_expense_metric_option btn btn-success">Add Option</a>
               </td>
             </tr>
           </tbody>

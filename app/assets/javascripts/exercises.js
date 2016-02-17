@@ -5,6 +5,8 @@ exercises_ready = function() {
     var button_row = $(this).closest('tr.add_metric_button_row');
     var new_row_html = table.find('.metric_template_row').html();
     $('<tr>' + new_row_html + '</tr>').insertBefore(button_row);
+    var new_option_button_row_html = table.find('.add_option_button_template_row').html();
+    $('<tr class="add_option_button_row" style="display: none;">' + new_option_button_row_html + '</tr>').insertBefore(button_row);
   });
 
   $('body').on('click', '.exercise_metric_list .add_expense_metric_option', function(){
@@ -14,7 +16,7 @@ exercises_ready = function() {
     $('<tr class="options_row">' + new_row_html + '</tr>').insertBefore(button_row);
   });
 
-  $('body').on('change', '.exercise_metric_list select.type_select', function() {
+  $('body').on('change', '.exercise_metric_list select.metric_type_select', function() {
     var table = $(this).closest('.exercise_metric_list');
     var metric_row = $(this).closest('tr');
     var type_value = $(this).val();

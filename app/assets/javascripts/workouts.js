@@ -6,7 +6,7 @@ workouts_ready = function() {
     var exercise_metrics = $(exercise).find('div.exercise_metrics').html();
     var new_row_html = '<tr><td>' + exercise_name +'</td>'
       + '<td>' + exercise_metrics + '</td>'
-      + '<td class="text-right"><input class="form-control inline_block" type="number" name="workout_exercises[][reps]" value=""/></td>'
+      + '<td class="text-right"><input class="form-control inline_block" type="number" name="workout_exercises[][reps]" value="1"/></td>'
       + '<td class="text-right"><a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a></td>';
     return new_row_html;
   };

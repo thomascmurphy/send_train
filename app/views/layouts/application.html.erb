@@ -83,9 +83,8 @@
                           <% if current_page?(url_for controller: '/workouts', action: 'index') || current_page?(url_for controller: '/microcycles', action: 'index') || current_page?(url_for controller: '/mesocycles', action: 'index') || current_page?(url_for controller: '/macrocycles', action: 'index') %> <span class="sr-only">(current)</span><% end %>
                         </a>
                         <ul class="dropdown-menu">
-                          <li><a href="<%= url_for controller: '/exercises', action: 'index' %>">Exercises</a></li>
-                          <li><a href="<%= url_for controller: '/workouts', action: 'index' %>">Workouts</a></li>
-                          <li><a href="<%= url_for controller: '/macrocycles', action: 'new' %>">New Plan</a></li>
+                          <li><a href="<%= url_for controller: '/exercises', action: 'index' %>">My Exercises</a></li>
+                          <li><a href="<%= url_for controller: '/workouts', action: 'index' %>">My Workouts</a></li>
                           <li><a href="<%= url_for controller: '/macrocycles', action: 'index' %>">My Plans</a></li>
                         </ul>
                       </li>
