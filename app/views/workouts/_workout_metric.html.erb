@@ -21,6 +21,10 @@
     </select>
 
   <% else %>
-      <input class="form-control inline_block" name="workout_exercises[][workout_metrics][][value]" type="<%= workout_metric.exercise_metric.exercise_metric_type.input_field %>" value="<%= workout_metric.value %>"/>
+      <input class="form-control inline_block"
+             name="workout_exercises[][workout_metrics][][value]"
+             type="<%= workout_metric.exercise_metric.exercise_metric_type.input_field %>"
+             value="<%= workout_metric.value %>"
+             placeholder="Baseline Value"/>
   <% end %>
 </div>
