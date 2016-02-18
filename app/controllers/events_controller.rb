@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
   before_filter :set_events, :except => [:show, :new, :edit, :delete, :gym_session_new]
+  before_filter :set_field_data, :only => [:show, :edit]
 
   def set_events
     @events = current_user.events
@@ -16,6 +17,10 @@ class EventsController < ApplicationController
     @current_events = @events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).order(start_date: :asc)
     @upcoming_events = @events.where("start_date > ?", DateTime.now.end_of_day).order(start_date: :asc)
     @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
+  end
+
+  def set_field_data
+    @all_grades = Climb.all_grades(current_user.grade_format)
   end
 
   def index
@@ -65,6 +70,7 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
+        @event.handle_exercise_performances(params[:exercise_performances])
         format.html { redirect_to @event, notice: 'Event was successfully created.' }
         format.js
         format.json { render json: @event, status: :created, location: @event }
@@ -105,6 +111,7 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.update_attributes(event_params)
+        @event.handle_exercise_performances(params[:exercise_performances])
         format.html
         format.js
         format.json { render json: @event, status: :ok, location: @event }

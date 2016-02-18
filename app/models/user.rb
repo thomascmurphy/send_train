@@ -7,7 +7,8 @@ class User < ActiveRecord::Base
   has_many :microcycles, dependent: :destroy
   has_many :workouts
   has_many :exercises
-  has_many :exercise_metrics
+  has_many :exercise_metrics, through: :exercises
+  has_many :exercise_performances, dependent: :destroy
   after_create :seed_exercises
 
   # Include default devise modules. Others available are:
@@ -98,6 +99,27 @@ class User < ActiveRecord::Base
     end
   end
 
+  def climb_score_at_date(end_date, type="all")
+    climb_ids = self.attempts.where("completion = 100 AND date < ?", end_date).map(&:climb_id)
+    climbs = self.climbs.where(id: climb_ids)
+    if type != "all"
+      climbs = climbs.where(climb_type: type)
+    end
+    best_climbs = climbs.order(grade: :desc).first(10)
+    if best_climbs.size > 0
+      climb_score = best_climbs.map(&:grade).inject(0){|sum,x| sum + x }.to_f / best_climbs.size
+    else
+      climb_score = 0
+    end
+    return climb_score
+  end
+
+  def climb_score_difference_at_dates(end_date_1, end_date_2, type="all")
+    first_score = self.climb_score_at_date(end_date_1, type)
+    second_score = self.climb_score_at_date(end_date_2, type)
+    return first_score - second_score
+  end
+
   def climb_score_for_period(start_date, end_date, type="all")
     climb_ids = self.attempts.where("completion = 100 AND date > ? AND date < ?", start_date, end_date).map(&:climb_id)
     climbs = self.climbs.where(id: climb_ids)
@@ -121,18 +143,32 @@ class User < ActiveRecord::Base
 
   def profile_graph_data
     graph_data = []
-    start_date = DateTime.now - 8.weeks
+    end_date = DateTime.now - 6.weeks
     for i in 0..3
-      end_date = start_date + 2.weeks
-      name_string = "#{start_date.strftime('%m/%d/%Y')} - #{end_date.strftime('%m/%d/%Y')}"
-      score = self.climb_score_for_period(start_date, end_date)
+      name_string = "#{end_date.strftime('%m/%d/%Y')}"
+      score = self.climb_score_at_date(end_date)
       graph_data << {'name': name_string,
                      'value': score,
                      'tooltip_value': Climb.convert_score_to_grades(score, self.grade_format)}
-      start_date = end_date
+      end_date += 2.weeks
     end
     return graph_data
   end
+
+  # def profile_graph_data
+  #   graph_data = []
+  #   start_date = DateTime.now - 8.weeks
+  #   for i in 0..3
+  #     end_date = start_date + 2.weeks
+  #     name_string = "#{start_date.strftime('%m/%d/%Y')} - #{end_date.strftime('%m/%d/%Y')}"
+  #     score = self.climb_score_for_period(start_date, end_date)
+  #     graph_data << {'name': name_string,
+  #                    'value': score,
+  #                    'tooltip_value': Climb.convert_score_to_grades(score, self.grade_format)}
+  #     start_date = end_date
+  #   end
+  #   return graph_data
+  # end
 
 
   def should_show_climb_data

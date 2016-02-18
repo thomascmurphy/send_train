@@ -5,7 +5,7 @@ class Event < ActiveRecord::Base
   belongs_to :mesocycle
   belongs_to :macrocycle
   belongs_to :parent_event, class_name: 'Event', foreign_key: 'parent_event_id'
-  has_many :exercise_performances
+  has_many :exercise_performances, dependent: :destroy
   after_create :create_child_events
   before_destroy :destroy_child_events
   after_save :check_child_completion
@@ -123,6 +123,17 @@ class Event < ActiveRecord::Base
                                         workout_id: macrocycle_workout.workout.id,
                                         parent_event_id: self.id)
       end
+    elsif self.workout.present?
+      self.workout.workout_exercises.each do |workout_exercise|
+        for rep in 1..workout_exercise.reps
+          workout_exercise.workout_metrics.each do |workout_metric|
+            exercise_performance = self.user.exercise_performances.create(event_id: self.id,
+                                                                          workout_metric_id: workout_metric.id,
+                                                                          rep: rep,
+                                                                          date: self.start_date)
+          end
+        end
+      end
     end
   end
 
@@ -167,6 +178,54 @@ class Event < ActiveRecord::Base
       return "#{ActionController::Base.helpers.pluralize(duration_length, duration_unit)}"
     else
       return "#{duration_length} #{duration_unit}"
+    end
+  end
+
+  def exercise_performances_by_rep(workout_metric_id)
+    performances = self.exercise_performances.where(workout_metric_id: workout_metric_id)
+    by_rep = {}
+    performances.each do |performance|
+      by_rep[performance.rep] = performance
+    end
+    return by_rep
+  end
+
+  def exercise_performances_by_metric(rep)
+    performances = self.exercise_performances.where(rep: rep)
+    by_metric = {}
+    performances.each do |performance|
+      by_metric[performance.workout_metric_id] = performance
+    end
+    return by_metric
+  end
+
+  def handle_exercise_performances(exercise_performances_params)
+    existing_exercise_performance_ids = self.exercise_performances.pluck(:id)
+    updated_exercise_performance_ids = []
+    if exercise_performances_params.present?
+      exercise_performances_params.each_with_index do |exercise_performance_params, performance_index|
+        exercise_performance_id = exercise_performance_params.with_indifferent_access["id"].to_i
+        if exercise_performance_id.present? && exercise_performance_id != 0
+          exercise_performance = self.exercise_performances.find_by_id(exercise_performance_id)
+          if exercise_performance.blank?
+            next
+          end
+          updated_exercise_performance_ids << exercise_performance_id
+        else
+          workout_metric_id = exercise_performance_params.with_indifferent_access["workout_metric_id"].to_i
+          if workout_metric_id.present? && workout_metric_id != 0
+            exercise_performance = self.exercise_performances.new
+            exercise_performance.workout_metric_id = workout_metric_id
+          else
+            next
+          end
+        end
+        exercise_performance.value = exercise_performance_params.with_indifferent_access["value"]
+        exercise_performance.save
+      end
+    end
+    if (existing_exercise_performance_ids - updated_exercise_performance_ids).present?
+      ExercisePerformance.where(id: existing_exercise_performance_ids - updated_exercise_performance_ids).destroy_all
     end
   end
 

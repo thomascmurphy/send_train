@@ -200,6 +200,10 @@ body {
   width: auto;
 }
 
+.form-control.short_input{
+  max-width: 120px;
+}
+
 /* ============ General Elements */
 html, body{
   height: 100%;
@@ -677,7 +681,6 @@ input[type=range]:focus::-ms-fill-upper {
 .sortable_table tbody tr{
   cursor: move;
 }
-
 
 
 

@@ -1,5 +1,5 @@
-class WorkoutPerformance < ActiveRecord::Base
+class ExercisePerformance < ActiveRecord::Base
   belongs_to :user
-  belongs_to :workout_exercise_metric
+  belongs_to :workout_metric
   belongs_to :event
 end

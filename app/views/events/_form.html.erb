@@ -4,26 +4,32 @@
     <div class="row">
       <div class="col-sm-4">
         <div class="form-group">
-          <%= f.label :name %><br>
+          <%= f.label "Custom Name" %><br>
           <%= f.text_field :label, class: "form-control" %>
         </div>
       </div>
-      <div class="col-sm-3">
-        <div class="form-group">
-          <%= f.label :workout %><br>
-          <%= f.collection_select(:workout_id, current_user.workouts.all, :id, :label, {prompt: "None"}, {class: "form-control workout_select"}) %>
+      <% unless @event.id.present? && @event.macrocycle_id.present? %>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <%= f.label :workout %><br>
+            <%= f.collection_select(:workout_id, current_user.workouts.all, :id, :label, {prompt: "None"}, {class: "form-control workout_select", disabled: @event.id.present?}) %>
+          </div>
         </div>
-      </div>
-      <div class="col-sm-1">
-        <br>
-        <label>-OR-</label>
-      </div>
-      <div class="col-sm-3">
-        <div class="form-group">
-          <%= f.label :macrocycle, "Plan" %><br>
-          <%= f.collection_select(:macrocycle_id, current_user.macrocycles.all, :id, :label, {prompt: "None"}, {class: "form-control macrocycle_select", disabled: @event.id.present?}) %>
+      <% end %>
+      <% unless @event.id.present? %>
+        <div class="col-sm-1">
+          <br>
+          <label>-OR-</label>
         </div>
-      </div>
+      <% end %>
+      <% unless @event.id.present? && @event.workout_id.present? %>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <%= f.label :macrocycle, "Plan" %><br>
+            <%= f.collection_select(:macrocycle_id, current_user.macrocycles.all, :id, :label, {prompt: "None"}, {class: "form-control macrocycle_select", disabled: @event.id.present?}) %>
+          </div>
+        </div>
+      <% end %>
     </div>
     <div class="row">
       <div class="col-sm-6">
@@ -50,11 +56,55 @@
         </div>
       <% end %>
     </div>
+
+    <% if @event.workout.present? %>
+      <div class="row">
+        <div class="col-xs-12">
+          <h4>Exercises</h4>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Exercise</th>
+                <th>Rep</th>
+                <th>Metrics</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody class="exercise_performance_list">
+              <% @event.workout.workout_exercises_ordered.each do |workout_exercise| %>
+                <% for rep in 1..workout_exercise.reps %>
+                  <% performances = @event.exercise_performances_by_metric(rep) %>
+                  <tr>
+                    <td>
+                      <% if rep == 1 %>
+                        <%= workout_exercise.exercise.label %>
+                      <% end %>
+                    </td>
+                    <td><%= rep %></td>
+                    <td>
+                      <% workout_exercise.workout_metrics.each do |workout_metric| %>
+                        <div class="col-sm-6">
+                          <%= render partial: 'exercise_performance', locals: {exercise_performance: performances[workout_metric.id]} %>
+                        </div>
+                      <% end %>
+                    </td>
+                    <td class="text-right">
+                      <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Delete</a>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% end %>
+
     <div class="row">
       <div class="col-xs-12">
         <div class="form-group">
           <%= f.label :notes %><br>
-          <%= f.text_area :notes, class: "form-control", size: "60x6" %>
+          <%= f.text_area :notes, class: "form-control", size: "60x3" %>
         </div>
       </div>
     </div>
