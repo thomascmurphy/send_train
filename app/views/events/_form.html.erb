@@ -83,7 +83,7 @@
                     <td><%= rep %></td>
                     <td>
                       <% workout_exercise.workout_metrics.each do |workout_metric| %>
-                        <div class="col-sm-6">
+                        <div class="<% if workout_exercise.workout_metrics.count > 1 %>col-sm-6<% end %>">
                           <%= render partial: 'exercise_performance', locals: {exercise_performance: performances[workout_metric.id]} %>
                         </div>
                       <% end %>
