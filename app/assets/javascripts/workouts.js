@@ -29,6 +29,7 @@ workouts_ready = function() {
       var push_row = $(this).find('tbody .push_row');
       var new_row_html = build_new_row(exercise_block);
       $(new_row_html).insertBefore(push_row);
+      $(this).find('tbody tr.placeholder_row').remove();
     }
   };
 
