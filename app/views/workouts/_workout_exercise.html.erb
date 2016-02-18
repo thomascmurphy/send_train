@@ -16,8 +16,10 @@
           <select name="workout_exercises[][workout_metrics][][value]" class="form-control inline_block" >
             <% if exercise_metric.exercise_metric_type.slug == "hold-type" %>
               <%= options_from_collection_for_select(exercise_metric.exercise_metric_options, :value, :label) %>
-            <% elsif exercise_metric.exercise_metric_type.slug == "climb-grade" %>
-              <%= options_for_select(@all_grades) %>
+            <% elsif exercise_metric.exercise_metric_type.slug == "boulder-grade" %>
+              <%= options_for_select(@boulder_grades) %>
+            <% elsif exercise_metric.exercise_metric_type.slug == "sport-grade" %>
+              <%= options_for_select(@sport_grades) %>
             <% end %>
           </select>
         <% else %>

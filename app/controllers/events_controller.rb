@@ -20,7 +20,8 @@ class EventsController < ApplicationController
   end
 
   def set_field_data
-    @all_grades = Climb.all_grades(current_user.grade_format)
+    @boulder_grades = Climb.bouldering_grades(current_user.grade_format)
+    @sport_grades = Climb.sport_grades(current_user.grade_format)
   end
 
   def index

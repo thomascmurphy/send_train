@@ -3,7 +3,8 @@ class WorkoutsController < ApplicationController
 
   def set_exercises
     @exercises = current_user.exercises
-    @all_grades = Climb.all_grades(current_user.grade_format)
+    @boulder_grades = Climb.bouldering_grades(current_user.grade_format)
+    @sport_grades = Climb.sport_grades(current_user.grade_format)
   end
 
   def index
