@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="col-xs-4 text-right">
-      <input type="submit" class="btn btn-success margin_bottom" value="<% if @workout.id.present? %>Update<% else %>Create<% end %> Workout">
+      <input type="submit" class="btn btn-success margin_bottom" value="Save Workout">
     </div>
   </div>
   <div class="row">
@@ -61,6 +61,11 @@
           <tr class="push_row" style="height: 100px"></tr>
         </tbody>
       </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 text-right">
+      <input type="submit" class="btn btn-success margin_bottom" value="Save Workout">
     </div>
   </div>
 <% end %>

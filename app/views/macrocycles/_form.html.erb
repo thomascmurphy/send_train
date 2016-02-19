@@ -2,13 +2,13 @@
   <div class="row large_margin_top">
     <div class="col-sm-6">
       <%= f.text_field :label, {placeholder: "Name", class: "form-control margin_right margin_bottom", style: "display: inline-block; width: auto; vertical-align: middle;"} %>
-      <input type="submit" class="btn btn-primary margin_bottom" value="<% if @macrocycle.id.present? %>Update<% else %>Create<% end %> Template">
+      <input type="submit" class="btn btn-primary margin_bottom" value="Save Template">
     </div>
     <div class="col-sm-6">
       <%= select_month(Date.today, {field_name: "month", prefix: "start_date"}, {class: "form-control margin_bottom", style: "display: inline-block; width: auto; vertical-align: middle;"}) %>
       <%= select_day(Date.today, {field_name: "day", prefix: "start_date"}, {class: "form-control margin_bottom", style: "display: inline-block; width: auto; vertical-align: middle;"}) %>
       <%= select_year(Date.today, {field_name: "year", prefix: "start_date"}, {class: "form-control margin_bottom", style: "display: inline-block; width: auto; vertical-align: middle;"}) %>
-      <input type="submit" name="add_events" class="btn btn-success margin_bottom" value="<% if @macrocycle.id.present? %>Update<% else %>Create<% end %> and Add to Schedule">
+      <input type="submit" name="add_events" class="btn btn-success margin_bottom" value="Save and Add to Schedule">
     </div>
 
   </div>

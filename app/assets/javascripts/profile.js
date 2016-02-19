@@ -80,7 +80,8 @@ profile_ready = function() {
       line_data.push(comparison_data);
     }
     var specific_line_options = {
-      title: $(this).data('chart-title')
+      title: $(this).data('chart-title'),
+      zoom_y: 0.75
     };
     $(this).drawLine(line_data, $.extend(specific_line_options, line_options));
   });
