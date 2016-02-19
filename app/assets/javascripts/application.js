@@ -18,7 +18,7 @@
 
 //= require bootstrap-sprockets
 //= require chartery
-//= touch-punch
+//= require touch-punch
 
 var ready;
 ready = function() {
