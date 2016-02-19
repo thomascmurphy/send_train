@@ -27,7 +27,9 @@
       <input class="form-control inline_block short_input"
              name="exercise_performances[][value]"
              type="<%= the_exercise_metric.exercise_metric_type.input_field %>"
-             value="<%= exercise_performance.value %>"
-             placeholder="Goal: <%= the_workout_metric.value %>"/>
+             value="<%= exercise_performance.value.present? ? exercise_performance.value : the_workout_metric.value %>"
+             <% if the_workout_metric.value.present? %>
+               placeholder="Goal: <%= the_workout_metric.value %>"
+             <% end %>/>
   <% end %>
 </div>
