@@ -53,6 +53,11 @@ TrainToSend::Application.routes.draw do
       get "impersonate"
     end
     get "stop_impersonating", to: 'users#stop_impersonating'
+
+    resources :item_shares, :path => "share" do
+      
+    end
+
   end
 
   get 'comment', to: 'comments#new'

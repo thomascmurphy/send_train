@@ -67,6 +67,18 @@
         </div>
       </div>
 
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <%= f.check_box(:accept_shares) %>
+            <%= f.label :accept_shares, "Accept Sharing From Other Users" %>
+          </div>
+        </div>
+        <div class="col-sm-6">
+
+        </div>
+      </div>
+
       <div class="actions">
         <%= f.submit "Update", class: "btn btn-primary" %>
       </div>

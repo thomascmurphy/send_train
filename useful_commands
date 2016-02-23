@@ -64,3 +64,8 @@ If you do not wish to kill all of you processes, you will need to use 'ps -aux' 
 
 
 export XDG_RUNTIME_DIR=/tmp/`whoami`
+
+
+ActiveRecord::Base.connection.tables.each do |t|
+  ActiveRecord::Base.connection.reset_pk_sequence!(t)
+end

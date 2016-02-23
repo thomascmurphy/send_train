@@ -95,7 +95,6 @@ class WorkoutsController < ApplicationController
     @workout.destroy
   end
 
-
   private
 
   def workout_params
