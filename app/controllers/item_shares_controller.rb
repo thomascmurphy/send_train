@@ -1,6 +1,8 @@
 class ItemSharesController < ApplicationController
 
   def show
+    @boulder_grades = Climb.bouldering_grades(current_user.grade_format)
+    @sport_grades = Climb.sport_grades(current_user.grade_format)
     @item_share = ItemShare.where(id: params[:id], recipient_id: current_user.id).first
     if @item_share.present?
       @item_share.received = true
