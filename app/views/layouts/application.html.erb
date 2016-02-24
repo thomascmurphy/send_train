@@ -77,10 +77,10 @@
                         </a>
                       </li>
 
-                      <li class="dropdown <% if current_page?(url_for controller: '/workouts', action: 'index') || current_page?(url_for controller: '/microcycles', action: 'index') || current_page?(url_for controller: '/mesocycles', action: 'index') || current_page?(url_for controller: '/macrocycles', action: 'index') %>active<% end %>">
+                      <li class="dropdown <% if current_page?(url_for controller: '/exercises', action: 'index') || current_page?(url_for controller: '/workouts', action: 'index') || current_page?(url_for controller: '/macrocycles', action: 'index') %>active<% end %>">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                           Plans <span class="caret"></span>
-                          <% if current_page?(url_for controller: '/workouts', action: 'index') || current_page?(url_for controller: '/microcycles', action: 'index') || current_page?(url_for controller: '/mesocycles', action: 'index') || current_page?(url_for controller: '/macrocycles', action: 'index') %> <span class="sr-only">(current)</span><% end %>
+                          <% if current_page?(url_for controller: '/exercises', action: 'index') || current_page?(url_for controller: '/workouts', action: 'index') || current_page?(url_for controller: '/macrocycles', action: 'index') %> <span class="sr-only">(current)</span><% end %>
                         </a>
                         <ul class="dropdown-menu">
                           <li><a href="<%= url_for controller: '/exercises', action: 'index' %>">My Exercises</a></li>
@@ -118,7 +118,7 @@
                         </ul>
                       </li>
                     <% else %>
-                      <li><%= link_to('Login', new_user_session_path) %></li>
+                      <li><%= link_to('Login / Signup', new_user_session_path) %></li>
                     <% end %>
                   </ul>
                 </div><!-- /.navbar-collapse -->

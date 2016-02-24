@@ -19,22 +19,17 @@ TrainToSend::Application.routes.draw do
 
     resources :exercises do
       get "delete"
+      get "duplicate"
     end
 
     resources :workouts do
       get "delete"
-    end
-
-    resources :microcycles do
-      get "delete"
-    end
-
-    resources :mesocycles do
-      get "delete"
+      get "duplicate"
     end
 
     resources :macrocycles, :path => "plans" do
       get "delete"
+      get "duplicate"
     end
 
     resources :events do
@@ -53,6 +48,12 @@ TrainToSend::Application.routes.draw do
       get "impersonate"
     end
     get "stop_impersonating", to: 'users#stop_impersonating'
+
+    resources :item_shares, :path => "share" do
+      get "accept"
+      get "reject"
+    end
+
   end
 
   get 'comment', to: 'comments#new'

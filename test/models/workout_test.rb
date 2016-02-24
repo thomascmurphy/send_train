@@ -1,6 +1,12 @@
 require 'test_helper'
 
 class WorkoutTest < ActiveSupport::TestCase
+  def setup
+    @user = users(:one)
+    @user2 = users(:two)
+    @workout = workouts(:hangboard)
+  end
+
   # test "all efficacy" do
   #   @workout = workouts(:hangboard)
   #   assert_equal(24, @workout.efficacy, "efficacy off")
@@ -10,4 +16,20 @@ class WorkoutTest < ActiveSupport::TestCase
   #   @workout = workouts(:hangboard)
   #   assert_equal(24, @workout.efficacy("boulder"), "boulder efficacy off")
   # end
+
+  test "duplicate for same user" do
+    new_workout = @workout.duplicate(@user)
+    assert_equal(@workout.user_id, new_workout.user_id, "user incorrect")
+    assert_equal(@workout.workout_type, new_workout.workout_type, "type incorrect")
+    assert_equal(@workout.label + " (copy)", new_workout.label, "label incorrect")
+    assert_equal(@workout.workout_exercises.count, new_workout.workout_exercises.count, "workout_exercises incorrect")
+    assert_equal(@workout.workout_metrics.count, new_workout.workout_metrics.count, "workout_metrics incorrect")
+  end
+
+
+  test "don't duplicate exercise with same reference_id" do
+    new_workout = @workout.duplicate(@user2)
+    assert_equal(2, @user2.exercises.count, "made an unnecessary copy")
+  end
+
 end

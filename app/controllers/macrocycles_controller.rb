@@ -148,10 +148,24 @@ class MacrocyclesController < ApplicationController
     end
   end
 
+  def duplicate
+    @macrocycles = current_user.macrocycles.order(created_at: :desc)
+    original_macrocycle = current_user.macrocycles.find_by_id(params[:macrocycle_id])
+    if original_macrocycle.present?
+      @macrocycle = original_macrocycle.duplicate(current_user)
+    end
+    respond_to do |format|
+      format.html
+      format.js
+      format.json
+    end
+  end
+
 
   private
-    def macrocycle_params
-      params.require(:macrocycle).permit(:label, :macrocycle_type, :mesocycle_ids => [])
-    end
+
+  def macrocycle_params
+    params.require(:macrocycle).permit(:label, :macrocycle_type, :mesocycle_ids => [])
+  end
 
 end

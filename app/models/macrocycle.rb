@@ -92,4 +92,31 @@ class Macrocycle < ActiveRecord::Base
     return (event_scores.inject{ |sum, el| sum + el }.to_f / event_scores.size) * 100
   end
 
+  def duplicate(user)
+    new_macrocycle = self.dup
+    new_macrocycle.user_id = user.id
+    if self.user_id == user.id
+      new_macrocycle.label += " (copy)"
+    end
+    referenced_workouts = user.workouts.pluck(:reference_id)
+    if new_macrocycle.save
+      if self.user_id != user.id
+        self.workouts.uniq.each do |workout|
+          if referenced_workouts.include? workout.reference_id
+            self.macrocycle_workouts.where(workout_id: workout.id).each do |macrocycle_workouts|
+              macrocycle_workout.duplicate(user, macrocycle_workout.workout_id, new_macrocycle.id)
+            end
+          else
+            workout.duplicate(user, self.id, new_macrocycle.id)
+          end
+        end
+      else
+        self.macrocycle_workouts.each do |macrocycle_workout|
+          macrocycle_workout.duplicate(user, macrocycle_workout.workout_id, new_macrocycle.id)
+        end
+      end
+      return new_macrocycle
+    end
+  end
+
 end

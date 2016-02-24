@@ -1,0 +1,12 @@
+<% if @item_share.notes.present? %>
+  <%= @item_share.notes %>
+<% else %>
+  <%= @item_share.sender.email %> has sent you a <%= @item_share.smart_item_type %>.
+<% end %>
+
+Click the following link in order to accept the shared item and duplicate it to your own account or reject it.
+
+<%= link_to(url_for(@item_share), @item_share) %>
+
+If you don't want to receive any shared items, you can deselect the option in your
+<%= link_to('preferences', {controller: '/profile', action: 'edit'}, class: "no_bg") %>

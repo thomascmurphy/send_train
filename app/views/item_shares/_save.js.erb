@@ -1,0 +1,8 @@
+$("#item_share_modal div.errors").html("").addClass('hidden');
+<% if @item_share.errors.any? %>
+  <% @item_share.errors.full_messages.each do |message| %>
+    $("#item_share_modal div.errors").removeClass('hidden').append($("<p />").html("<%= message.html_safe %>"));
+  <% end %>
+<% else %>
+  $("#item_share_modal").modal("hide");
+<% end %>

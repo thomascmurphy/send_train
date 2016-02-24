@@ -1,4 +1,4 @@
-<div class="col-md-3 col-sm-6 margin_bottom">
+<div class="col-md-4 col-sm-6 margin_bottom">
   <div class="panel<%= macrocycle.panel_class %>">
     <div class="panel-heading">
       <h3 class="panel-title"><%= macrocycle.label %></h3>
@@ -6,8 +6,10 @@
     <div class="panel-body">
       <%= pluralize(macrocycle.duration_weeks, 'Week') %>
     </div>
-    <div class="panel-footer">
+    <div class="panel-footer text-right">
+      <%= link_to "Duplicate", macrocycle_duplicate_path(macrocycle), remote: true, class: "btn btn-success" %>
       <%= link_to "Edit", edit_macrocycle_path(macrocycle), class: "btn btn-info" %>
+      <%= link_to "Share", new_item_share_path(item_type: "Macrocycle", item_id: macrocycle.id), remote: true, class: "btn btn-warning" %>
       <%= link_to "Delete", macrocycle_delete_path(macrocycle), remote: true, class: "btn btn-danger" %>
     </div>
   </div>

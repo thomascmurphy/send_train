@@ -48,7 +48,7 @@ class ProfileController < ApplicationController
   def profile_params
     params.require(:user).permit(:first_name, :last_name, :grade_format,
                                  :birthdate, :climbing_start_date, :default_length_unit,
-                                 :default_weight_unit, :gym_name)
+                                 :default_weight_unit, :gym_name, :accept_shares)
   end
 
 end

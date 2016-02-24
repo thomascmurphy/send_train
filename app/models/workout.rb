@@ -170,4 +170,36 @@ class Workout < ActiveRecord::Base
     end
   end
 
+  def duplicate(user, old_macrocycle_id=nil, new_macrocycle_id=nil)
+    new_workout = self.dup
+    new_workout.user_id = user.id
+    if new_macrocycle_id.blank? && self.user_id == user.id
+      new_workout.label += " (copy)"
+    end
+    referenced_exercises = user.exercises.pluck(:reference_id)
+    if new_workout.save
+      if old_macrocycle_id.present? && new_macrocycle_id.present?
+        self.macrocycle_workouts.where(macrocycle_id: old_macrocycle_id).each do |macrocycle_workout|
+          macrocycle_workout.duplicate(user, new_workout.id, new_macrocycle_id)
+        end
+      end
+      if self.user_id != user.id
+        self.exercises.uniq.each do |exercise|
+          if referenced_exercises.include? exercise.reference_id
+            self.workout_exercises.where(exercise_id: exercise.id).each do |workout_exercise|
+              workout_exercise.duplicate(user, workout_exercise.exercise_id, new_workout.id)
+            end
+          else
+            exercise.duplicate(user, self.id, new_workout.id)
+          end
+        end
+      else
+        self.workout_exercises.each do |workout_exercise|
+          workout_exercise.duplicate(user, workout_exercise.exercise_id, new_workout.id)
+        end
+      end
+      return new_workout
+    end
+  end
+
 end

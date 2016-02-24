@@ -1,0 +1,11 @@
+one:
+  workout: hangboard
+  macrocycle: macro
+  order_in_day: 0
+  day_in_cycle: 1
+
+two:
+  workout: campusboard
+  macrocycle: macro
+  order_in_day: 0
+  day_in_cycle: 3

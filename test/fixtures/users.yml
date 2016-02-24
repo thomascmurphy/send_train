@@ -9,5 +9,7 @@ one:
   email: test@test.com
 # column: value
 #
-two: {}
+two:
+  id: 2
+  email: test2@test.com
 #  column: value
