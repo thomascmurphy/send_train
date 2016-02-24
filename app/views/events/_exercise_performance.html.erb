@@ -17,9 +17,9 @@
       <% if the_exercise_metric.exercise_metric_type.slug == "hold-type" %>
         <%= options_from_collection_for_select(the_exercise_metric.exercise_metric_options, :value, :label, exercise_performance.value || the_workout_metric.value) %>
       <% elsif the_exercise_metric.exercise_metric_type.slug == "boulder-grade" %>
-        <%= options_for_select(@boulder_grades, workout_metric.value) %>
+        <%= options_for_select(@boulder_grades, the_workout_metric.value) %>
       <% elsif the_exercise_metric.exercise_metric_type.slug == "sport-grade" %>
-        <%= options_for_select(@sport_grades, workout_metric.value) %>
+        <%= options_for_select(@sport_grades, the_workout_metric.value) %>
       <% end %>
     </select>
 
