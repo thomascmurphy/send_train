@@ -4,9 +4,96 @@
       <%= @item_share.smart_item_type %>
       <small>from <%= @item_share.sharer.email %></small>
     </h1>
-    <p>You've received a shared <%= @item_share.smart_item_type.downcase %>.</p>
+    <p class="lead">You've received a shared <%= @item_share.smart_item_type.downcase %>.</p>
+  </div>
+</div>
+<div class="row text-right">
+  <div class="col-xs-12">
+    <%= link_to "Accept and Copy Plan", item_share_accept_path(@item_share), class:"btn btn-success margin_bottom" %>
+    <%= link_to "Reject this Plan", item_share_reject_path(@item_share), class:"btn btn-danger margin_bottom" %>
   </div>
 </div>
 <div class="row">
+  <% if @item_share.item_type.downcase == "macrocycle" %>
+    <% @macrocycle = @item_share.item %>
+    <div class="col-xs-12 calendar margin_bottom">
+      <div class="row calendar_days_header hidden-xs">
+        <div class="col-sm-1 calendar_day">
+          <h5>Day 1</h5>
+        </div>
+        <div class="col-sm-1 calendar_day">
+          <h5>Day 2</h5>
+        </div>
+        <div class="col-sm-1 calendar_day">
+          <h5>Day 3</h5>
+        </div>
+        <div class="col-sm-1 calendar_day">
+          <h5>Day 4</h5>
+        </div>
+        <div class="col-sm-1 calendar_day">
+          <h5>Day 5</h5>
+        </div>
+        <div class="col-sm-1 calendar_day">
+          <h5>Day 6</h5>
+        </div>
+        <div class="col-sm-1 calendar_day">
+          <h5>Day 7</h5>
+        </div>
+      </div>
+
+      <% for week in 1..@macrocycle.duration_weeks %>
+        <div class="row row-eq-height-sm calendar_week" data-week=1>
+          <% for day in 1..7 %>
+            <div class="col-sm-1 calendar_day">
+              <span class="visible-xs-block">Day <%= day %></span>
+              <% if @macrocycle.workouts_by_day[(week-1)*7 + day].present? %>
+                <% @macrocycle.workouts_by_day[(week-1)*7 + day].each do |macrocycle_workout| %>
+                  <div class="alert<%= macrocycle_workout.workout.alert_class %>">
+                    <%= macrocycle_workout.workout.label %>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+
+
+  <% elsif @item_share.item_type.downcase == "workout" %>
+    <% @workout = @item_share.item %>
+    <div class="row">
+      <div class="col-xs-12">
+        <h4>Exercises</h4>
+        <table class="table table-striped exercise_list">
+          <thead>
+            <tr>
+              <th>Exercise</th>
+              <th class="text-right">Options</th>
+              <th class="text-right">Reps</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @workout.workout_exercises_ordered.each do |workout_exercise| %>
+              <tr>
+                <td>
+                  <%= workout_exercise.exercise.label %>
+                </td>
+                <td>
+                  <% workout_exercise.workout_metrics.each do |workout_metric| %>
+                    <%= render partial: '/workouts/workout_metric', locals: {workout_metric: workout_metric, disabled: true} %>
+                  <% end %>
+                </td>
+                <td class="text-right">
+                  <input class="form-control inline_block" type="number" name="workout_exercises[][reps]" value="<%= workout_exercise.reps %>" disabled="disabled"/>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
 
 </div>

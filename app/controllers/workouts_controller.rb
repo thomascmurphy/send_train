@@ -95,6 +95,19 @@ class WorkoutsController < ApplicationController
     @workout.destroy
   end
 
+  def duplicate
+    @workouts = current_user.workouts.order(created_at: :desc)
+    original_workout = current_user.workouts.find_by_id(params[:workout_id])
+    if original_workout.present?
+      @workout = original_workout.duplicate(current_user)
+    end
+    respond_to do |format|
+      format.html
+      format.js
+      format.json
+    end
+  end
+
   private
 
   def workout_params

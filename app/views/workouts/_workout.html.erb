@@ -1,4 +1,4 @@
-<div class="col-md-3 col-sm-6 margin_bottom">
+<div class="col-md-4 col-sm-6 margin_bottom">
   <div class="panel<%= workout.panel_class %>">
     <div class="panel-heading">
       <h3 class="panel-title"><%= workout.label %></h3>
@@ -6,9 +6,10 @@
     <div class="panel-body">
       <%= simple_format(truncate(workout.description, length: 50, separator: ' ')) %>
     </div>
-    <div class="panel-footer">
+    <div class="panel-footer text-right">
+      <%= link_to "Duplicate", workout_duplicate_path(workout), remote: true, class: "btn btn-success" %>
       <%= link_to "Edit", edit_workout_path(workout), class: "btn btn-info" %>
-      <%= link_to "Share", new_item_share_path(item_type: "Workout", item_id: workout.id), remote: true, class: "btn btn-success" %>
+      <%= link_to "Share", new_item_share_path(item_type: "Workout", item_id: workout.id), remote: true, class: "btn btn-warning" %>
       <%= link_to "Delete", workout_delete_path(workout), remote: true, class: "btn btn-danger" %>
     </div>
   </div>

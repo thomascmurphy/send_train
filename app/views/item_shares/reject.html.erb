@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h1 class="inline_block valign_middle margin_right">
+      <%= @item_share.smart_item_type %>
+      <small>from <%= @item_share.sharer.email %></small>
+    </h1>
+    <p class="lead">You've rejected the shared <%= @item_share.smart_item_type.downcase %>.</p>
+
+    <p>If you'd like to disable any future shared items, just head to your
+      <%= link_to('profile page', {controller: '/profile', action: 'edit'}) %>
+      and uncheck the <strong>"Accept Sharing From Other Users"</strong> box.</p>
+  </div>
+</div>

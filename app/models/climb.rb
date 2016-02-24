@@ -1,6 +1,6 @@
 class Climb < ActiveRecord::Base
   belongs_to :user
-  has_many :attempts
+  has_many :attempts, dependent: :destroy
 
   def redpointed
     successful_attempts = self.attempts.where(completion: 100).order(date: :desc)

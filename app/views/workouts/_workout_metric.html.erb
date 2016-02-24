@@ -10,7 +10,8 @@
   <input name="workout_exercises[][workout_metrics][][id]" type="hidden" value="<%= workout_metric.id %>"/>
   <% if workout_metric.exercise_metric.exercise_metric_type.input_field == "select" %>
 
-    <select name="workout_exercises[][workout_metrics][][value]" class="form-control inline_block" >
+    <select name="workout_exercises[][workout_metrics][][value]" class="form-control inline_block"
+    <% if defined?(disabled) && disabled.present? %>disabled="disabled"<% end %>>
       <% if workout_metric.exercise_metric.exercise_metric_type.slug == "hold-type" %>
         <%= options_from_collection_for_select(workout_metric.exercise_metric.exercise_metric_options, :value, :label, workout_metric.value) %>
       <% elsif workout_metric.exercise_metric.exercise_metric_type.slug == "boulder-grade" %>
@@ -25,6 +26,7 @@
              name="workout_exercises[][workout_metrics][][value]"
              type="<%= workout_metric.exercise_metric.exercise_metric_type.input_field %>"
              value="<%= workout_metric.value %>"
-             placeholder="Baseline Value"/>
+             placeholder="Baseline Value"
+             <% if defined?(disabled) && disabled.present? %>disabled="disabled"<% end %>/>
   <% end %>
 </div>

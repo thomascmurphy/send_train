@@ -90,6 +90,19 @@ class ExercisesController < ApplicationController
     @exercise.destroy
   end
 
+  def duplicate
+    @exercises = current_user.exercises.order(created_at: :desc)
+    original_exercise = current_user.exercises.find_by_id(params[:exercise_id])
+    if original_exercise.present?
+      @exercise = original_exercise.duplicate(current_user)
+    end
+    respond_to do |format|
+      format.html
+      format.js
+      format.json
+    end
+  end
+
 
   private
 

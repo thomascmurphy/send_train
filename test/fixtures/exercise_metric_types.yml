@@ -1,11 +1,16 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  label: MyString
-  input_field: MyString
-  slug: MyString
+weight:
+  label: Weight
+  input_field: number
+  slug: weight
 
-two:
-  label: MyString
-  input_field: MyString
-  slug: MyString
+repetitions:
+  label: Repetitions
+  input_field: number
+  slug: repetitions
+
+time:
+  label: Time
+  input_field: number
+  slug: time

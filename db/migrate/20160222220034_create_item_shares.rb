@@ -12,6 +12,6 @@ class CreateItemShares < ActiveRecord::Migration
       t.timestamps null: false
     end
 
-    add_column :users, :accept_shares, :boolean, default: false
+    add_column :users, :accept_shares, :boolean, default: true
   end
 end

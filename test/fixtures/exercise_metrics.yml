@@ -1,15 +1,14 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  label: MyString
-  exercise_metric_type_id: 
-  user_id: 
-  rest: false
-  rest_time: 1
+weightmetric:
+  label: Weight
+  exercise_metric_type: weight
+  exercise: deadhang
+  order: 0
 
-two:
-  label: MyString
-  exercise_metric_type_id: 
-  user_id: 
-  rest: false
-  rest_time: 1
+
+timemetric:
+  label: Time
+  exercise_metric_type: time
+  exercise: deadhang
+  order: 1

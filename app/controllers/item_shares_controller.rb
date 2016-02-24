@@ -49,6 +49,28 @@ class ItemSharesController < ApplicationController
 
   end
 
+  def accept
+    @item_share = ItemShare.where(id: params[:item_share_id], recipient_id: current_user.id).first
+    if @item_share.present?
+      new_item = @item_share.item.duplicate(current_user)
+      @item_share.accepted = true
+      @item_share.save
+      redirect_to new_item, notice: "Item successfully copied!"
+    else
+      redirect_to root_path, notice: "That item does not exist"
+    end
+  end
+
+  def reject
+    @item_share = ItemShare.where(id: params[:item_share_id], recipient_id: current_user.id).first
+    if @item_share.present?
+      @item_share.accepted = false
+      @item_share.save
+    else
+      redirect_to root_path, notice: "That item does not exist"
+    end
+  end
+
   private
 
   def item_share_params

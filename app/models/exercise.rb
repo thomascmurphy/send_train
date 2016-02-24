@@ -113,6 +113,26 @@ class Exercise < ActiveRecord::Base
     end
   end
 
+  def duplicate(user, old_workout_id=nil, new_workout_id=nil)
+    exercise_metric_id_conversion = {}
+    new_exercise = self.dup
+    new_exercise.user_id = user.id
+    if new_workout_id.blank?
+      new_exercise.label += " (copy)"
+    end
+    if new_exercise.save
+      self.exercise_metrics.each do |exercise_metric|
+        new_exercise_metric = exercise_metric.duplicate(user, new_exercise.id)
+        exercise_metric_id_conversion[exercise_metric.id] = new_exercise_metric.id
+      end
+      if old_workout_id.present? && new_workout_id.present?
+        self.workout_exercises.where(workout_id: old_workout_id).each do |workout_exercise|
+          workout_exercise.duplicate(user, new_exercise.id, new_workout_id, exercise_metric_id_conversion)
+        end
+      end
+      return new_exercise
+    end
+  end
 
 
 end
