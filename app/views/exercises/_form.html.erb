@@ -48,7 +48,15 @@
                   </select>
                 </td>
                 <td>
-                  <input type="text" name="exercise_metrics[][default_value]" value="<%= exercise_metric.default_value %>" class="form-control" placeholder="Default Value"/>
+                  <input type="number"
+                         name="exercise_metrics[][default_value]"
+                         value="<%= exercise_metric.default_value %>"
+                         class="form-control default_value"
+                         placeholder="Default Value"
+                         <% unless [1,2,3].include? exercise_metric.exercise_metric_type_id %>
+                          style="display: none;"
+                          disabled="disabled"
+                         <% end %>/>
                 </td>
                 <td class="text-right">
                   <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
@@ -92,12 +100,15 @@
                   <%= options_from_collection_for_select(ExerciseMetricType.all, :id, :label) %>
                 </select>
               </td>
+              <td>
+                <input type="number" name="exercise_metrics[][default_value]" value="" class="form-control default_value" placeholder="Default Value"/>
+              </td>
               <td class="text-right">
                 <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
               </td>
             </tr>
             <tr class="option_template_row hidden">
-              <td class="text-right small text-muted" style="border-width: 0;">Option for dropdown field:</td>
+              <td class="text-right small text-muted" style="border-width: 0;" colspan="2">Option for dropdown field:</td>
               <td style="border-top-style: dashed;">
                 <input type="text" name="exercise_metrics[][exercise_metric_options][][label]" value="" class="form-control"/>
               </td>
