@@ -116,6 +116,7 @@ class Event < ActiveRecord::Base
 
   def create_child_events
     if self.macrocycle.present?
+      event_date = self.start_date
       self.macrocycle.macrocycle_workouts.each do |macrocycle_workout|
         event_date = self.start_date + (macrocycle_workout.day_in_cycle - 1).days
         event = self.user.events.create(start_date: event_date.beginning_of_day,
@@ -123,6 +124,8 @@ class Event < ActiveRecord::Base
                                         workout_id: macrocycle_workout.workout.id,
                                         parent_event_id: self.id)
       end
+      self.end_date = event_date.end_of_day
+      self.save
     elsif self.workout.present?
       self.workout.workout_exercises.each do |workout_exercise|
         for rep in 1..workout_exercise.reps
@@ -134,6 +137,8 @@ class Event < ActiveRecord::Base
           end
         end
       end
+      self.end_date = self.start_date.end_of_day
+      self.save
     end
   end
 

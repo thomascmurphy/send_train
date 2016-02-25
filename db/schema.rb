@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160222220034) do
+ActiveRecord::Schema.define(version: 20160225172204) do
 
   create_table "attempts", force: :cascade do |t|
     t.datetime "date"
@@ -101,6 +101,7 @@ ActiveRecord::Schema.define(version: 20160222220034) do
     t.integer  "order"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+    t.string   "default_value"
   end
 
   add_index "exercise_metrics", ["exercise_id"], name: "index_exercise_metrics_on_exercise_id"

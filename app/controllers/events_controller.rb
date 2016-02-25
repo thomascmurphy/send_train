@@ -10,7 +10,7 @@ class EventsController < ApplicationController
     for week in 0..1
       for day in 0..6
         date = monday + (day + week * 7).days
-        @upcoming_weeks[week][date.strftime("%b %e")] = @events.where("start_date >= ? AND start_date < ? AND end_date <= ?", date.beginning_of_day, date.end_of_day, date.end_of_day).order(start_date: :asc)
+        @upcoming_weeks[week][date.strftime("%b %e")] = @events.where("start_date >= ? AND start_date < ? AND (end_date <= ? OR end_date IS NULL)", date.beginning_of_day, date.end_of_day, date.end_of_day).order(start_date: :asc)
       end
     end
 
@@ -71,7 +71,6 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
-        @event.handle_exercise_performances(params[:exercise_performances])
         format.html { redirect_to @event, notice: 'Event was successfully created.' }
         format.js
         format.json { render json: @event, status: :created, location: @event }

@@ -1,5 +1,9 @@
 <div class="planner_exercise alert<%= exercise.alert_class %> draggable" data-exercise-id="<%= exercise.id %>">
-  <span class="exercise_label"><%= exercise.label %><input name="workout_exercises[][exercise_id]" type="hidden" value="<%= exercise.id %>"/></span>
+  <span class="exercise_label">
+    <%= exercise.label %>
+    <input name="workout_exercises[][id]" type="hidden" value=""/>
+    <input name="workout_exercises[][exercise_id]" type="hidden" value="<%= exercise.id %>"/>
+  </span>
   <div class="hidden exercise_metrics">
     <% exercise.exercise_metrics.each do |exercise_metric| %>
       <div class="form-goup text-right">
@@ -26,6 +30,7 @@
           <input class="form-control inline_block"
                  name="workout_exercises[][workout_metrics][][value]"
                  type="<%= exercise_metric.exercise_metric_type.input_field %>"
+                 value="<%= exercise_metric.default_value %>"
                  placeholder="Baseline Value"/>
         <% end %>
       </div>

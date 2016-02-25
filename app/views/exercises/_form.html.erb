@@ -31,6 +31,7 @@
             <tr>
               <th>Label</th>
               <th>Metric Type</th>
+              <th>Default Value</th>
               <th></th>
             </tr>
           </thead>
@@ -46,6 +47,9 @@
                     <%= options_from_collection_for_select(ExerciseMetricType.all, :id, :label, exercise_metric.exercise_metric_type_id) %>
                   </select>
                 </td>
+                <td>
+                  <input type="text" name="exercise_metrics[][default_value]" value="<%= exercise_metric.default_value %>" class="form-control" placeholder="Default Value"/>
+                </td>
                 <td class="text-right">
                   <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
                 </td>
@@ -53,7 +57,7 @@
               <% if exercise_metric.exercise_metric_options.present? %>
                 <% exercise_metric.exercise_metric_options.each do |exercise_metric_option| %>
                   <tr class="options_row">
-                    <td class="text-right small text-muted" style="border-width: 0;">Option for dropdown field:</td>
+                    <td class="text-right small text-muted" style="border-width: 0;" colspan="2">Option for dropdown field:</td>
                     <td style="border-top-style: dashed;">
                       <%= hidden_field_tag "exercise_metrics[][exercise_metric_options][][id]", exercise_metric_option.id %>
                       <input type="text" name="exercise_metrics[][exercise_metric_options][][label]" value="<%= exercise_metric_option.label %>" class="form-control"/>
@@ -74,7 +78,7 @@
 
 
             <tr class="add_metric_button_row">
-              <td colspan="3" class="text-right" style="border-top-width: 0;">
+              <td colspan="4" class="text-right" style="border-top-width: 0;">
                 <a href="javascript:void(0);" class="add_expense_metric btn btn-success">Add Metric</a>
               </td>
             </tr>
@@ -102,7 +106,7 @@
               </td>
             </tr>
             <tr class="add_option_button_template_row" style="display:none;">
-              <td colspan="3" class="text-right" style="border-top-width: 0;">
+              <td colspan="4" class="text-right" style="border-top-width: 0;">
                 <a href="javascript:void(0);" class="add_expense_metric_option btn btn-success">Add Option</a>
               </td>
             </tr>

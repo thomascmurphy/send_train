@@ -77,6 +77,7 @@ class Exercise < ActiveRecord::Base
           exercise_metric.label = exercise_metric_label
           exercise_metric.exercise_metric_type_id = exercise_metric_params.with_indifferent_access["exercise_metric_type_id"].to_i
           exercise_metric.order = metric_index
+          exercise_metric.default_value = exercise_metric_params.with_indifferent_access["default_value"]
           exercise_metric.save
         else
           next
