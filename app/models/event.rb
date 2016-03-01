@@ -234,5 +234,12 @@ class Event < ActiveRecord::Base
     end
   end
 
+  def quantification
+    exercise = self.workout_metric.exercise_metric.exercise
+    exercise_metric = self.workout_metric.exercise_metric
+    sibling_performances = ExercisePerformance.where(event_id: self.event_id, rep: self.rep, )
+
+  end
+
 
 end
