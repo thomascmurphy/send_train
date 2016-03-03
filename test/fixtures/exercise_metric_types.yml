@@ -1,5 +1,10 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+holdtype:
+  label: Hold Type
+  input_field: select
+  slug: hold-type
+
 weight:
   label: Weight
   input_field: number
@@ -14,3 +19,8 @@ time:
   label: Time
   input_field: number
   slug: time
+
+resttime:
+  label: Rest Time
+  input_field: number
+  slug: rest-time

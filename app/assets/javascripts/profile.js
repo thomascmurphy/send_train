@@ -41,7 +41,9 @@ profile_ready = function() {
   var line_options = {
       colors: [
           '#00BCD4',
-          '#FF9800'],
+          '#FF9800',
+          '#5cb85c',
+          '#d9534f'],
       has_key: false,
       hover: true
   };
@@ -86,7 +88,31 @@ profile_ready = function() {
     $(this).drawLine(line_data, $.extend(specific_line_options, line_options));
   });
 
+  $('.build_many_lines').each(function(){
+    var full_line_data = [];
+    var raw_data = $(this).data('line-data');
+    for (var name in raw_data) {
+      if (!raw_data.hasOwnProperty(name)) continue;
+      var line_data = [];
+      var capital_name = name.charAt(0).toUpperCase() + name.slice(1);
+      for (var i=0; i<raw_data[name].length; i++) {
+        raw_data[name][i]
+        var point_value = {name: capital_name + " " + raw_data[name][i]["date"],
+                           value: raw_data[name][i]["value"]};
+        line_data.push(point_value);
+      }
+      full_line_data.push(line_data);
+    }
+    var specific_line_options = {
+      title: $(this).data('chart-title'),
+      zoom_y: 0.75
+    };
+    $(this).drawLine(full_line_data, $.extend(specific_line_options, line_options));
+  });
+
 }
+
+
 
 $(document).ready(profile_ready);
 $(document).on('page:load', profile_ready);

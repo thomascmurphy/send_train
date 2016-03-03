@@ -43,6 +43,12 @@ class ProfileController < ApplicationController
     end
   end
 
+  def progress
+    @user = current_user
+    @workout = Workout.find(1)
+    @workout_progress = @workout.progress.to_json
+  end
+
   private
 
   def profile_params

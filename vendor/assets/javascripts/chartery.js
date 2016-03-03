@@ -1408,7 +1408,7 @@ if(!full_donut){
 
     }
 
-    element.addClass('chart').addClass('bar_chart');
+    element.addClass('chart').addClass('line_chart');
 
     return element;
   };

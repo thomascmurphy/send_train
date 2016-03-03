@@ -1,14 +1,25 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+holdmetric:
+  label: Hold
+  exercise_metric_type: hold
+  exercise: deadhang
+  order: 0
+
 weightmetric:
   label: Weight
   exercise_metric_type: weight
   exercise: deadhang
-  order: 0
-
+  order: 1
 
 timemetric:
   label: Time
   exercise_metric_type: time
   exercise: deadhang
-  order: 1
+  order: 2
+
+restmetric:
+  label: Rest Time
+  exercise_metric_type: resttime
+  exercise: deadhang
+  order: 3

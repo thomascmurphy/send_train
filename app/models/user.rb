@@ -45,7 +45,7 @@ class User < ActiveRecord::Base
     )
     deadhang_metric_rest_time = deadhang.exercise_metrics.create(
       label: "Rest Time",
-      exercise_metric_type_id: 3
+      exercise_metric_type_id: 8
     )
 
     campus = self.exercises.create(
@@ -59,7 +59,7 @@ class User < ActiveRecord::Base
     )
     campus_metric_rest_time = campus.exercise_metrics.create(
       label: "Rest Time",
-      exercise_metric_type_id: 3
+      exercise_metric_type_id: 8
     )
 
     rest = self.exercises.create(
@@ -69,7 +69,7 @@ class User < ActiveRecord::Base
     )
     rest_metric_rest_time = rest.exercise_metrics.create(
       label: "Rest Time",
-      exercise_metric_type_id: 3
+      exercise_metric_type_id: 8
     )
   end
 
@@ -193,6 +193,14 @@ class User < ActiveRecord::Base
       end
     end
     return should_show
+  end
+
+  def agnostic_weight(weight)
+    agnostic_weight = weight
+    if self.default_weight_unit == "lb"
+      agnostic_weight = weight * 0.453592
+    end
+    return agnostic_weight
   end
 
 end

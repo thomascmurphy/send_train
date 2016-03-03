@@ -13,5 +13,6 @@ exercise_metric_types = ExerciseMetricType.create([
                                                     { label: 'Campus Rungs', input_field: 'text', slug: 'campus-rungs' },
                                                     { label: 'Hold Type', input_field: 'select', slug: 'hold-type' },
                                                     { label: 'Boulder Grade', input_field: 'select', slug: 'boulder-grade' },
-                                                    { label: 'Sport Grade', input_field: 'select', slug: 'sport-grade' }
+                                                    { label: 'Sport Grade', input_field: 'select', slug: 'sport-grade' },
+                                                    { label: 'Rest Time', input_field: 'number', slug: 'rest-time' },
                                                   ])

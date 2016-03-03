@@ -234,11 +234,20 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def quantification
-    exercise = self.workout_metric.exercise_metric.exercise
-    exercise_metric = self.workout_metric.exercise_metric
-    sibling_performances = ExercisePerformance.where(event_id: self.event_id, rep: self.rep, )
-
+  def quantify
+    quantification = {}
+    completed_workout_exercises = []
+    self.exercise_performances.each do |exercise_performance|
+      workout_exercise_id = exercise_performance.workout_metric.workout_exercise_id
+      if !completed_workout_exercises.include? workout_exercise_id
+        exercise_performance_quantification = exercise_performance.quantify
+        if exercise_performance_quantification[:name].present? && exercise_performance_quantification[:value].present?
+          quantification[exercise_performance_quantification[:name]] = exercise_performance_quantification[:value]
+        end
+        completed_workout_exercises << workout_exercise_id
+      end
+    end
+    return quantification
   end
 
 
