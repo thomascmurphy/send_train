@@ -30,7 +30,7 @@ class ExercisePerformance < ActiveRecord::Base
             hold_type = performance.value
           when 'weight'
             weight_original = performance.value.to_i
-            weight = performance.user.agnostic_weight(performance.value.to_i) + 20
+            weight = performance.user.agnostic_weight(performance.value.to_i)
           when 'time'
             hang_time = performance.value.to_i
           when 'rest-time'
