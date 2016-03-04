@@ -20,4 +20,15 @@ class WorkoutExercise < ActiveRecord::Base
       return new_workout_exercise
     end
   end
+
+  def useful_label
+    useful_label = self.exercise.label
+    workout_metrics = self.workout_metrics.all
+    workout_metrics.each do |workout_metric|
+      if workout_metric.exercise_metric.exercise_metric_type_id == ExerciseMetricType::HOLD_TYPE_ID
+        useful_label = workout_metric.value.capitalize
+      end
+    end
+    return useful_label
+  end
 end

@@ -105,6 +105,11 @@ profile_ready = function() {
     $(this).drawLine(line_data, $.extend(specific_line_options, line_options));
   });
 
+  $('.progress_form').on('change', '.workout_select', function() {
+    $(this).closest('.progress_form').find('.workout_exercise_select_area').hide();
+    $(this).closest('.progress_form').find('.workout_exercise_select').prop('disabled', true);
+  });
+
 }
 
 

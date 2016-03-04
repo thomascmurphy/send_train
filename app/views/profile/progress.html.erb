@@ -4,26 +4,34 @@
   </div>
 </div>
 
-<div class="row large_margin_top margin_bottom">
-  <div class="col-xs-12">
-    <%= form_tag("/profile/progress", method: "get", class: "form-inline margin_top" ) do %>
-        <div class="form-group">
-          <strong>Workout: </strong>
-          <%= select_tag("workout_id", options_from_collection_for_select(current_user.workouts.all, "id", "label", @workout.present? ? @workout.id : 0), {prompt: "Choose Workout", class: "form-control workout_select"}) %>
-        </div>
-        <% if current_user.should_show_climb_data? %>
-          <div class="form-group margin_left">
-            <label>
-              <%= check_box_tag("show_climbs", "true", @show_climbs) %>
-              Show climbing progress
-            </label>
-          </div>
-        <% end %>
-        <%= submit_tag("Show", name: nil, class: "btn btn-primary margin_left") %>
+<%= form_tag("/profile/progress", method: "get", class: "form-inline margin_top progress_form" ) do %>
+  <div class="row large_margin_top margin_bottom">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <strong>Workout: </strong>
+        <%= select_tag("workout_id", options_from_collection_for_select(current_user.workouts.all, "id", "label", @workout.present? ? @workout.id : 0), {prompt: "Choose Workout", class: "form-control workout_select"}) %>
       </div>
-    <% end %>
+      <% if @workout.present? %>
+        <div class="form-group margin_left workout_exercise_select_area" style="vertical-align: text-top;">
+          <strong class="valign_top">Exercises: </strong>
+          <%= select_tag("workout_exercise_ids", options_from_collection_for_select(@workout.useful_workout_exercises, "id", "useful_label", @filter_workout_exercise_ids), {multiple: true, class: "form-control workout_exercise_select"}) %>
+        </div>
+      <% end %>
+      <% if current_user.should_show_climb_data? %>
+        <div class="form-group margin_left">
+          <label>
+            <%= check_box_tag("show_climbs", "true", @show_climbs) %>
+            Show climbing progress
+          </label>
+        </div>
+      <% end %>
+      <%= submit_tag("Show", name: nil, class: "btn btn-primary margin_left") %>
+    </div>
+
   </div>
-</div>
+<% end %>
+
+
 <div class="row large_margin_top margin_bottom">
   <div class="col-xs-12">
     <div class="progress_area">

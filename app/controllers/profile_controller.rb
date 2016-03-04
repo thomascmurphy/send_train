@@ -47,9 +47,10 @@ class ProfileController < ApplicationController
     @workout = nil
     @climb_data = nil
     @show_climbs = params[:show_climbs]
+    @filter_workout_exercise_ids = params[:workout_exercise_ids].present? ? params[:workout_exercise_ids].map(&:to_i) : nil
     if params[:workout_id].present?
       @workout = current_user.workouts.find_by_id(params[:workout_id])
-      progress = @workout.progress
+      progress = @workout.progress(@filter_workout_exercise_ids)
       formatted_progress = []
       progress.each do |hold, quantifications|
         hold_progress = []

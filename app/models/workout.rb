@@ -20,6 +20,17 @@ class Workout < ActiveRecord::Base
     self.workout_exercises.order(:order_in_workout)
   end
 
+  def useful_workout_exercises
+    useful_workout_exercises = []
+    self.workout_exercises.each do |workout_exercise|
+      exercise_metrics = workout_exercise.exercise.exercise_metrics
+      unless exercise_metrics.count == 1 && exercise_metrics.first.exercise_metric_type_id == ExerciseMetricType::REST_TIME_ID
+        useful_workout_exercises << workout_exercise
+      end
+    end
+    return useful_workout_exercises
+  end
+
   def panel_class
     case self.workout_type
     when "strength"
@@ -203,14 +214,14 @@ class Workout < ActiveRecord::Base
     end
   end
 
-  def progress(start_date=(DateTime.now - 1.year), end_date=DateTime.now)
+  def progress(filter_workout_exercise_ids=nil, start_date=(DateTime.now - 1.year), end_date=DateTime.now)
     progress = {}
     events = self.events.where("start_date >= ? AND end_date <= ? AND completed = ?",
                                start_date.beginning_of_day,
                                end_date.end_of_day,
                                true).order(end_date: :asc)
     events.each do |event|
-      quantifications = event.quantify
+      quantifications = event.quantify(filter_workout_exercise_ids)
       quantifications.each do |name, value|
         if progress[name].present?
           progress[name] << {date: event.end_date.strftime("%b %d, %Y"), value: value.round(2)}
