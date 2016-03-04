@@ -43,7 +43,10 @@ profile_ready = function() {
           '#00BCD4',
           '#FF9800',
           '#5cb85c',
-          '#d9534f'],
+          '#d9534f',
+          '#c174b0',
+          '#00ae9d'
+          '#FDD835'],
       has_key: false,
       hover: true
   };
