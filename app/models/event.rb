@@ -242,8 +242,9 @@ class Event < ActiveRecord::Base
       if !completed_workout_exercises.include? workout_exercise_id
         if filter_workout_exercise_ids.blank? || (filter_workout_exercise_ids.include? workout_exercise_id)
           exercise_performance_quantification = exercise_performance.quantify
-          if exercise_performance_quantification[:name].present? && exercise_performance_quantification[:value].present?
-            quantification[exercise_performance_quantification[:name]] = exercise_performance_quantification[:value]
+          if exercise_performance_quantification[:name].present? && exercise_performance_quantification[:value].present? && exercise_performance_quantification[:tooltip_value].present?
+            quantification[exercise_performance_quantification[:name]] = {value: exercise_performance_quantification[:value],
+                                                                          tooltip_value: exercise_performance_quantification[:tooltip_value]}
           end
           completed_workout_exercises << workout_exercise_id
         end

@@ -52,12 +52,12 @@ class ProfileController < ApplicationController
       @workout = current_user.workouts.find_by_id(params[:workout_id])
       progress = @workout.progress(@filter_workout_exercise_ids)
       formatted_progress = []
-      progress.each do |hold, quantifications|
+      progress.each do |label, quantifications|
         hold_progress = []
         quantifications.each do |quantification|
-          hold_progress << {name: "#{hold.capitalize} #{quantification[:date]}",
+          hold_progress << {name: "#{label.capitalize} (#{quantification[:date]})",
                             value: quantification[:value],
-                            tooltip_value: quantification[:value]}
+                            tooltip_value: quantification[:tooltip_value]}
         end
         formatted_progress << hold_progress
       end
