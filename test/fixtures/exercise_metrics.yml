@@ -2,7 +2,7 @@
 
 holdmetric:
   label: Hold
-  exercise_metric_type: hold
+  exercise_metric_type: holdtype
   exercise: deadhang
   order: 0
 

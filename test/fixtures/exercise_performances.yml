@@ -6,6 +6,7 @@ one:
   value: crimp
   event: hangboard1
   rep: 1
+  date: 2016-01-04 17:47:38
 
 two:
   user_id: 1
@@ -13,6 +14,7 @@ two:
   value: 15
   event: hangboard1
   rep: 1
+  date: 2016-01-04 17:47:38
 
 three:
   user_id: 1
@@ -20,6 +22,7 @@ three:
   value: 8
   event: hangboard1
   rep: 1
+  date: 2016-01-04 17:47:38
 
 four:
   user_id: 1
@@ -27,6 +30,7 @@ four:
   value: 12
   event: hangboard1
   rep: 1
+  date: 2016-01-04 17:47:38
 
 five:
   user_id: 1
@@ -41,13 +45,15 @@ six:
   value: 20
   event: hangboard1
   rep: 2
+  date: 2016-01-04 17:47:38
 
 seven:
   user_id: 1
   workout_metric: crimptime
-  value: 6
+  value: 7
   event: hangboard1
   rep: 2
+  date: 2016-01-04 17:47:38
 
 eight:
   user_id: 1
@@ -55,6 +61,7 @@ eight:
   value: 14
   event: hangboard1
   rep: 2
+  date: 2016-01-04 17:47:38
 
 
 
@@ -64,6 +71,7 @@ nine:
   value: sloper
   event: hangboard1
   rep: 1
+  date: 2016-01-04 17:47:38
 
 ten:
   user_id: 1
@@ -71,6 +79,7 @@ ten:
   value: 25
   event: hangboard1
   rep: 1
+  date: 2016-01-04 17:47:38
 
 eleven:
   user_id: 1
@@ -78,6 +87,7 @@ eleven:
   value: 10
   event: hangboard1
   rep: 1
+  date: 2016-01-04 17:47:38
 
 twelve:
   user_id: 1
@@ -85,6 +95,7 @@ twelve:
   value: 10
   event: hangboard1
   rep: 1
+  date: 2016-01-04 17:47:38
 
 thirteen:
   user_id: 1
@@ -92,6 +103,7 @@ thirteen:
   value: sloper
   event: hangboard1
   rep: 2
+  date: 2016-01-04 17:47:38
 
 fourteen:
   user_id: 1
@@ -99,6 +111,7 @@ fourteen:
   value: 25
   event: hangboard1
   rep: 2
+  date: 2016-01-04 17:47:38
 
 fifteen:
   user_id: 1
@@ -106,6 +119,7 @@ fifteen:
   value: 10
   event: hangboard1
   rep: 2
+  date: 2016-01-04 17:47:38
 
 sixteen:
   user_id: 1
@@ -113,3 +127,4 @@ sixteen:
   value: 10
   event: hangboard1
   rep: 2
+  date: 2016-01-04 17:47:38

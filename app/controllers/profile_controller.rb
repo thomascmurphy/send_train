@@ -44,9 +44,33 @@ class ProfileController < ApplicationController
   end
 
   def progress
+    @workout = nil
+    @climb_data = nil
+    @show_climbs = params[:show_climbs]
+    if params[:workout_id].present?
+      @workout = current_user.workouts.find_by_id(params[:workout_id])
+      progress = @workout.progress
+      formatted_progress = []
+      progress.each do |hold, quantifications|
+        hold_progress = []
+        quantifications.each do |quantification|
+          hold_progress << {name: "#{hold.capitalize} #{quantification[:date]}",
+                            value: quantification[:value],
+                            tooltip_value: quantification[:value]}
+        end
+        formatted_progress << hold_progress
+      end
+      @workout_progress = formatted_progress.to_json
+    end
     @user = current_user
-    @workout = Workout.find(1)
-    @workout_progress = @workout.progress.to_json
+    if @show_climbs.present? && @user.should_show_climb_data?
+      @climb_data = @user.profile_graph_data.to_json
+    end
+    respond_to do |format|
+      format.html
+      format.js { render :reload }
+      format.json { render json: @workout_progress, status: :ok }
+    end
   end
 
   private

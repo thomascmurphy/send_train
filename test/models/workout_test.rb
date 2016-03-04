@@ -32,4 +32,11 @@ class WorkoutTest < ActiveSupport::TestCase
     assert_equal(2, @user2.exercises.count, "made an unnecessary copy")
   end
 
+  test "progress" do
+    progress = @workout.progress
+    crimp_progress = progress["crimp"]
+    assert_equal("Jan 11, 2016", crimp_progress[:date], "progress date off, remember formatting")
+    assert_equal(58.97, crimp_progress[:value], "progress value off, remember rounding")
+  end
+
 end

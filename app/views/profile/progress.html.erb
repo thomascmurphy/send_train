@@ -5,15 +5,29 @@
 </div>
 
 <div class="row large_margin_top margin_bottom">
-  <div class="col-sm-12">
-    <h3>Workout Progress</h3>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><%= @workout.label %></h3>
+  <div class="col-xs-12">
+    <%= form_tag("/profile/progress", method: "get", class: "form-inline margin_top" ) do %>
+        <div class="form-group">
+          <strong>Workout: </strong>
+          <%= select_tag("workout_id", options_from_collection_for_select(current_user.workouts.all, "id", "label", @workout.present? ? @workout.id : 0), {prompt: "Choose Workout", class: "form-control workout_select"}) %>
+        </div>
+        <% if current_user.should_show_climb_data? %>
+          <div class="form-group margin_left">
+            <label>
+              <%= check_box_tag("show_climbs", "true", @show_climbs) %>
+              Show climbing progress
+            </label>
+          </div>
+        <% end %>
+        <%= submit_tag("Show", name: nil, class: "btn btn-primary margin_left") %>
       </div>
-      <div class="panel-body">
-          <div class="build_many_lines" data-line-data='<%= @workout_progress %>'></div>
-      </div>
+    <% end %>
+  </div>
+</div>
+<div class="row large_margin_top margin_bottom">
+  <div class="col-xs-12">
+    <div class="progress_area">
+      <%= render "progress" %>
     </div>
   </div>
 </div>

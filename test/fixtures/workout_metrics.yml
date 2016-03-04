@@ -1,39 +1,39 @@
 crimphold:
-  workout_exercise: hangboarddeadhang
+  workout_exercise: hangboarddeadhang1
   exercise_metric: holdmetric
   value:
 
 crimpweight:
-  workout_exercise: hangboarddeadhang
+  workout_exercise: hangboarddeadhang1
   exercise_metric: weightmetric
   value:
 
 crimptime:
-  workout_exercise: hangboarddeadhang
+  workout_exercise: hangboarddeadhang1
   exercise_metric: timemetric
   value:
 
 crimprest:
-  workout_exercise: hangboarddeadhang
+  workout_exercise: hangboarddeadhang1
   exercise_metric: restmetric
   value:
 
 sloperhold:
-  workout_exercise: hangboarddeadhang
+  workout_exercise: hangboarddeadhang2
   exercise_metric: holdmetric
   value:
 
 sloperweight:
-  workout_exercise: hangboarddeadhang
+  workout_exercise: hangboarddeadhang2
   exercise_metric: weightmetric
   value:
 
 slopertime:
-  workout_exercise: hangboarddeadhang
+  workout_exercise: hangboarddeadhang2
   exercise_metric: timemetric
   value:
 
 sloperrest:
-  workout_exercise: hangboarddeadhang
+  workout_exercise: hangboarddeadhang2
   exercise_metric: restmetric
   value:

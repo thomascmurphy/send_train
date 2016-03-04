@@ -171,7 +171,7 @@ class User < ActiveRecord::Base
   # end
 
 
-  def should_show_climb_data
+  def should_show_climb_data?
     should_show = false
     climb_count = self.climbs.count
     oldest_attempt = self.attempts.order(date: :asc).first
@@ -183,7 +183,7 @@ class User < ActiveRecord::Base
     return should_show
   end
 
-  def should_show_workout_data
+  def should_show_workout_data?
     should_show = false
     completed_macrocycles_count = self.events.where.not(macrocycle_id: nil).count
     oldest_completed = self.events.where.not(macrocycle_id: nil).order(start_date: :asc)

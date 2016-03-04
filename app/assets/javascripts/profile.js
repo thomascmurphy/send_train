@@ -89,25 +89,16 @@ profile_ready = function() {
   });
 
   $('.build_many_lines').each(function(){
-    var full_line_data = [];
-    var raw_data = $(this).data('line-data');
-    for (var name in raw_data) {
-      if (!raw_data.hasOwnProperty(name)) continue;
-      var line_data = [];
-      var capital_name = name.charAt(0).toUpperCase() + name.slice(1);
-      for (var i=0; i<raw_data[name].length; i++) {
-        raw_data[name][i]
-        var point_value = {name: capital_name + " " + raw_data[name][i]["date"],
-                           value: raw_data[name][i]["value"]};
-        line_data.push(point_value);
-      }
-      full_line_data.push(line_data);
+    var line_data = $(this).data('line-data');
+    if (typeof $(this).data('first-line-data') != 'undefined') {
+      line_data.unshift($(this).data('first-line-data'));
+      line_options.colors.unshift("#000000");
     }
     var specific_line_options = {
       title: $(this).data('chart-title'),
       zoom_y: 0.75
     };
-    $(this).drawLine(full_line_data, $.extend(specific_line_options, line_options));
+    $(this).drawLine(line_data, $.extend(specific_line_options, line_options));
   });
 
 }
