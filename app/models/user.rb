@@ -176,7 +176,7 @@ class User < ActiveRecord::Base
     climb_count = self.climbs.count
     oldest_attempt = self.attempts.order(date: :asc).first
     if oldest_attempt.present?
-      if climb_count > 2 && oldest_attempt.date < DateTime.now - 2.weeks
+      if climb_count > 20 && oldest_attempt.date < DateTime.now - 6.weeks
         should_show = true
       end
     end
