@@ -96,6 +96,7 @@ profile_ready = function() {
     if (typeof $(this).data('first-line-data') != 'undefined') {
       line_data.unshift($(this).data('first-line-data'));
       line_options.colors.unshift("#000000");
+      line_options.separate_scales = true;
     }
     var specific_line_options = {
       title: $(this).data('chart-title'),
