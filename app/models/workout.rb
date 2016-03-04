@@ -6,6 +6,7 @@ class Workout < ActiveRecord::Base
   has_many :workout_exercises, dependent: :destroy
   has_many :exercises, through: :workout_exercises
   has_many :workout_metrics, through: :workout_exercises
+  has_many :exercise_performances, through: :workout_metrics
   after_create :set_reference_id
 
   def set_reference_id
@@ -200,6 +201,22 @@ class Workout < ActiveRecord::Base
       end
       return new_workout
     end
+  end
+
+  def progress(start_date=(DateTime.now - 1.year), end_date=DateTime.now)
+    progress = {}
+    events = self.events.where("start_date >= ? AND end_date <= ?", start_date.beginning_of_day, end_date.end_of_day)
+    events.each do |event|
+      quantifications = event.quantify
+      quantifications.each do |name, value|
+        if progress[name].present?
+          progress[name] << {date: event.end_date.strftime("%b %d, %Y"), value: value.round(2)}
+        else
+          progress[name] = [{date: event.end_date.strftime("%b %d, %Y"), value: value.round(2)}]
+        end
+      end
+    end
+    return progress
   end
 
 end

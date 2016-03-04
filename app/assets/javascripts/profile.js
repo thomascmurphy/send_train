@@ -41,7 +41,12 @@ profile_ready = function() {
   var line_options = {
       colors: [
           '#00BCD4',
-          '#FF9800'],
+          '#FF9800',
+          '#5cb85c',
+          '#d9534f',
+          '#c174b0',
+          '#00ae9d'
+          '#FDD835'],
       has_key: false,
       hover: true
   };
@@ -86,7 +91,22 @@ profile_ready = function() {
     $(this).drawLine(line_data, $.extend(specific_line_options, line_options));
   });
 
+  $('.build_many_lines').each(function(){
+    var line_data = $(this).data('line-data');
+    if (typeof $(this).data('first-line-data') != 'undefined') {
+      line_data.unshift($(this).data('first-line-data'));
+      line_options.colors.unshift("#000000");
+    }
+    var specific_line_options = {
+      title: $(this).data('chart-title'),
+      zoom_y: 0.75
+    };
+    $(this).drawLine(line_data, $.extend(specific_line_options, line_options));
+  });
+
 }
+
+
 
 $(document).ready(profile_ready);
 $(document).on('page:load', profile_ready);

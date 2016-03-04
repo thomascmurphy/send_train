@@ -1,10 +1,16 @@
-one:
+hangboarddeadhang1:
   workout: hangboard
   exercise: deadhang
   order_in_workout: 0
   reps: 1
 
-two:
+hangboarddeadhang2:
+  workout: hangboard
+  exercise: deadhang
+  order_in_workout: 1
+  reps: 1
+
+hangboardcampus:
   workout: hangboard
   exercise: campus
   order_in_workout: 1

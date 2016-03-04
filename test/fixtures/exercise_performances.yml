@@ -1,13 +1,130 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  user_id:
-  workout_metric_id:
-  value: MyString
-  event_id:
+  user_id: 1
+  workout_metric: crimphold
+  value: crimp
+  event: hangboard1
+  rep: 1
+  date: 2016-01-04 17:47:38
 
 two:
-  user_id:
-  workout_metric_id: 
-  value: MyString
-  event_id:
+  user_id: 1
+  workout_metric: crimpweight
+  value: 15
+  event: hangboard1
+  rep: 1
+  date: 2016-01-04 17:47:38
+
+three:
+  user_id: 1
+  workout_metric: crimptime
+  value: 8
+  event: hangboard1
+  rep: 1
+  date: 2016-01-04 17:47:38
+
+four:
+  user_id: 1
+  workout_metric: crimprest
+  value: 12
+  event: hangboard1
+  rep: 1
+  date: 2016-01-04 17:47:38
+
+five:
+  user_id: 1
+  workout_metric: crimphold
+  value: crimp
+  event: hangboard1
+  rep: 2
+
+six:
+  user_id: 1
+  workout_metric: crimpweight
+  value: 20
+  event: hangboard1
+  rep: 2
+  date: 2016-01-04 17:47:38
+
+seven:
+  user_id: 1
+  workout_metric: crimptime
+  value: 7
+  event: hangboard1
+  rep: 2
+  date: 2016-01-04 17:47:38
+
+eight:
+  user_id: 1
+  workout_metric: crimprest
+  value: 14
+  event: hangboard1
+  rep: 2
+  date: 2016-01-04 17:47:38
+
+
+
+nine:
+  user_id: 1
+  workout_metric: sloperhold
+  value: sloper
+  event: hangboard1
+  rep: 1
+  date: 2016-01-04 17:47:38
+
+ten:
+  user_id: 1
+  workout_metric: sloperweight
+  value: 25
+  event: hangboard1
+  rep: 1
+  date: 2016-01-04 17:47:38
+
+eleven:
+  user_id: 1
+  workout_metric: slopertime
+  value: 10
+  event: hangboard1
+  rep: 1
+  date: 2016-01-04 17:47:38
+
+twelve:
+  user_id: 1
+  workout_metric: sloperrest
+  value: 10
+  event: hangboard1
+  rep: 1
+  date: 2016-01-04 17:47:38
+
+thirteen:
+  user_id: 1
+  workout_metric: sloperhold
+  value: sloper
+  event: hangboard1
+  rep: 2
+  date: 2016-01-04 17:47:38
+
+fourteen:
+  user_id: 1
+  workout_metric: sloperweight
+  value: 25
+  event: hangboard1
+  rep: 2
+  date: 2016-01-04 17:47:38
+
+fifteen:
+  user_id: 1
+  workout_metric: slopertime
+  value: 10
+  event: hangboard1
+  rep: 2
+  date: 2016-01-04 17:47:38
+
+sixteen:
+  user_id: 1
+  workout_metric: sloperrest
+  value: 10
+  event: hangboard1
+  rep: 2
+  date: 2016-01-04 17:47:38
