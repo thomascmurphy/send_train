@@ -45,7 +45,7 @@ profile_ready = function() {
           '#5cb85c',
           '#d9534f',
           '#c174b0',
-          '#00ae9d'
+          '#00ae9d',
           '#FDD835'],
       has_key: false,
       hover: true
