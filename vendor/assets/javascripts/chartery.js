@@ -1252,11 +1252,12 @@ if(!full_donut){
         width = 100 * aspect_ratio,
         height = 100,
         colors = options.colors,
+        show_area_color = typeof options.show_area_color === 'undefined' ? true : options.show_area_color
         background_color = options.background_color || '#fff',
         title = options.title,
         hover = options.hover,
         dot_radius = 1.5,
-        separate_scales = options.separate_scales ? options.separate_scales : false,
+        separate_scales = typeof options.separate_scales === 'undefined' ? false : options.separate_scales,
         zoom_y = typeof options.zoom_y === 'undefined' ? 0 : options.zoom_y,
         height_adjustment = typeof options.height_adjustment === 'undefined' ? 1 : options.height_adjustment,
         cos = Math.cos,
@@ -1346,16 +1347,6 @@ if(!full_donut){
         start_x += point_spacing;
       }
 
-      var fill_start_coord = dot_radius + ',' + area_height;
-      var fill_end_coord = dot_radius + area_width + ',' + area_height;
-
-      var line_path = makeSVG('polygon',
-                               {
-                                 points: fill_start_coord + ' ' + coords.join(' ') + ' ' + fill_end_coord,
-                                 fill: color,
-                                 "fill-opacity": 0.5
-                               });
-
       var fill_path = makeSVG('polyline',
                               {
                                 points: coords.join(' '),
@@ -1365,7 +1356,20 @@ if(!full_donut){
                                 "stroke-width": "0.5%"
                               });
       svg.append(fill_path);
-      svg.append(line_path);
+
+      if (show_area_color) {
+        var fill_start_coord = dot_radius + ',' + area_height;
+        var fill_end_coord = dot_radius + area_width + ',' + area_height;
+
+        var line_path = makeSVG('polygon',
+                                 {
+                                   points: fill_start_coord + ' ' + coords.join(' ') + ' ' + fill_end_coord,
+                                   fill: color,
+                                   "fill-opacity": 0.5
+                                 });
+        svg.append(line_path);
+      }
+
     }
     for (k=0; k<dots.length; k++){
       svg.append(dots[k]);

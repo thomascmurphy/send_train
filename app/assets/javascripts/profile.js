@@ -100,7 +100,8 @@ profile_ready = function() {
     }
     var specific_line_options = {
       title: $(this).data('chart-title'),
-      zoom_y: 0.75
+      zoom_y: 0.75,
+      show_area_color: false
     };
     $(this).drawLine(line_data, $.extend(specific_line_options, line_options));
   });
