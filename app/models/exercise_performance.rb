@@ -38,7 +38,7 @@ class ExercisePerformance < ActiveRecord::Base
       end
       name = hold_type
       quantification = quantifications.inject{ |sum, el| sum + el }.to_f / quantifications.size
-    when ["reps"]
+    when ["repetitions"]
       name = exercise.label
       quantifications = sibling_performances.pluck(:value)
       quantification = quantifications.inject{ |sum, el| sum + el }.to_f / quantifications.size
