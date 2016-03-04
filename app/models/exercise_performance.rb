@@ -40,15 +40,15 @@ class ExercisePerformance < ActiveRecord::Base
       quantification = quantifications.inject{ |sum, el| sum + el }.to_f / quantifications.size
     when ["repetitions"]
       name = exercise.label
-      quantifications = sibling_performances.pluck(:value)
+      quantifications = sibling_performances.pluck(:value).map(&:to_i)
       quantification = quantifications.inject{ |sum, el| sum + el }.to_f / quantifications.size
     when ["time"]
       name = exercise.label
-      quantifications = sibling_performances.pluck(:value)
+      quantifications = sibling_performances.pluck(:value).map(&:to_i)
       quantification = quantifications.inject{ |sum, el| sum + el }.to_f / quantifications.size
     when ["boulder-grade"] || ["sport-grade"]
       name = exercise.label
-      quantifications = sibling_performances.pluck(:value)
+      quantifications = sibling_performances.pluck(:value).map(&:to_i)
       quantification = quantifications.inject{ |sum, el| sum + el }.to_f / quantifications.size
     else
       name = nil
