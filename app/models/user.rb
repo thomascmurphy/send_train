@@ -9,7 +9,8 @@ class User < ActiveRecord::Base
   has_many :exercises
   has_many :exercise_metrics, through: :exercises
   has_many :exercise_performances, dependent: :destroy
-  has_many :user_coaches
+  has_many :coaches, class_name: 'UserCoach', foreign_key: 'user_id'
+  has_many :students, class_name: 'UserCoach', foreign_key: 'coach_id'
   after_create :seed_exercises
 
   # Include default devise modules. Others available are:

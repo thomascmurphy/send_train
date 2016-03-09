@@ -44,28 +44,34 @@ class ProfileController < ApplicationController
   end
 
   def progress
+    if params[:user_id].present? && current_user.students.where(user_id: params[:user_id]).present?
+      @user = User.find_by_id(params[:user_id])
+    else
+      @user = current_user
+    end
     @workout = nil
     @climb_data = nil
     dates = []
     @show_climbs = params[:show_climbs]
     @filter_workout_exercise_ids = params[:workout_exercise_ids].present? ? params[:workout_exercise_ids].map(&:to_i) : nil
     if params[:workout_id].present?
-      @workout = current_user.workouts.find_by_id(params[:workout_id])
-      progress = @workout.progress(@filter_workout_exercise_ids)
+      @workout = @user.workouts.find_by_id(params[:workout_id])
       formatted_progress = []
-      progress.each do |label, quantifications|
-        dates.concat quantifications.map{|q| DateTime.strptime(q[:date], "%b %d, %Y")}
-        hold_progress = []
-        quantifications.each do |quantification|
-          hold_progress << {name: "#{label.capitalize} (#{quantification[:date]})",
-                            value: quantification[:value],
-                            tooltip_value: quantification[:tooltip_value]}
+      if @workout.present?
+        progress = @workout.progress(@filter_workout_exercise_ids)
+        progress.each do |label, quantifications|
+          dates.concat quantifications.map{|q| DateTime.strptime(q[:date], "%b %d, %Y")}
+          hold_progress = []
+          quantifications.each do |quantification|
+            hold_progress << {name: "#{label.capitalize} (#{quantification[:date]})",
+                              value: quantification[:value],
+                              tooltip_value: quantification[:tooltip_value]}
+          end
+          formatted_progress << hold_progress
         end
-        formatted_progress << hold_progress
       end
       @workout_progress = formatted_progress.to_json
     end
-    @user = current_user
     if @show_climbs.present? && @user.should_show_climb_data?
       if dates.present?
         @climb_data = @user.climb_graph_data_for_dates(dates.uniq).to_json

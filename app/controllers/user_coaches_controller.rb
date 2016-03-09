@@ -14,7 +14,7 @@ class UserCoachesController < ApplicationController
     if coach.present?
       @user = current_user
       @user_coach = UserCoach.new(user_id: current_user.id, coach_id: coach.id)
-      if @user.user_coaches.where(coach_id: coach.id).present?
+      if @user.coaches.where(coach_id: coach.id).present?
         @user_coach.errors.add(:base, "You have already added that user as a coach.")
         respond_to do |format|
           format.html
@@ -44,7 +44,7 @@ class UserCoachesController < ApplicationController
   end
 
   def delete
-    @user_coach = current_user.user_coaches.find_by_id(params[:user_coach_id])
+    @user_coach = current_user.coaches.find_by_id(params[:user_coach_id])
     respond_to do |format|
       format.html
       format.js
@@ -54,8 +54,12 @@ class UserCoachesController < ApplicationController
 
   def destroy
     @user = current_user
-    @user_coach = current_user.user_coaches.find_by_id(params[:id])
+    @user_coach = current_user.coaches.find_by_id(params[:id])
     @user_coach.destroy
+  end
+
+  def my_students
+    @students = current_user.students
   end
 
   private

@@ -42,11 +42,13 @@ TrainToSend::Application.routes.draw do
     get 'profile', to: 'profile#show'
     get 'profile/edit', to: 'profile#edit'
     get 'profile/progress', to: 'profile#progress'
+    get 'profile/:user_id/progress', to: 'profile#progress', as: 'profile_user_progress'
     patch 'profile', to: 'profile#update'
 
-    resources :user_coaches, only: [:new, :create, :destroy] do
+    resources :user_coaches, :path => "coaches", only: [:new, :create, :destroy] do
       get "delete"
     end
+    get "coaches/my_students", to: 'user_coaches#my_students'
 
 
     resources :users, only: [:index, :show] do

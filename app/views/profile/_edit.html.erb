@@ -74,7 +74,7 @@
         </div>
         <div class="col-sm-6">
           <%= f.label "Authorized Coaches" %>
-          <% @user.user_coaches.each do |user_coach| %>
+          <% @user.coaches.each do |user_coach| %>
             <div class="alert alert-default">
               <%= link_to raw("<span aria-hidden='true'>×</span>"), user_coach_delete_path(user_coach), remote: true, class: "close" %>
               <%= user_coach.coach.smart_name %> <%= user_coach.coach.last_name %>
