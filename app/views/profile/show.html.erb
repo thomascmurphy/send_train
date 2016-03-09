@@ -13,7 +13,7 @@
           <h3 class="panel-title">Best Climbs</h3>
         </div>
         <div class="panel-body">
-            <div class="build_line" <% @user.profile_graph_data.each_with_index do |line_data, index| %>
+            <div class="build_line" <% @user.climb_graph_data.each_with_index do |line_data, index| %>
                                         data-primary-name-<%= index %> = "<%= line_data[:name] %>"
                                         data-primary-value-<%= index %> = "<%= line_data[:value] %>"
                                         data-primary-tooltip-value-<%= index %> = "<%= line_data[:tooltip_value] %>"

@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
     )
     deadhang_metric_hold = deadhang.exercise_metrics.create(
       label: "Hold",
-      exercise_metric_type_id: 5
+      exercise_metric_type_id: ExerciseMetricType::HOLD_TYPE_ID
     )
     hold_options = deadhang_metric_hold.exercise_metric_options.create([
       {label: "Crimp", value: "crimp"},
@@ -37,15 +37,15 @@ class User < ActiveRecord::Base
     ])
     deadhang_metric_weight = deadhang.exercise_metrics.create(
       label: "Weight",
-      exercise_metric_type_id: 1
+      exercise_metric_type_id: ExerciseMetricType::WEIGHT_ID
     )
     deadhang_metric_hang_time = deadhang.exercise_metrics.create(
       label: "Hang Time",
-      exercise_metric_type_id: 3
+      exercise_metric_type_id: ExerciseMetricType::TIME_ID
     )
     deadhang_metric_rest_time = deadhang.exercise_metrics.create(
       label: "Rest Time",
-      exercise_metric_type_id: 8
+      exercise_metric_type_id: ExerciseMetricType::REST_TIME_ID
     )
 
     campus = self.exercises.create(
@@ -55,11 +55,11 @@ class User < ActiveRecord::Base
     )
     campus_metric_campus_rungs = campus.exercise_metrics.create(
       label: "Rungs",
-      exercise_metric_type_id: 4
+      exercise_metric_type_id: ExerciseMetricType::CAMPUS_RUNGS_ID
     )
     campus_metric_rest_time = campus.exercise_metrics.create(
       label: "Rest Time",
-      exercise_metric_type_id: 8
+      exercise_metric_type_id: ExerciseMetricType::REST_TIME_ID
     )
 
     rest = self.exercises.create(
@@ -69,7 +69,7 @@ class User < ActiveRecord::Base
     )
     rest_metric_rest_time = rest.exercise_metrics.create(
       label: "Rest Time",
-      exercise_metric_type_id: 8
+      exercise_metric_type_id: ExerciseMetricType::REST_TIME_ID
     )
   end
 
@@ -141,18 +141,24 @@ class User < ActiveRecord::Base
     return first_score - second_score
   end
 
-  def profile_graph_data
+  def climb_graph_data_for_dates(dates)
     graph_data = []
-    end_date = DateTime.now - 6.weeks
-    for i in 0..3
-      name_string = "#{end_date.strftime('%m/%d/%Y')}"
-      score = self.climb_score_at_date(end_date)
+    dates.each do |date|
+      name_string = "#{date.strftime('%b %d, %Y')}"
+      score = self.climb_score_at_date(date)
       graph_data << {'name': name_string,
                      'value': score,
                      'tooltip_value': Climb.convert_score_to_grades(score, self.grade_format)}
-      end_date += 2.weeks
     end
     return graph_data
+  end
+
+  def climb_graph_data
+    dates = [DateTime.now - 6.weeks,
+             DateTime.now - 4.weeks,
+             DateTime.now - 2.weeks,
+             DateTime.now]
+    return self.climb_graph_data_for_dates(dates)
   end
 
   # def profile_graph_data

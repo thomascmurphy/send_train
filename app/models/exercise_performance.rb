@@ -3,6 +3,24 @@ class ExercisePerformance < ActiveRecord::Base
   belongs_to :workout_metric
   belongs_to :event
 
+  def self.campus_score(campus_rungs_string)
+    campus_rung_array = []
+    campus_score = nil
+    if campus_rungs_string.count("-") >= 1
+      campus_rung_array = campus_rungs_string.split("-").map(&:to_i)
+    elsif campus_rungs_string.count(" ") >= 1
+      campus_rung_array = campus_rungs_string.split(" ").map(&:to_i)
+    end
+    if campus_rung_array.count > 0
+      campus_rung_skips = campus_rung_array.each_cons(2).map { |a,b| (b-a).abs }
+      top_three_skips = campus_rung_skips.sort.last(3)
+      top_three_skips_sum = top_three_skips.inject(0){|sum,x| sum + x }
+      total_rungs = campus_rung_skips.inject(0){|sum,x| sum + x }
+      campus_score = top_three_skips_sum**2 + total_rungs
+    end
+    return campus_score
+  end
+
   def quantify
     exercise_metric_type_conversion = {}
     ExerciseMetricType.all.each do |exercise_metric_type|
@@ -62,10 +80,39 @@ class ExercisePerformance < ActiveRecord::Base
       quantifications = sibling_performances.pluck(:value).map(&:to_i)
       quantification = quantifications.inject{ |sum, el| sum + el }.to_f / quantifications.size
       tooltip_value = Climb.convert_score_to_grades(quantification, self.user.grade_format)
+    when ["campus-rungs", "rest-time"]
+      quantifications = []
+      campus_rungs = nil
+      sibling_performances.group_by(&:rep).each do |rep, performances|
+        campus_score = nil
+        rest_time = nil
+        performances.each do |performance|
+          case exercise_metric_type_conversion[performance.workout_metric.exercise_metric.exercise_metric_type_id]
+          when 'campus-rungs'
+            campus_rungs = performance.value
+            campus_score = self.class.campus_score(performance.value)
+          else
+          end
+        end
+        quantifications << campus_score
+      end
+      name = "#{exercise.label} (#{campus_rungs})"
+      quantification = quantifications.inject{ |sum, el| sum + el }.to_f / quantifications.size
+      tooltip_value = "#{quantification.round(2)}"
+    when ["campus-rungs"]
+      name = "#{exercise.label} (#{sibling_performances.pluck(:value).first})"
+      quantifications = sibling_performances.pluck(:value).map{|x| self.class.campus_score(x)}
+      quantification = quantifications.inject{ |sum, el| sum + el }.to_f / quantifications.size
+      tooltip_value = "#{quantification.round(2)}"
     else
       name = nil
       quantification = nil
+      tooltip_value = nil
     end
-    return {'name': name, 'value': quantification, 'tooltip_value': tooltip_value}
+    if name.present? && quantification.present? && tooltip_value.present?
+      return {'name': name, 'value': quantification, 'tooltip_value': tooltip_value}
+    else
+      return nil
+    end
   end
 end

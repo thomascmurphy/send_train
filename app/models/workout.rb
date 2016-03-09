@@ -222,11 +222,11 @@ class Workout < ActiveRecord::Base
                                true).order(end_date: :asc)
     events.each do |event|
       quantifications = event.quantify(filter_workout_exercise_ids)
-      quantifications.each do |name, values|
-        if progress[name].present?
-          progress[name] << {date: event.end_date.strftime("%b %d, %Y"), value: values[:value].round(2), tooltip_value: values[:tooltip_value]}
+      quantifications.each do |quantification|
+        if progress[quantification[:name]].present?
+          progress[quantification[:name]] << {date: event.end_date.strftime("%b %d, %Y"), value: quantification[:value].round(2), tooltip_value: quantification[:tooltip_value]}
         else
-          progress[name] = [{date: event.end_date.strftime("%b %d, %Y"), value: values[:value].round(2), tooltip_value: values[:tooltip_value]}]
+          progress[quantification[:name]] = [{date: event.end_date.strftime("%b %d, %Y"), value: quantification[:value].round(2), tooltip_value: quantification[:tooltip_value]}]
         end
       end
     end

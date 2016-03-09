@@ -46,6 +46,7 @@ class ProfileController < ApplicationController
   def progress
     @workout = nil
     @climb_data = nil
+    dates = []
     @show_climbs = params[:show_climbs]
     @filter_workout_exercise_ids = params[:workout_exercise_ids].present? ? params[:workout_exercise_ids].map(&:to_i) : nil
     if params[:workout_id].present?
@@ -53,6 +54,7 @@ class ProfileController < ApplicationController
       progress = @workout.progress(@filter_workout_exercise_ids)
       formatted_progress = []
       progress.each do |label, quantifications|
+        dates.concat quantifications.map{|q| DateTime.strptime(q[:date], "%b %d, %Y")}
         hold_progress = []
         quantifications.each do |quantification|
           hold_progress << {name: "#{label.capitalize} (#{quantification[:date]})",
@@ -65,7 +67,11 @@ class ProfileController < ApplicationController
     end
     @user = current_user
     if @show_climbs.present? && @user.should_show_climb_data?
-      @climb_data = @user.profile_graph_data.to_json
+      if dates.present?
+        @climb_data = @user.climb_graph_data_for_dates(dates.uniq).to_json
+      else
+        @climb_data = @user.climb_graph_data.to_json
+      end
     end
     respond_to do |format|
       format.html
