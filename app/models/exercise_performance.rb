@@ -7,9 +7,9 @@ class ExercisePerformance < ActiveRecord::Base
     campus_rung_array = []
     campus_score = nil
     if campus_rungs_string.count("-") >= 1
-      campus_rung_array = campus_rungs_string.split("-").map(&:to_i)
+      campus_rung_array = campus_rungs_string.split("-").map(&:to_i).reject { |c| c == 0 }
     elsif campus_rungs_string.count(" ") >= 1
-      campus_rung_array = campus_rungs_string.split(" ").map(&:to_i)
+      campus_rung_array = campus_rungs_string.split(" ").map(&:to_i).reject { |c| c == 0 }
     end
     if campus_rung_array.count > 0
       campus_rung_skips = campus_rung_array.each_cons(2).map { |a,b| (b-a).abs }
