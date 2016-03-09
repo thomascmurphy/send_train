@@ -1,0 +1,9 @@
+$("#coach_modal div.errors").html("").addClass('hidden');
+<% if @user_coach.errors.any? %>
+  <% @user_coach.errors.full_messages.each do |message| %>
+    $("#coach_modal div.errors").removeClass('hidden').append($("<p />").html("<%= message.html_safe %>"));
+  <% end %>
+<% else %>
+  $(".profile_edit").html("<%= escape_javascript(render 'profile/edit') %>");
+  $("#coach_modal").modal("hide");
+<% end %>

@@ -41,7 +41,7 @@ class ItemSharesController < ApplicationController
         end
       end
     else
-      @item_share.errors.add(:recipient_id, "There is either no user associated with that email or they have sharing disabled.")
+      @item_share.errors.add(:base, "There is either no user associated with that email or they have sharing disabled.")
       respond_to do |format|
         format.html
         format.js

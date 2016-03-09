@@ -44,6 +44,10 @@ TrainToSend::Application.routes.draw do
     get 'profile/progress', to: 'profile#progress'
     patch 'profile', to: 'profile#update'
 
+    resources :user_coaches, only: [:new, :create, :destroy] do
+      get "delete"
+    end
+
 
     resources :users, only: [:index, :show] do
       get "impersonate"
