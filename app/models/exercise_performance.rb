@@ -75,12 +75,12 @@ class ExercisePerformance < ActiveRecord::Base
       quantifications = sibling_performances.pluck(:value).map(&:to_i)
       quantification = quantifications.inject{ |sum, el| sum + el }.to_f / quantifications.size
       tooltip_value = "#{quantification.round(2)}s"
-    when ["boulder-grade"] || ["sport-grade"]
+    when ["boulder-grade"], ["sport-grade"]
       name = exercise.label
       quantifications = sibling_performances.pluck(:value).map(&:to_i)
       quantification = quantifications.inject{ |sum, el| sum + el }.to_f / quantifications.size
       tooltip_value = Climb.convert_score_to_grades(quantification, self.user.grade_format)
-    when ["campus-rungs", "rest-time"]
+    when ["campus-rungs"], ["campus-rungs", "rest-time"], ["campus-rungs", "hold-type", "rest-time"]
       quantifications = []
       campus_rungs = nil
       sibling_performances.group_by(&:rep).each do |rep, performances|
@@ -97,11 +97,6 @@ class ExercisePerformance < ActiveRecord::Base
         quantifications << campus_score
       end
       name = "#{exercise.label} (#{campus_rungs})"
-      quantification = quantifications.inject{ |sum, el| sum + el }.to_f / quantifications.size
-      tooltip_value = "#{quantification.round(2)}"
-    when ["campus-rungs"]
-      name = "#{exercise.label} (#{sibling_performances.pluck(:value).first})"
-      quantifications = sibling_performances.pluck(:value).map{|x| self.class.campus_score(x)}
       quantification = quantifications.inject{ |sum, el| sum + el }.to_f / quantifications.size
       tooltip_value = "#{quantification.round(2)}"
     else
