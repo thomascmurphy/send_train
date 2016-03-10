@@ -1,14 +1,20 @@
 <div class="row">
   <div class="col-xs-12">
-    <h1>My Progress</h1>
+    <h1>
+      <% if current_user == @user %>
+        My Progress
+      <% else %>
+        <%= @user.smart_name %>'s Progress
+      <% end %>
+    </h1>
   </div>
 </div>
-<%= form_tag("/profile/progress", method: "get", class: "form-inline margin_top progress_form" ) do %>
+<%= form_tag("", method: "get", class: "form-inline margin_top progress_form" ) do %>
   <div class="row large_margin_top margin_bottom">
     <div class="col-xs-12">
       <div class="form-group">
         <strong>Workout: </strong>
-        <%= select_tag("workout_id", options_from_collection_for_select(current_user.workouts.all, "id", "label", @workout.present? ? @workout.id : 0), {prompt: "Choose Workout", class: "form-control workout_select"}) %>
+        <%= select_tag("workout_id", options_from_collection_for_select(@user.workouts.all, "id", "label", @workout.present? ? @workout.id : 0), {prompt: "Choose Workout", class: "form-control workout_select"}) %>
       </div>
       <% if @workout.present? %>
         <div class="form-group margin_left workout_exercise_select_area" style="vertical-align: text-top;">
@@ -16,7 +22,7 @@
           <%= select_tag("workout_exercise_ids", options_from_collection_for_select(@workout.useful_workout_exercises, "id", "useful_label", @filter_workout_exercise_ids), {multiple: true, class: "form-control workout_exercise_select"}) %>
         </div>
       <% end %>
-      <% if current_user.should_show_climb_data? %>
+      <% if @user.should_show_climb_data? %>
         <div class="form-group margin_left">
           <label>
             <%= check_box_tag("show_climbs", "true", @show_climbs) %>

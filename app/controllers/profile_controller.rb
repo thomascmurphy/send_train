@@ -44,28 +44,34 @@ class ProfileController < ApplicationController
   end
 
   def progress
+    if params[:user_id].present? && current_user.students.where(user_id: params[:user_id]).present?
+      @user = User.find_by_id(params[:user_id])
+    else
+      @user = current_user
+    end
     @workout = nil
     @climb_data = nil
     dates = []
     @show_climbs = params[:show_climbs]
     @filter_workout_exercise_ids = params[:workout_exercise_ids].present? ? params[:workout_exercise_ids].map(&:to_i) : nil
     if params[:workout_id].present?
-      @workout = current_user.workouts.find_by_id(params[:workout_id])
-      progress = @workout.progress(@filter_workout_exercise_ids)
+      @workout = @user.workouts.find_by_id(params[:workout_id])
       formatted_progress = []
-      progress.each do |label, quantifications|
-        dates.concat quantifications.map{|q| DateTime.strptime(q[:date], "%b %d, %Y")}
-        hold_progress = []
-        quantifications.each do |quantification|
-          hold_progress << {name: "#{label.capitalize} (#{quantification[:date]})",
-                            value: quantification[:value],
-                            tooltip_value: quantification[:tooltip_value]}
+      if @workout.present?
+        progress = @workout.progress(@filter_workout_exercise_ids)
+        progress.each do |label, quantifications|
+          dates.concat quantifications.map{|q| DateTime.strptime(q[:date], "%b %d, %Y")}
+          hold_progress = []
+          quantifications.each do |quantification|
+            hold_progress << {name: "#{label.capitalize} (#{quantification[:date]})",
+                              value: quantification[:value],
+                              tooltip_value: quantification[:tooltip_value]}
+          end
+          formatted_progress << hold_progress
         end
-        formatted_progress << hold_progress
       end
       @workout_progress = formatted_progress.to_json
     end
-    @user = current_user
     if @show_climbs.present? && @user.should_show_climb_data?
       if dates.present?
         @climb_data = @user.climb_graph_data_for_dates(dates.uniq).to_json
@@ -74,10 +80,35 @@ class ProfileController < ApplicationController
       end
     end
     respond_to do |format|
-      format.html
+      format.html {
+        if params[:user_id].present? && params[:user_id].to_i != @user.id
+          redirect_to profile_progress_path
+        end
+      }
       format.js { render :reload }
       format.json { render json: @workout_progress, status: :ok }
     end
+  end
+
+  def schedule
+    if params[:user_id].present? && current_user.students.where(user_id: params[:user_id]).present?
+      @user = User.find_by_id(params[:user_id])
+    else
+      redirect_to events_path
+    end
+    @events = @user.events
+    monday = DateTime.now.utc.beginning_of_week
+    @upcoming_weeks = {0=>{}, 1=>{}}
+    for week in 0..1
+      for day in 0..6
+        date = monday + (day + week * 7).days
+        @upcoming_weeks[week][date.strftime("%b %e")] = @events.where("start_date >= ? AND start_date < ? AND (end_date <= ? OR end_date IS NULL)", date.beginning_of_day, date.end_of_day, date.end_of_day).order(start_date: :asc)
+      end
+    end
+
+    @current_events = @events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).order(start_date: :asc)
+    @upcoming_events = @events.where("start_date > ?", DateTime.now.end_of_day).order(start_date: :asc)
+    @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
   end
 
   private

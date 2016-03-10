@@ -1,6 +1,6 @@
 <div class="row">
   <% @past_events.each_with_index do |event, index| %>
-    <%= render event %>
+    <%= render partial: 'events/event', object: event, locals: {coach_viewing: defined?(coach_viewing) ? coach_viewing : false} %>
     <% if index % 4 == 3 %>
   </div><div class="row margin_bottom">
     <% end %>

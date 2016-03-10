@@ -1,0 +1,30 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h1>My Students</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <table class="table table-striped" id="students">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Name</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody class="user_list">
+        <% @students.each do |student| %>
+          <tr>
+            <td><%= student.user.email %></td>
+            <td><%= student.user.first_name %> <%= student.user.last_name %></td>
+            <td class="text-right">
+              <%= link_to "Progress", profile_user_progress_path(student.user), class: "btn btn-info" %>
+              <%= link_to "Schedule", profile_user_schedule_path(student.user), class: "btn btn-success" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

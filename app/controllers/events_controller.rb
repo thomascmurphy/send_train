@@ -33,11 +33,18 @@ class EventsController < ApplicationController
   end
 
   def show
-    @event = current_user.events.find_by_id(params[:id])
-    respond_to do |format|
-      format.html
-      format.js
-      format.json { render json: @event, status: :ok, location: @event }
+    @event = Event.find_by_id(params[:id])
+    @user = @event.user
+    authorized = true
+    if @user.id != current_user.id && current_user.students.where(user_id: @user.id).blank?
+      authorized = false
+    end
+    if authorized.present?
+      respond_to do |format|
+        format.html
+        format.js
+        format.json { render json: @event, status: :ok, location: @event }
+      end
     end
   end
 

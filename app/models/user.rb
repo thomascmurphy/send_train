@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
   has_many :exercises
   has_many :exercise_metrics, through: :exercises
   has_many :exercise_performances, dependent: :destroy
+  has_many :coaches, class_name: 'UserCoach', foreign_key: 'user_id', dependent: :destroy
+  has_many :students, class_name: 'UserCoach', foreign_key: 'coach_id', dependent: :destroy
   after_create :seed_exercises
 
   # Include default devise modules. Others available are:
@@ -207,6 +209,14 @@ class User < ActiveRecord::Base
       agnostic_weight = weight * 0.453592
     end
     return agnostic_weight
+  end
+
+  def smart_name
+    if self.first_name.present? || self.last_name.present?
+      return "#{self.first_name} #{self.last_name}"
+    else
+      return self.email
+    end
   end
 
 end
