@@ -13,7 +13,7 @@
   <input name="exercise_performances[][id]" type="hidden" value="<%= exercise_performance.id %>"/>
   <% if the_exercise_metric.exercise_metric_type.input_field == "select" %>
 
-    <select name="exercise_performances[][value]" class="form-control inline_block short_input" >
+    <select name="exercise_performances[][value]" class="form-control inline_block short_input" <% if defined?(disabled) && disabled.present? %>disabled="true"<% end %>>
       <% if the_exercise_metric.exercise_metric_type.slug == "hold-type" %>
         <%= options_from_collection_for_select(the_exercise_metric.exercise_metric_options, :value, :label, exercise_performance.value || the_workout_metric.value) %>
       <% elsif the_exercise_metric.exercise_metric_type.slug == "boulder-grade" %>
@@ -30,6 +30,10 @@
              value="<%= exercise_performance.value.present? ? exercise_performance.value : the_workout_metric.value %>"
              <% if the_workout_metric.value.present? %>
                placeholder="Goal: <%= the_workout_metric.value %>"
-             <% end %>/>
+             <% end %>
+             <% if defined?(disabled) && disabled.present? %>
+               disabled="true"
+             <% end %>
+             />
   <% end %>
 </div>

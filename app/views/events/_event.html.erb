@@ -29,14 +29,19 @@
         <% end %>
       <% end %>
     </div>
+
     <div class="panel-footer">
-      <% unless event.gym_session.present? %>
-        <% unless event.completed %>
-          <%= link_to "Complete", event_complete_path(event), remote: true, class: "btn btn-success complete_button" %>
+      <% if defined?(coach_viewing) && coach_viewing.present? %>
+        <%= link_to "View", event_path(event), remote: true, class: "btn btn-info" %>
+      <% else %>
+        <% unless event.gym_session.present? %>
+          <% unless event.completed %>
+            <%= link_to "Complete", event_complete_path(event), remote: true, class: "btn btn-success complete_button" %>
+          <% end %>
+          <%= link_to "Edit", edit_event_path(event), remote: true, class: "btn btn-info" %>
         <% end %>
-        <%= link_to "Edit", edit_event_path(event), remote: true, class: "btn btn-info" %>
+        <%= link_to "Delete", event_delete_path(event), remote: true, class: "btn btn-danger" %>
       <% end %>
-      <%= link_to "Delete", event_delete_path(event), remote: true, class: "btn btn-danger" %>
     </div>
   </div>
 </div>

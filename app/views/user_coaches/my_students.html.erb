@@ -20,6 +20,7 @@
             <td><%= student.user.first_name %> <%= student.user.last_name %></td>
             <td class="text-right">
               <%= link_to "Progress", profile_user_progress_path(student.user), class: "btn btn-info" %>
+              <%= link_to "Schedule", profile_user_schedule_path(student.user), class: "btn btn-success" %>
             </td>
           </tr>
         <% end %>

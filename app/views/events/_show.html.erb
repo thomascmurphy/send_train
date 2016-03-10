@@ -1,0 +1,115 @@
+<div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel"><%= @event.label %></h4>
+    </div>
+    <div class="modal-body">
+      <ul class="errors"></ul>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group">
+            <%= label_tag "Custom Name" %><br>
+            <%= text_field_tag @event, :label, class: "form-control", disabled: true %>
+          </div>
+        </div>
+        <% unless @event.macrocycle_id.present? %>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <%= label_tag "Workout" %><br>
+              <%= collection_select(@event, :workout_id, current_user.workouts.all, :id, :label, {prompt: "None"}, {class: "form-control workout_select", disabled: true}) %>
+            </div>
+          </div>
+        <% end %>
+        <% unless @event.workout_id.present? %>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <%= label_tag "Plan" %><br>
+              <%= collection_select(@event, :macrocycle_id, current_user.macrocycles.all, :id, :label, {prompt: "None"}, {class: "form-control macrocycle_select", disabled: true}) %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <%= label_tag "Start Date" %><br>
+            <%= select_month(@event.start_date.month, {field_name: "month", prefix: "start_date"}, {class: "form-control", style: "display: inline-block; width: auto;", disabled: true}) %>
+            <%= select_day(@event.start_date.day, {field_name: "day", prefix: "start_date"}, {class: "form-control", style: "display: inline-block; width: auto;", disabled: true}) %>
+            <%= select_year(@event.start_date.year, {field_name: "year", prefix: "start_date"}, {class: "form-control", style: "display: inline-block; width: auto;", disabled: true}) %>
+          </div>
+        </div>
+        <% if @event.id.present? %>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <% if @event.workout_id.present? %>
+                <%= label_tag "Completed" %><br>
+                <%= check_box "event", "completed", {disabled: true} %>
+              <% else %>
+                <%= label_tag "End Date" %><br>
+                <%= select_month(@event.end_date.month, {field_name: "month", prefix: "end_date"}, {class: "form-control", style: "display: inline-block; width: auto;", disabled: true}) %>
+                <%= select_day(@event.end_date.day, {field_name: "day", prefix: "end_date"}, {class: "form-control", style: "display: inline-block; width: auto;", disabled: true}) %>
+                <%= select_year(@event.end_date.year, {field_name: "year", prefix: "end_date"}, {class: "form-control", style: "display: inline-block; width: auto;", disabled: true}) %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <% if @event.workout.present? %>
+        <div class="row">
+          <div class="col-xs-12">
+            <h4>Exercises</h4>
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Exercise</th>
+                  <th>Rep</th>
+                  <th class="text-right">Metrics</th>
+                </tr>
+              </thead>
+              <tbody class="exercise_performance_list">
+                <% @event.workout.workout_exercises_ordered.each do |workout_exercise| %>
+                  <% for rep in 1..workout_exercise.reps %>
+                    <% performances = @event.exercise_performances_by_metric(rep) %>
+                    <% if (performances.keys & workout_exercise.workout_metrics.pluck(:id)).present? %>
+                      <tr>
+                        <td>
+                          <% if rep == 1 %>
+                            <%= workout_exercise.exercise.label %>
+                          <% end %>
+                        </td>
+                        <td><%= rep %></td>
+                        <td>
+                          <% workout_exercise.workout_metrics.each do |workout_metric| %>
+                            <div class="<% if workout_exercise.workout_metrics.count > 1 %>col-sm-6<% end %>">
+                              <% if performances[workout_metric.id].present? %>
+                                <%= render partial: 'exercise_performance', locals: {exercise_performance: performances[workout_metric.id], disabled: true} %>
+                              <% end %>
+                            </div>
+                          <% end %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <%= label_tag "Notes" %><br>
+            <%= text_area_tag @event, :notes, class: "form-control", size: "60x3", disabled: true %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+</div>
