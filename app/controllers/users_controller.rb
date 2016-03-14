@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.all
+    @users = User.all.order(current_sign_in_at: :desc)
   end
 
   def impersonate

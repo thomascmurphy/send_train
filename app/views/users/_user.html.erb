@@ -2,6 +2,7 @@
   <td><%= user.id %></td>
   <td><%= user.email %></td>
   <td><%= user.first_name %> <%= user.last_name %></td>
+  <td><%= user.current_sign_in_at.strftime("%B %d, %Y") %></td>
   <td class="text-right">
     <% unless true_user == user %>
       <%= link_to "Impersonate", user_impersonate_path(user), class: "btn btn-info" %>
