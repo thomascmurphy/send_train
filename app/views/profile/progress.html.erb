@@ -26,8 +26,24 @@
         <div class="form-group margin_left">
           <label>
             <%= check_box_tag("show_climbs", "true", @show_climbs) %>
-            Show climbing progress
+            Overlay Climbs
           </label>
+        </div>
+      <% end %>
+      <% if @date_lower.present? && @date_upper.present? %>
+        <div class="form-group margin_left text-right" style="vertical-align: top;">
+          <div class="margin_bottom">
+            <%= label_tag(:climb_type, "From:") %>
+            <%= select_month(@date_lower, {field_name: "month_lower"}, {class: "form-control"}) %>
+            <%= select_day(@date_lower, {field_name: "day_lower"}, {class: "form-control"}) %>
+            <%= select_year(@date_lower, {field_name: "year_lower"}, {class: "form-control"}) %>
+          </div>
+          <div class="margin_bottom">
+            <%= label_tag(:climb_type, "To:") %>
+            <%= select_month(@date_upper, {field_name: "month_upper"}, {class: "form-control"}) %>
+            <%= select_day(@date_upper, {field_name: "day_upper"}, {class: "form-control"}) %>
+            <%= select_year(@date_upper, {field_name: "year_upper"}, {class: "form-control"}) %>
+          </div>
         </div>
       <% end %>
       <%= submit_tag("Show", name: nil, class: "btn btn-primary margin_left") %>

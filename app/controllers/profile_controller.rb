@@ -51,14 +51,27 @@ class ProfileController < ApplicationController
     end
     @workout = nil
     @climb_data = nil
-    dates = []
     @show_climbs = params[:show_climbs]
     @filter_workout_exercise_ids = params[:workout_exercise_ids].present? ? params[:workout_exercise_ids].map(&:to_i) : nil
+    date_params = params[:date]
+    if date_params.present?
+      if date_params[:day_lower].present? && date_params[:month_lower].present? && date_params[:year_lower].present?
+        @date_lower = DateTime.strptime("#{date_params[:year_lower]} #{date_params[:month_lower]} #{date_params[:day_lower]}", "%Y %m %d")
+      end
+      if date_params[:day_upper].present? && date_params[:month_upper].present? && date_params[:year_upper].present?
+        @date_upper = DateTime.strptime("#{date_params[:year_upper]} #{date_params[:month_upper]} #{date_params[:day_upper]}", "%Y %m %d").end_of_day
+      end
+    else
+      @date_lower = DateTime.now - 1.year;
+      @date_upper = DateTime.now;
+    end
+
+    dates = []
     if params[:workout_id].present?
       @workout = @user.workouts.find_by_id(params[:workout_id])
       formatted_progress = []
       if @workout.present?
-        progress = @workout.progress(@filter_workout_exercise_ids)
+        progress = @workout.progress(@filter_workout_exercise_ids, @date_lower, @date_upper)
         progress.each do |label, quantifications|
           dates.concat quantifications.map{|q| DateTime.strptime(q[:date], "%b %d, %Y")}
           hold_progress = []
