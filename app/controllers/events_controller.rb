@@ -112,7 +112,7 @@ class EventsController < ApplicationController
         end_date = DateTime.strptime("#{end_date_params[:year]} #{end_date_params[:month]} #{end_date_params[:day]}", "%Y %m %d")
         params[:event][:end_date] = end_date
       end
-    elsif start_date.present? && start_date > @event.end_date
+    elsif start_date.present? && (start_date > @event.end_date || @event.workout_id.present?)
       @event.end_date = start_date
     end
 
