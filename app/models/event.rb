@@ -7,6 +7,7 @@ class Event < ActiveRecord::Base
   belongs_to :parent_event, class_name: 'Event', foreign_key: 'parent_event_id'
   has_many :exercise_performances, dependent: :destroy
   after_create :create_child_events
+  before_create :default_end_date
   before_destroy :destroy_child_events
   after_save :check_child_completion
 
@@ -51,6 +52,12 @@ class Event < ActiveRecord::Base
   def set_dates_to_now
     self.start_date = DateTime.now
     self.end_date = DateTime.now
+  end
+
+  def default_end_date
+    if self.end_date.blank?
+      self.end_date = self.start_date.end_of_day
+    end
   end
 
   def smart_label
@@ -107,9 +114,12 @@ class Event < ActiveRecord::Base
   end
 
   def alert_class
-    alert_class = ""
+    alert_class = "alert-default"
+    if self.workout.present?
+      alert_class = self.workout.alert_class
+    end
     if self.completed.present?
-      alert_class = "translucent"
+      alert_class += " translucent"
     end
     return alert_class
   end

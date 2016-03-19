@@ -30,9 +30,9 @@
         <% if day.present?%>
           <% day.each do |event| %>
             <% if defined?(coach_viewing) && coach_viewing.present? %>
-              <%= link_to "#{event.smart_label}", event_path(event), remote: true, class: "block planner_workout alert#{event.workout.alert_class} #{event.alert_class}" %>
+              <%= link_to "#{event.smart_label}", event_path(event), remote: true, class: "block planner_workout alert #{event.alert_class}" %>
             <% else %>
-              <%= link_to "#{event.smart_label}", edit_event_path(event), remote: true, class: "block planner_workout alert#{event.workout.alert_class} #{event.alert_class}" %>
+              <%= link_to "#{event.smart_label}", edit_event_path(event), remote: true, class: "block planner_workout alert #{event.alert_class}" %>
             <% end %>
           <% end %>
         <% end %>
