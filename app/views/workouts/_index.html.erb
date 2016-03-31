@@ -1,7 +1,7 @@
 <div class="row">
   <% @workouts.each_with_index do |workout, index| %>
     <%= render workout %>
-    <% if index % 4 == 3 %>
+    <% if index % 3 == 2 %>
   </div><div class="row">
     <% end %>
   <% end %>
