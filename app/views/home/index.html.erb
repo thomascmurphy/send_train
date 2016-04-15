@@ -1,10 +1,58 @@
 <div class="row large_margin_bottom">
-  <div class="col-xs-12">
+  <div class="col-sm-10 col-sm-offset-1">
     <h1>Welcome</h1>
+    <div id="home_carousel" class="carousel slide" data-ride="carousel">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#home_carousel" data-slide-to="0" class="active"></li>
+        <li data-target="#home_carousel" data-slide-to="1"></li>
+        <li data-target="#home_carousel" data-slide-to="2"></li>
+        <li data-target="#home_carousel" data-slide-to="3"></li>
+      </ol>
+
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner" role="listbox">
+        <div class="item active">
+          <%= image_tag("screen_metrics.jpg", alt: "exercise metrics", class: "valign_middle") %>
+          <div class="carousel-caption">
+            Climbing workouts are weird. Setup metrics that make sense for each one.
+          </div>
+        </div>
+        <div class="item">
+          <%= image_tag("screen_schedule.jpg", alt: "scheduel planning", class: "valign_middle") %>
+          <div class="carousel-caption">
+            Keep track of your training schedule so you can stay on top of it all.
+          </div>
+        </div>
+        <div class="item">
+          <%= image_tag("screen_progress.jpg", alt: "workout progress", class: "valign_middle") %>
+          <div class="carousel-caption">
+            View all that satisfying upward progress.
+          </div>
+        </div>
+        <div class="item">
+          <%= image_tag("screen_climbs.jpg", alt: "climbs section", class: "valign_middle") %>
+          <div class="carousel-caption">
+            Keep a list of your open projects and tick them off one by one.
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <a class="left carousel-control" href="#home_carousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="right carousel-control" href="#home_carousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
   </div>
 </div>
-<div class="row">
-  <div class="col-sm-8">
+
+<div class="row large_margin_bottom">
+  <div class="col-sm-10 col-sm-offset-1">
     <p class="lead">
       We all have our tried-and-true training routines but how well do they actually work?
       Are there some that we should be focusing on more than others?
@@ -17,8 +65,5 @@
       While it will take some time to accumulate this data for you, I tried to make the planning aspect as easy as possible to hopefully provide utility right from the moment you sign up.
       That being said, the site is very much a work in progress, so please don't hesitate to send me a <%= link_to "comment or suggestion", controller: "/comments", action: "new", remote: true %>.
     </p>
-  </div>
-  <div class="col-sm-4">
-
   </div>
 </div>

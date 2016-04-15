@@ -210,6 +210,22 @@ body {
   max-width: 120px;
 }
 
+.carousel-caption {
+  width: 100%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-left: 15%;
+  padding-right: 15%;
+  padding-bottom: 30px;
+  box-sizing: border-box;
+  background-color: $shader_black;
+}
+
+.carousel-indicators {
+  bottom: 0px;
+}
+
 /* ============ General Elements */
 html, body{
   height: 100%;
@@ -835,6 +851,11 @@ input[type=range]:focus::-ms-fill-upper {
       }
 
     }
+  }
+
+  .carousel-caption {
+    padding-left: 20%;
+    padding-right: 20%;
   }
 }
 
