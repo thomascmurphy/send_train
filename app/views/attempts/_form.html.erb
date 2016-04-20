@@ -18,7 +18,7 @@
 							<input type="range" name="attempt[completion]" min="0" max="100" step="5" value="<%= @attempt.completion %>" class="completion_slider">
 						</div>
 						<div class="col-xs-3">
-							<span class="slider_value_wrapper alt_font"><span class="slider_value">0</span>%</span>
+							<span class="slider_value_wrapper alt_font"><span class="slider_value"><%= @attempt.completion || 0 %></span>%</span>
 						</div>
 					</div>
         </div>
