@@ -1,0 +1,101 @@
+<h1><%= @event.workout.label %></h1>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Exercise</th>
+      <th>Rep</th>
+      <th>Metrics</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @event.workout.workout_exercises_ordered.each do |workout_exercise| %>
+      <% if workout_exercise.is_rest %>
+        <tr>
+          <td style="width: 150px;">
+            <%= workout_exercise.exercise.label %>
+          </td>
+          <td style="width: 75px;">
+          </td>
+          <td class="no_padding">
+            <% performances = @event.exercise_performances_by_metric(1) %>
+            <% if (performances.keys & workout_exercise.workout_metrics.pluck(:id)).present? %>
+              <% workout_exercise.workout_metrics.each do |workout_metric| %>
+                <% exercise_performance = performances[workout_metric.id] %>
+                <% the_workout_metric = performances[workout_metric.id].workout_metric %>
+                <% the_exercise_metric = the_workout_metric.exercise_metric %>
+                <div class="no_padding">
+                  <label class="separate">
+                    <%= the_exercise_metric.label %>
+                  </label>
+                  <div class="exercise_performance">
+                    <% if exercise_performance.value.present? %>
+                      <%= exercise_performance.value %>
+                    <% elsif the_workout_metric.value.present? %>
+                      <small>(Goal: <%= the_workout_metric.value %> seconds)</small>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          </td>
+        </tr>
+      <% else %>
+        <% for rep in 1..workout_exercise.reps %>
+          <tr>
+            <td style="width: 150px;">
+              <% if rep == 1 %>
+                <%= workout_exercise.exercise.label %>
+              <% end %>
+            </td>
+            <td style="width: 75px;">
+              Rep <%= rep %>
+            </td>
+            <td class="no_padding">
+              <% performances = @event.exercise_performances_by_metric(rep) %>
+              <% if (performances.keys & workout_exercise.workout_metrics.pluck(:id)).present? %>
+                <% workout_exercise.workout_metrics.each do |workout_metric| %>
+                  <% exercise_performance = performances[workout_metric.id] %>
+                  <% the_workout_metric = performances[workout_metric.id].workout_metric %>
+                  <% the_exercise_metric = the_workout_metric.exercise_metric %>
+                  <div class="col-xs-<%= (12 / workout_exercise.workout_metrics.count).to_i %> no_padding" style="max-width: 200px; border-right: 1px solid #dddddd;">
+                    <label class="separate">
+                      <%= the_exercise_metric.label %>
+                    </label>
+                    <div class="exercise_performance">
+                      <% if exercise_performance.value.present? %>
+                        <%= exercise_performance.value %>
+                        <% if the_exercise_metric.exercise_metric_type.slug == "weight" %>
+                          <%= current_user.default_weight_unit %>s
+                        <% elsif the_exercise_metric.exercise_metric_type.slug == "time" || the_exercise_metric.exercise_metric_type.slug == "rest-time"%>
+                          seconds
+                        <% end %>
+                      <% elsif the_workout_metric.value.present? %>
+                        <small>
+                          (Goal: <%= the_workout_metric.value %>
+                          <% if the_exercise_metric.exercise_metric_type.slug == "weight" %>
+                            <%= current_user.default_weight_unit %>s
+                          <% elsif the_exercise_metric.exercise_metric_type.slug == "time" || the_exercise_metric.exercise_metric_type.slug == "rest-time"%>
+                            seconds
+                          <% end %>
+                          )
+                        </small>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+                <!-- <div class="no_padding">
+                  <label class="separate">
+                    Notes
+                  </label>
+                  <div class="exercise_performance">
+
+                  </div>
+                </div> -->
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

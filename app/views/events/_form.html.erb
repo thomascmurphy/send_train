@@ -117,6 +117,9 @@
     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
     <% if @event.id.present? %>
       <%= link_to "Delete", event_delete_path(@event), remote: true, class: "btn btn-danger" %>
+      <% if @event.workout_id.present? %>
+        <%= link_to "Print", event_print_path(@event), target: "_blank", class: "btn btn-success" %>
+      <% end %>
     <% end %>
     <input type="submit" class="btn btn-primary" value="Save">
   </div>

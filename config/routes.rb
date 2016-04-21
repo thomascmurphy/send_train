@@ -35,6 +35,7 @@ TrainToSend::Application.routes.draw do
     resources :events do
       get "delete"
       get "complete"
+      get "print"
     end
     get 'gym_session', to: 'events#gym_session_new'
     post 'gym_session', to: 'events#gym_session_create'

@@ -198,6 +198,11 @@ class EventsController < ApplicationController
     end
   end
 
+  def print
+    @event = Event.find_by_id(params[:event_id])
+    render layout: "print"
+  end
+
 
   private
     def event_params

@@ -1,0 +1,209 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ */
+
+ // "bootstrap-sprockets" must be imported before "bootstrap" and "bootstrap/variables"
+ @import "bootstrap-sprockets";
+ @import "bootstrap";
+
+ @import url(http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,300italic|Oswald:400,700);
+
+ @import "chartery";
+
+ $font_stack: "Lato", sans-serif;
+ $font_stack_alt: "Oswald", sans-serif;
+
+ $cyan: #00BCD4;
+ $cyan_dark: #0097A7;
+ $text_gray: #a8a9ab;
+
+ /* ============ General Elements */
+ html, body{
+   height: 100%;
+ }
+
+ body{
+     color: #000000;
+     background-color: #ffffff;
+     font-family: $font_stack;
+     font-weight: 300;
+     font-size: 16px;
+ }
+
+ h1, h2, h3, h4, h5, h6{
+     font-family: $font_stack;
+ }
+
+ .alt_font, h1.alt_font, h2.alt_font, h3.alt_font, h4.alt_font, h5.alt_font, h6.alt_font, h1 .alt_font, h2 .alt_font, h3 .alt_font, h4 .alt_font, h5 .alt_font, h6 .alt_font{
+     font-family: $font_stack_alt;
+ }
+
+ .text-muted{
+     color: $text_gray;
+ }
+
+
+ .thin, h1.thin, h2.thin, h3.thin, h4.thin, h5.thin{
+     font-family: $font_stack;
+     font-weight: lighter;
+ }
+
+ .normal_weight, h1.normal_weight, h2.normal_weight, h3.normal_weight, h4.normal_weight, h5.normal_weight{
+     font-weight: normal;
+ }
+
+ .smaller{
+     font-size: 0.8em;
+     line-height: 1.375em;
+ }
+
+ a, a:active{
+     text-decoration: none;
+     color: $cyan;
+ }
+
+ a:hover{
+     text-decoration: none;
+     color: $cyan_dark;
+ }
+
+ a.row, a.block, img.block{
+     display: block;
+ }
+
+ .inline_block{
+     display: inline-block;
+ }
+
+ .float_none{
+     float: none;
+ }
+
+ .valign_middle{
+     vertical-align: middle;
+ }
+
+ .valign_top{
+     vertical-align: top;
+ }
+
+ .valign_bottom{
+     vertical-align: bottom;
+ }
+
+ .pointer{
+     cursor: pointer;
+ }
+
+ .no_margin{
+     margin: 0 !important;
+ }
+
+ .no_margin_top{
+     margin-top: 0 !important;
+ }
+
+ .no_margin_right{
+     margin-right: 0 !important;
+ }
+
+ .no_margin_bottom{
+     margin-bottom: 0 !important;
+ }
+
+ .no_margin_left{
+     margin-left: 0 !important;
+ }
+
+ .margin_all{
+     margin: 1em;
+ }
+
+ .margin_top{
+     margin-top: 1em;
+ }
+
+ .margin_right{
+     margin-right: 1em;
+ }
+
+ .margin_bottom{
+     margin-bottom: 1em;
+ }
+
+ .margin_left{
+     margin-left: 1em;
+ }
+
+ .large_margin_all{
+     margin: 2em;
+ }
+
+ .large_margin_top{
+     margin-top: 2em;
+ }
+
+ .large_margin_right{
+     margin-right: 2em;
+ }
+
+ .large_margin_bottom{
+     margin-bottom: 2em;
+ }
+
+ .large_margin_left{
+     margin-left: 2em;
+ }
+
+ .no_padding{
+     padding: 0 !important;
+ }
+
+ .no_padding_top{
+     padding-top: 0 !important;
+ }
+
+ .no_padding_right{
+     padding-right: 0 !important;
+ }
+
+ .no_padding_bottom{
+     padding-bottom: 0 !important;
+ }
+
+ .no_padding_left{
+     padding-left: 0 !important;
+ }
+
+
+
+
+
+
+ #logo {
+   max-height: 50px;
+   margin-right: 10px;
+ }
+
+ label.separate {
+   margin-bottom: 0px;
+   display: block;
+   border-bottom: 1px solid #dddddd;
+   padding-left: 15px;
+   padding-right: 15px;
+ }
+
+ .exercise_performance {
+   padding-left: 15px;
+   padding-right: 15px;
+   min-height: 75px;
+ }

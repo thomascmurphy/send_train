@@ -31,4 +31,16 @@ class WorkoutExercise < ActiveRecord::Base
     end
     return useful_label
   end
+
+  def is_rest
+    is_rest = false
+    workout_metrics = self.workout_metrics.all
+    if workout_metrics.count == 1 && workout_metrics.first.exercise_metric.exercise_metric_type_id == ExerciseMetricType::REST_TIME_ID
+      is_rest = true
+    end
+    is_rest
+  end
+
+
+
 end
