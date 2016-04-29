@@ -24,43 +24,45 @@
   <div class="row">
     <div class="col-xs-12">
       <h4>Exercises</h4>
-      <table class="table table-striped exercise_list droppable_table sortable_table">
-        <thead>
-          <tr>
-            <th>Exercise</th>
-            <th class="text-right">Options</th>
-            <th class="text-right">Reps</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @workout.workout_exercises_ordered.each do |workout_exercise| %>
+      <div class="table-responsive">
+        <table class="table table-striped exercise_list droppable_table sortable_table">
+          <thead>
             <tr>
-              <td>
-                <%= workout_exercise.exercise.label %>
-                <input name="workout_exercises[][id]" type="hidden" value="<%= workout_exercise.id %>"/>
-              </td>
-              <td>
-                <% workout_exercise.workout_metrics.each do |workout_metric| %>
-                  <%= render partial: 'workout_metric', locals: {workout_metric: workout_metric} %>
-                <% end %>
-              </td>
-              <td class="text-right">
-                <input class="form-control inline_block" type="number" name="workout_exercises[][reps]" value="<%= workout_exercise.reps %>"/>
-              </td>
-              <td class="text-right">
-                <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
-              </td>
+              <th>Exercise</th>
+              <th class="text-right">Options</th>
+              <th class="text-right">Reps</th>
+              <th></th>
             </tr>
-          <% end %>
-          <% unless @workout.workout_exercises_ordered.present? %>
-            <tr class="placeholder_row">
-              <td colspan="4" class="text-center">Drag your exercises here and then rearrange them as you need.</td>
-            </tr>
-          <% end %>
-          <tr class="push_row" style="height: 100px"></tr>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <% @workout.workout_exercises_ordered.each do |workout_exercise| %>
+              <tr>
+                <td>
+                  <%= workout_exercise.exercise.label %>
+                  <input name="workout_exercises[][id]" type="hidden" value="<%= workout_exercise.id %>"/>
+                </td>
+                <td>
+                  <% workout_exercise.workout_metrics.each do |workout_metric| %>
+                    <%= render partial: 'workout_metric', locals: {workout_metric: workout_metric} %>
+                  <% end %>
+                </td>
+                <td class="text-right">
+                  <input class="form-control inline_block" type="number" name="workout_exercises[][reps]" value="<%= workout_exercise.reps %>"/>
+                </td>
+                <td class="text-right">
+                  <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
+                </td>
+              </tr>
+            <% end %>
+            <% unless @workout.workout_exercises_ordered.present? %>
+              <tr class="placeholder_row">
+                <td colspan="4" class="text-center">Drag your exercises here and then rearrange them as you need.</td>
+              </tr>
+            <% end %>
+            <tr class="push_row" style="height: 100px"></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
   <div class="row">

@@ -26,103 +26,105 @@
     <div class="row">
       <div class="col-xs-12">
         <h4>Metrics</h4>
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>Label</th>
-              <th>Metric Type</th>
-              <th>Default Value</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody class="exercise_metric_list">
-            <% @exercise.exercise_metrics.each do |exercise_metric| %>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
               <tr>
+                <th>Label</th>
+                <th>Metric Type</th>
+                <th>Default Value</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody class="exercise_metric_list">
+              <% @exercise.exercise_metrics.each do |exercise_metric| %>
+                <tr>
+                  <td>
+                    <%= hidden_field_tag "exercise_metrics[][id]", exercise_metric.id %>
+                    <input type="text" name="exercise_metrics[][label]" value="<%= exercise_metric.label %>" class="form-control"/>
+                  </td>
+                  <td>
+                    <select name="exercise_metrics[][exercise_metric_type_id]" class="form-control metric_type_select">
+                      <%= options_from_collection_for_select(ExerciseMetricType.all, :id, :label, exercise_metric.exercise_metric_type_id) %>
+                    </select>
+                  </td>
+                  <td>
+                    <input type="number"
+                           name="exercise_metrics[][default_value]"
+                           value="<%= exercise_metric.default_value %>"
+                           class="form-control default_value"
+                           placeholder="Default Value"
+                           <% unless [1,2,3,8].include? exercise_metric.exercise_metric_type_id %>
+                            style="display: none;"
+                            disabled="disabled"
+                           <% end %>/>
+                  </td>
+                  <td class="text-right">
+                    <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
+                  </td>
+                </tr>
+                <% if exercise_metric.exercise_metric_options.present? %>
+                  <% exercise_metric.exercise_metric_options.each do |exercise_metric_option| %>
+                    <tr class="options_row">
+                      <td class="text-right small text-muted" style="border-width: 0;" colspan="2">Option for dropdown field:</td>
+                      <td style="border-top-style: dashed;">
+                        <%= hidden_field_tag "exercise_metrics[][exercise_metric_options][][id]", exercise_metric_option.id %>
+                        <input type="text" name="exercise_metrics[][exercise_metric_options][][label]" value="<%= exercise_metric_option.label %>" class="form-control"/>
+                      </td>
+                      <td class="text-right" style="border-top-style: dashed;">
+                        <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% end %>
+                <tr class="add_option_button_row" <% unless exercise_metric.exercise_metric_options.present? %>style="display:none;"<% end %>>
+                  <td colspan="3" class="text-right" style="border-top-width: 0;">
+                    <a href="javascript:void(0);" class="add_expense_metric_option btn btn-success">Add Option</a>
+                  </td>
+                </tr>
+
+              <% end %>
+
+
+              <tr class="add_metric_button_row">
+                <td colspan="4" class="text-right" style="border-top-width: 0;">
+                  <a href="javascript:void(0);" class="add_expense_metric btn btn-success">Add Metric</a>
+                </td>
+              </tr>
+
+              <tr class="metric_template_row hidden">
                 <td>
-                  <%= hidden_field_tag "exercise_metrics[][id]", exercise_metric.id %>
-                  <input type="text" name="exercise_metrics[][label]" value="<%= exercise_metric.label %>" class="form-control"/>
+                  <input type="text" name="exercise_metrics[][label]" value="" class="form-control"/>
                 </td>
                 <td>
                   <select name="exercise_metrics[][exercise_metric_type_id]" class="form-control metric_type_select">
-                    <%= options_from_collection_for_select(ExerciseMetricType.all, :id, :label, exercise_metric.exercise_metric_type_id) %>
+                    <%= options_from_collection_for_select(ExerciseMetricType.all, :id, :label) %>
                   </select>
                 </td>
                 <td>
-                  <input type="number"
-                         name="exercise_metrics[][default_value]"
-                         value="<%= exercise_metric.default_value %>"
-                         class="form-control default_value"
-                         placeholder="Default Value"
-                         <% unless [1,2,3,8].include? exercise_metric.exercise_metric_type_id %>
-                          style="display: none;"
-                          disabled="disabled"
-                         <% end %>/>
+                  <input type="number" name="exercise_metrics[][default_value]" value="" class="form-control default_value" placeholder="Default Value"/>
                 </td>
                 <td class="text-right">
                   <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
                 </td>
               </tr>
-              <% if exercise_metric.exercise_metric_options.present? %>
-                <% exercise_metric.exercise_metric_options.each do |exercise_metric_option| %>
-                  <tr class="options_row">
-                    <td class="text-right small text-muted" style="border-width: 0;" colspan="2">Option for dropdown field:</td>
-                    <td style="border-top-style: dashed;">
-                      <%= hidden_field_tag "exercise_metrics[][exercise_metric_options][][id]", exercise_metric_option.id %>
-                      <input type="text" name="exercise_metrics[][exercise_metric_options][][label]" value="<%= exercise_metric_option.label %>" class="form-control"/>
-                    </td>
-                    <td class="text-right" style="border-top-style: dashed;">
-                      <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
-                    </td>
-                  </tr>
-                <% end %>
-              <% end %>
-              <tr class="add_option_button_row" <% unless exercise_metric.exercise_metric_options.present? %>style="display:none;"<% end %>>
-                <td colspan="3" class="text-right" style="border-top-width: 0;">
+              <tr class="option_template_row hidden">
+                <td class="text-right small text-muted" style="border-width: 0;" colspan="2">Option for dropdown field:</td>
+                <td style="border-top-style: dashed;">
+                  <input type="text" name="exercise_metrics[][exercise_metric_options][][label]" value="" class="form-control"/>
+                </td>
+                <td class="text-right" style="border-top-style: dashed;">
+                  <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
+                </td>
+              </tr>
+              <tr class="add_option_button_template_row" style="display:none;">
+                <td colspan="4" class="text-right" style="border-top-width: 0;">
                   <a href="javascript:void(0);" class="add_expense_metric_option btn btn-success">Add Option</a>
                 </td>
               </tr>
-
-            <% end %>
-
-
-            <tr class="add_metric_button_row">
-              <td colspan="4" class="text-right" style="border-top-width: 0;">
-                <a href="javascript:void(0);" class="add_expense_metric btn btn-success">Add Metric</a>
-              </td>
-            </tr>
-
-            <tr class="metric_template_row hidden">
-              <td>
-                <input type="text" name="exercise_metrics[][label]" value="" class="form-control"/>
-              </td>
-              <td>
-                <select name="exercise_metrics[][exercise_metric_type_id]" class="form-control metric_type_select">
-                  <%= options_from_collection_for_select(ExerciseMetricType.all, :id, :label) %>
-                </select>
-              </td>
-              <td>
-                <input type="number" name="exercise_metrics[][default_value]" value="" class="form-control default_value" placeholder="Default Value"/>
-              </td>
-              <td class="text-right">
-                <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
-              </td>
-            </tr>
-            <tr class="option_template_row hidden">
-              <td class="text-right small text-muted" style="border-width: 0;" colspan="2">Option for dropdown field:</td>
-              <td style="border-top-style: dashed;">
-                <input type="text" name="exercise_metrics[][exercise_metric_options][][label]" value="" class="form-control"/>
-              </td>
-              <td class="text-right" style="border-top-style: dashed;">
-                <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
-              </td>
-            </tr>
-            <tr class="add_option_button_template_row" style="display:none;">
-              <td colspan="4" class="text-right" style="border-top-width: 0;">
-                <a href="javascript:void(0);" class="add_expense_metric_option btn btn-success">Add Option</a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

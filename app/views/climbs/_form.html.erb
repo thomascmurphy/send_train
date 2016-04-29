@@ -86,44 +86,46 @@
       <div class="row">
         <div class="col-xs-12">
           <h4>Attempts</h4>
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Completion</th>
-                <th>Notes</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody class="exercise_metric_list">
-              <% @climb.attempts.each do |attempt| %>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
                 <tr>
-                  <td>
-                    <%= attempt.date.strftime('%m/%d/%Y') %>
-                  </td>
-                  <td>
-                    <%= attempt.completion %>%
-                  </td>
-                  <td>
-                    <% if attempt.onsight.present? %>
-                      Onsighted
-                    <% elsif attempt.flash.present? %>
-                      Flashed
-                    <% end %>
-                  </td>
-                  <td class="text-right">
-                    <%= link_to "Edit", edit_climb_attempt_path(@climb, attempt), remote: true, class: "btn btn-info" %>
-                    <%= link_to "Delete", climb_attempt_path(@climb, attempt), method: :delete, remote: true, class: "btn btn-danger" %>
+                  <th>Date</th>
+                  <th>Completion</th>
+                  <th>Notes</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody class="exercise_metric_list">
+                <% @climb.attempts.each do |attempt| %>
+                  <tr>
+                    <td>
+                      <%= attempt.date.strftime('%m/%d/%Y') %>
+                    </td>
+                    <td>
+                      <%= attempt.completion %>%
+                    </td>
+                    <td>
+                      <% if attempt.onsight.present? %>
+                        Onsighted
+                      <% elsif attempt.flash.present? %>
+                        Flashed
+                      <% end %>
+                    </td>
+                    <td class="text-right">
+                      <%= link_to "Edit", edit_climb_attempt_path(@climb, attempt), remote: true, class: "btn btn-info" %>
+                      <%= link_to "Delete", climb_attempt_path(@climb, attempt), method: :delete, remote: true, class: "btn btn-danger" %>
+                    </td>
+                  </tr>
+                <% end %>
+                <tr>
+                  <td colspan="4" class="text-right" style="border-top-width: 0;">
+                    <%= link_to "Add Attempt", new_climb_attempt_path(@climb), remote: true, class: "btn btn-success" %>
                   </td>
                 </tr>
-              <% end %>
-              <tr>
-                <td colspan="4" class="text-right" style="border-top-width: 0;">
-                  <%= link_to "Add Attempt", new_climb_attempt_path(@climb), remote: true, class: "btn btn-success" %>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       <% end %>
