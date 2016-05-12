@@ -63,11 +63,19 @@
                     </label>
                     <div class="exercise_performance">
                       <% if exercise_performance.value.present? %>
-                        <%= exercise_performance.value %>
+                        <% if the_exercise_metric.exercise_metric_type.slug == "boulder-grade" %>
+                          <%= Climb.convert_score_to_grades(exercise_performance.value.to_i, exercise_performance.user.grade_format, "boulder") %>
+                        <% elsif the_exercise_metric.exercise_metric_type.slug == "sport-grade" %>
+                          <%= Climb.convert_score_to_grades(exercise_performance.value.to_i, exercise_performance.user.grade_format, "sport") %>
+                        <% else %>
+                          <%= exercise_performance.value %>
+                        <% end %>
                         <% if the_exercise_metric.exercise_metric_type.slug == "weight" %>
                           <%= current_user.default_weight_unit %>s
                         <% elsif the_exercise_metric.exercise_metric_type.slug == "time" || the_exercise_metric.exercise_metric_type.slug == "rest-time"%>
                           seconds
+                        <% elsif the_exercise_metric.exercise_metric_type.slug == "completion" %>
+                          %
                         <% end %>
                       <% elsif the_workout_metric.value.present? %>
                         <small>
@@ -76,6 +84,8 @@
                             <%= current_user.default_weight_unit %>s
                           <% elsif the_exercise_metric.exercise_metric_type.slug == "time" || the_exercise_metric.exercise_metric_type.slug == "rest-time"%>
                             seconds
+                          <% elsif the_exercise_metric.exercise_metric_type.slug == "completion" %>
+                            %
                           <% end %>
                           )
                         </small>
