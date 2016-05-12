@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160309143304) do
+ActiveRecord::Schema.define(version: 20160429144727) do
 
   create_table "attempts", force: :cascade do |t|
     t.datetime "date"
@@ -255,9 +255,13 @@ ActiveRecord::Schema.define(version: 20160309143304) do
     t.string   "grade_format"
     t.integer  "onboarding_step",        default: 0
     t.boolean  "accept_shares",          default: false
+    t.boolean  "allow_profile_view",     default: true
+    t.boolean  "allow_followers",        default: true
+    t.string   "handle"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
+  add_index "users", ["handle"], name: "index_users_on_handle", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
 
   create_table "workout_exercises", force: :cascade do |t|

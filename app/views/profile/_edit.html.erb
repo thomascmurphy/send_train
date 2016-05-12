@@ -1,3 +1,14 @@
+<% if @user.errors.any? %>
+  <div class="alert alert-danger" role="alert">
+    <strong><%= pluralize(@user.errors.count, "error") %> prohibited your profile from being saved:</strong><br/>
+    <ul>
+    <% @user.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+
 <%= form_for(@user, url: "/profile") do |f| %>
   <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
@@ -13,6 +24,17 @@
             <%= f.label :last_name %><br />
             <%= f.text_field :last_name, class: "form-control" %>
           </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <%= f.label :handle %> <small>(If you don't wish to show your full name)</small><br />
+            <%= f.text_field :handle, class: "form-control" %>
+          </div>
+        </div>
+        <div class="col-sm-6">
         </div>
       </div>
 
@@ -69,7 +91,11 @@
         <div class="col-sm-6">
           <div class="form-group">
             <%= f.check_box(:accept_shares) %>
-            <%= f.label :accept_shares, "Accept Sharing From Other Users" %>
+            <%= f.label :accept_shares, "Accept Sharing From Other Users" %><br/>
+            <%= f.check_box(:allow_profile_view) %>
+            <%= f.label :allow_profile_view, "Allow Others to View Your Profile" %><br/>
+            <%= f.check_box(:allow_followers) %>
+            <%= f.label :allow_followers, "Allow Others to Follow You" %>
           </div>
         </div>
         <div class="col-sm-6">

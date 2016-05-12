@@ -37,7 +37,7 @@ class ProfileController < ApplicationController
         format.js
         format.json { render json: @user, status: :ok, location: @user }
       else
-        format.html { render action: "new" }
+        format.html { render action: "edit", notice: 'Something\'s wrong.' }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
@@ -129,7 +129,8 @@ class ProfileController < ApplicationController
   def profile_params
     params.require(:user).permit(:first_name, :last_name, :grade_format,
                                  :birthdate, :climbing_start_date, :default_length_unit,
-                                 :default_weight_unit, :gym_name, :accept_shares)
+                                 :default_weight_unit, :gym_name, :accept_shares,
+                                 :handle, :allow_profile_view, :allow_followers)
   end
 
 end

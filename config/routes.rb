@@ -63,6 +63,11 @@ TrainToSend::Application.routes.draw do
       get "reject"
     end
 
+    get 'community', to: 'community#index'
+    get 'community/training', to: 'community#training'
+    get 'community/users', to: 'community#users'
+    get 'community/users/:user_id', to: 'community#user', as: 'community_user_view'
+
   end
 
   get 'comment', to: 'comments#new'

@@ -12,11 +12,20 @@ class User < ActiveRecord::Base
   has_many :coaches, class_name: 'UserCoach', foreign_key: 'user_id', dependent: :destroy
   has_many :students, class_name: 'UserCoach', foreign_key: 'coach_id', dependent: :destroy
   after_create :seed_exercises
+  before_save :set_nil
+
+  validates_uniqueness_of :handle
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
+
+  def set_nil
+    [:handle].each do |att|
+      self[att] = nil if self[att].blank?
+    end
+  end
 
   def seed_exercises
     deadhang = self.exercises.create(

@@ -49,13 +49,13 @@
     <div id="header_area">
       <div class="container">
         <div class="row">
-          <div class="col-xs-6 col-sm-5 col-md-4">
+          <div class="col-xs-5 col-sm-4 col-md-3">
             <a href="/" class="white" id="home_link">
               <%= image_tag("climber_logo_white.png", id: "logo", class: "valign_middle") %>
               <h1 id="site_title" class="inline_block valign_middle alt_font"><em>Climber.<br/>Training</em></h1>
             </a>
           </div>
-          <div class="col-xs-6 col-sm-7 col-md-8">
+          <div class="col-xs-7 col-sm-8 col-md-9">
             <nav class="navbar navbar-default">
               <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
@@ -107,6 +107,18 @@
                           Schedule
                           <% if current_page?(url_for controller: '/events', action: 'index') %> <span class="sr-only">(current)</span><% end %>
                         </a>
+                      </li>
+
+                      <li class="<% if current_page?(url_for controller: '/community', action: 'index') || current_page?(url_for controller: '/community', action: 'training') || current_page?(url_for controller: '/community', action: 'users') %>active<% end %>">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                          Community <span class="caret"></span>
+                          <% if current_page?(url_for controller: '/community', action: 'index') || current_page?(url_for controller: '/community', action: 'training') || current_page?(url_for controller: '/community', action: 'users') %> <span class="sr-only">(current)</span><% end %>
+                        </a>
+                        <ul class="dropdown-menu">
+                          <li><a href="<%= url_for controller: '/community', action: 'index' %>">Dashboard</a></li>
+                          <li><a href="<%= url_for controller: '/community', action: 'index' %>">Training</a></li>
+                          <li><a href="<%= url_for controller: '/community', action: 'index' %>">Users</a></li>
+                        </ul>
                       </li>
 
                     <% end %>

@@ -709,6 +709,10 @@ input[type=range]:focus::-ms-fill-upper {
   cursor: move;
 }
 
+.field_with_errors {
+  color: #d9534f;
+}
+
 
 
 /* ============ Header Area */
@@ -753,13 +757,13 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 #logo{
-  max-height: 80px;
+  max-height: 75px;
   margin-right: 10px;
 }
 
 #site_title{
   margin: 0px;
-  font-size: 42px;
+  font-size: 30px;
 }
 
 #notice_area{
@@ -815,9 +819,9 @@ input[type=range]:focus::-ms-fill-upper {
           }
 
           > li{
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
-            margin-left: 20px;
+            margin-left: 15px;
             margin-bottom: 10px;
             color: $white;
 
