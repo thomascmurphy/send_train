@@ -17,11 +17,29 @@
       <% if the_exercise_metric.exercise_metric_type.slug == "hold-type" %>
         <%= options_from_collection_for_select(the_exercise_metric.exercise_metric_options, :value, :label, exercise_performance.value || the_workout_metric.value) %>
       <% elsif the_exercise_metric.exercise_metric_type.slug == "boulder-grade" %>
-        <%= options_for_select(@boulder_grades, the_workout_metric.value) %>
+        <%= options_for_select(@boulder_grades, exercise_performance.value || the_workout_metric.value) %>
       <% elsif the_exercise_metric.exercise_metric_type.slug == "sport-grade" %>
-        <%= options_for_select(@sport_grades, the_workout_metric.value) %>
+        <%= options_for_select(@sport_grades, exercise_performance.value || the_workout_metric.value) %>
       <% end %>
     </select>
+  <% elsif the_exercise_metric.exercise_metric_type.input_field == "range" %>
+    <div class="col-sm-9 pull-right">
+      <div class="row slider_container">
+        <div class="col-xs-9 no_padding_right">
+          <input type="range"
+                 name="exercise_performances[][value]"
+                 min="0"
+                 max="100"
+                 step="5"
+                 value="<%= exercise_performance.value.present? ? exercise_performance.value : the_workout_metric.value %>"
+                 class="completion_slider"
+                 <% if defined?(disabled) && disabled.present? %>disabled="true"<% end %>/>
+        </div>
+        <div class="col-xs-3">
+          <span class="slider_value_wrapper alt_font"><span class="slider_value"><%= exercise_performance.value.present? ? exercise_performance.value : the_workout_metric.value %></span>%</span>
+        </div>
+      </div>
+    </div>
 
   <% else %>
       <input class="form-control inline_block short_input"

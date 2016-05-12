@@ -31,7 +31,7 @@ class ExercisePerformance < ActiveRecord::Base
     workout_metric_ids = WorkoutMetric.where(workout_exercise_id: workout_exercise.id).pluck(:id)
     sibling_performances = ExercisePerformance.where(event_id: self.event_id, workout_metric_id: workout_metric_ids)
     exercise_metric_types = exercise.exercise_metrics.pluck(:exercise_metric_type_id).map{|type_id| exercise_metric_type_conversion[type_id]}
-    case exercise_metric_types.sort
+    case exercise_metric_types.uniq.sort
     when ["hold-type", "rest-time", "time", "weight"]
       quantifications = []
       weights = []
@@ -75,11 +75,51 @@ class ExercisePerformance < ActiveRecord::Base
       quantifications = sibling_performances.pluck(:value).map(&:to_i)
       quantification = quantifications.inject{ |sum, el| sum + el }.to_f / quantifications.size
       tooltip_value = "#{quantification.round(2)}s"
+    when ["boulder-grade", "completion"], ["sport-grade", "completion"]
+      climb_type = nil
+      if exercise_metric_types.uniq.sort == ["boulder-grade", "completion"]
+        climb_type = "boulder"
+      elsif exercise_metric_types.uniq.sort == ["sport-grade", "completion"]
+        climb_type = "sport"
+      end
+      name = exercise.label
+      completions = []
+      average_grades = []
+      quantifications = []
+      sibling_performances.group_by(&:rep).each do |rep, performances|
+        completion = 1
+        climb_score = 0
+        climb_count = 0
+        performances.each do |performance|
+          case exercise_metric_type_conversion[performance.workout_metric.exercise_metric.exercise_metric_type_id]
+          when 'boulder-grade', 'sport-grade'
+            climb_score += performance.value.to_i
+            climb_count += 1
+          else
+            completion = performance.value.to_i
+          end
+        end
+        average_grade = climb_score.to_f / climb_count
+        average_grades << average_grade
+        completions << completion
+        quantifications << (average_grade * (completion.to_f / 100))
+      end
+      total_average_grade = average_grades.inject{ |sum, el| sum + el }.to_f / average_grades.size
+      quantification = quantifications.inject{ |sum, el| sum + el }.to_f / quantifications.size
+      climb_string = Climb.convert_score_to_grades(total_average_grade, self.user.grade_format, climb_type)
+      completion_string = "#{completions.inject{ |sum, el| sum + el }.to_f / completions.size}%"
+      tooltip_value = "#{climb_string} (#{completion_string} completion)"
     when ["boulder-grade"], ["sport-grade"]
+      climb_type = nil
+      if exercise_metric_types.uniq.sort == ["boulder-grade"]
+        climb_type = "boulder"
+      elsif exercise_metric_types.uniq.sort == ["sport-grade"]
+        climb_type = "sport"
+      end
       name = exercise.label
       quantifications = sibling_performances.pluck(:value).map(&:to_i)
       quantification = quantifications.inject{ |sum, el| sum + el }.to_f / quantifications.size
-      tooltip_value = Climb.convert_score_to_grades(quantification, self.user.grade_format)
+      tooltip_value = Climb.convert_score_to_grades(quantification, self.user.grade_format, climb_type)
     when ["campus-rungs"], ["campus-rungs", "rest-time"], ["campus-rungs", "hold-type", "rest-time"]
       quantifications = []
       campus_rungs = nil

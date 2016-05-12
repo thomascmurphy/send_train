@@ -26,6 +26,23 @@
               <%= options_for_select(@sport_grades) %>
             <% end %>
           </select>
+        <% elsif exercise_metric.exercise_metric_type.input_field == "range" %>
+          <div class="col-sm-9 pull-right">
+            <div class="row slider_container">
+              <div class="col-xs-9 no_padding_right">
+                <input type="range"
+                       name="workout_exercises[][workout_metrics][][value]"
+                       min="0"
+                       max="100"
+                       step="5"
+                       value="<%= exercise_metric.default_value.present? ? exercise_metric.default_value : 0 %>"
+                       class="completion_slider">
+              </div>
+              <div class="col-xs-3">
+                <span class="slider_value_wrapper alt_font"><span class="slider_value"><%= exercise_metric.default_value.present? ? exercise_metric.default_value : 0 %></span>%</span>
+              </div>
+            </div>
+          </div>
         <% else %>
           <input class="form-control inline_block"
                  name="workout_exercises[][workout_metrics][][value]"
