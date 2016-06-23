@@ -49,6 +49,10 @@ class User < ActiveRecord::Base
       label: "Rest Time",
       exercise_metric_type_id: ExerciseMetricType::REST_TIME_ID
     )
+    deadhang_metric_reps = deadhang.exercise_metrics.create(
+      label: "Reps",
+      exercise_metric_type_id: ExerciseMetricType::REPETITIONS_ID
+    )
 
     campus = self.exercises.create(
       label: "Campus",

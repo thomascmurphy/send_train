@@ -47,7 +47,6 @@ profile_ready = function() {
           '#c174b0',
           '#00ae9d',
           '#FDD835'],
-      has_key: false,
       hover: true
   };
 
@@ -86,7 +85,8 @@ profile_ready = function() {
     }
     var specific_line_options = {
       title: $(this).data('chart-title'),
-      zoom_y: 0.75
+      zoom_y: 0.75,
+      has_key: false
     };
     $(this).drawLine(line_data, $.extend(specific_line_options, line_options));
   });
@@ -101,7 +101,8 @@ profile_ready = function() {
     var specific_line_options = {
       title: $(this).data('chart-title'),
       zoom_y: 0.75,
-      show_area_color: false
+      show_area_color: false,
+      has_key: true
     };
     $(this).drawLine(line_data, $.extend(specific_line_options, line_options));
   });
