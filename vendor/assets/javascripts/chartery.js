@@ -323,7 +323,7 @@ if(!full_donut){
     svg.append(center_small);
 
     if(has_key){
-      var key_line_height = height / key_data.length;
+      var key_line_height = area_height / key_data.length;
       var key_circle_radius = Math.min(5, key_line_height);
       for(var i=0; i<key_data.length; i++){
         var key_data_item = key_data[i];
@@ -511,7 +511,7 @@ if(!full_donut){
     }
 
     if(has_key){
-      var key_line_height = (height - offset_top) / key_data.length;
+      var key_line_height = (area_height - offset_top) / key_data.length;
       var key_circle_radius = Math.min(5, key_line_height);
       for(var i=0; i<key_data.length; i++){
         var key_data_item = key_data[i];
@@ -837,7 +837,7 @@ if(!full_donut){
     }
 
     if(has_key) {
-      var key_line_height = (height - offset_top) / key_data.length;
+      var key_line_height = (area_height - offset_top) / key_data.length;
       var key_circle_radius = Math.min(5, key_line_height);
       for(var i=0; i<key_data.length; i++) {
         var key_data_item = key_data[i];
@@ -1397,7 +1397,7 @@ if(!full_donut){
     }
 
     if(has_key) {
-      var key_line_height = (height - offset_top) / key_data.length;
+      var key_line_height = (area_height - offset_top) / key_data.length;
       var key_circle_radius = Math.min(5, key_line_height);
       for(var i=0; i<key_data.length; i++) {
         var key_data_item = key_data[i];
