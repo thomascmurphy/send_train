@@ -74,9 +74,10 @@ class ProfileController < ApplicationController
         progress = @workout.progress(@filter_workout_exercise_ids, @date_lower, @date_upper)
         progress.each do |label, quantifications|
           dates.concat quantifications.map{|q| DateTime.strptime(q[:date], "%b %d, %Y")}
-          hold_progress = {'title': label, 'values': []}
+          #hold_progress = {'title': label, 'values': []}
+          hold_progress = []
           quantifications.each do |quantification|
-            hold_progress[:values] << {name: "#{label.capitalize} (#{quantification[:date]})",
+            hold_progress << {name: "#{label.capitalize} (#{quantification[:date]})",
                                        value: quantification[:value],
                                        tooltip_value: quantification[:tooltip_value]}
           end

@@ -102,7 +102,7 @@ profile_ready = function() {
       title: $(this).data('chart-title'),
       zoom_y: 0.75,
       show_area_color: false,
-      has_key: true
+      has_key: false
     };
     $(this).drawLine(line_data, $.extend(specific_line_options, line_options));
   });
