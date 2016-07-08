@@ -32,7 +32,8 @@ class ExercisePerformance < ActiveRecord::Base
     sibling_performances = ExercisePerformance.where(event_id: self.event_id, workout_metric_id: workout_metric_ids)
     exercise_metric_types = exercise.exercise_metrics.pluck(:exercise_metric_type_id).map{|type_id| exercise_metric_type_conversion[type_id]}
     case exercise_metric_types.uniq.sort
-    when ["hold-type", "rest-time", "time", "weight"]
+    when ["hold-type", "rest-time", "time", "weight"],
+         ["hold-type", "repetitions", "rest-time", "time", "weight"]
       quantifications = []
       weights = []
       hang_times = []

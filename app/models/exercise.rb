@@ -98,7 +98,8 @@ class Exercise < ActiveRecord::Base
             exercise_metric_option_label = exercise_metric_option_params.with_indifferent_access["label"]
             if exercise_metric_option_label.present?
               exercise_metric_option.label = exercise_metric_option_params.with_indifferent_access["label"]
-              exercise_metric_option.value = exercise_metric_option_params.with_indifferent_access["label"].parameterize
+              #exercise_metric_option.value = exercise_metric_option_params.with_indifferent_access["label"].parameterize
+              exercise_metric_option.value = exercise_metric_option_params.with_indifferent_access["label"]
               exercise_metric_option.order = option_index
               exercise_metric_option.save
             end

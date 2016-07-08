@@ -29,13 +29,13 @@ class User < ActiveRecord::Base
       exercise_metric_type_id: ExerciseMetricType::HOLD_TYPE_ID
     )
     hold_options = deadhang_metric_hold.exercise_metric_options.create([
-      {label: "Crimp", value: "crimp"},
-      {label: "Sloper", value: "sloper"},
-      {label: "Pinch", value: "pinch"},
-      {label: "Front Two Fingers", value: "front-two-fingers"},
-      {label: "Middle Two Fingers", value: "middle-two-fingers"},
-      {label: "Back Two Fingers", value: "back-two-fingers"},
-      {label: "Front Three Fingers", value: "front-three-fingers"}
+      {label: "Crimp", value: "Crimp"},
+      {label: "Sloper", value: "Sloper"},
+      {label: "Pinch", value: "Pinch"},
+      {label: "Front Two Fingers", value: "Front Two Fingers"},
+      {label: "Middle Two Fingers", value: "Middle Two Fingers"},
+      {label: "Back Two Fingers", value: "Back Two Fingers"},
+      {label: "Front Three Fingers", value: "Front Three Fingers"}
     ])
     deadhang_metric_weight = deadhang.exercise_metrics.create(
       label: "Weight",
@@ -209,10 +209,14 @@ class User < ActiveRecord::Base
 
   def agnostic_weight(weight)
     agnostic_weight = weight
+    user_weight = self.weight || 0
+    if self.weight_unit == "lb"
+      user_weight = user_weight * 0.453592
+    end
     if self.default_weight_unit == "lb"
       agnostic_weight = weight * 0.453592
     end
-    return agnostic_weight
+    return user_weight + agnostic_weight
   end
 
   def smart_name
