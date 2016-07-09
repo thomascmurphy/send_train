@@ -70,20 +70,27 @@ class ProfileController < ApplicationController
     if params[:workout_id].present?
       @workout = @user.workouts.find_by_id(params[:workout_id])
       formatted_progress = []
+      table_progress = []
       if @workout.present?
         progress = @workout.progress(@filter_workout_exercise_ids, @date_lower, @date_upper)
         progress.each do |label, quantifications|
           dates.concat quantifications.map{|q| DateTime.strptime(q[:date], "%b %d, %Y")}
           hold_progress = {'title': label, 'values': []}
+          hold_progress_table = {'title': label, 'values': {}}
           quantifications.each do |quantification|
             hold_progress[:values] << {name: "#{label.capitalize} (#{quantification[:date]})",
                                        value: quantification[:value],
                                        tooltip_value: quantification[:tooltip_value]}
+
+            hold_progress_table[:values][quantification[:date]] = quantification[:tooltip_value]
           end
           formatted_progress << hold_progress
+          table_progress << hold_progress_table
         end
       end
+      @date_strings = dates.uniq.sort.map{|d| d.strftime("%b %d, %Y")}
       @workout_progress = formatted_progress.to_json
+      @table_progress = table_progress
     end
     if @show_climbs.present? && @user.should_show_climb_data?
       if dates.present?
