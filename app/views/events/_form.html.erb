@@ -13,7 +13,7 @@
         <div class="col-sm-3">
           <div class="form-group">
             <%= f.label :workout %><br>
-            <%= f.collection_select(:workout_id, current_user.workouts.all, :id, :label, {prompt: "None"}, {class: "form-control workout_select", disabled: @event.id.present?}) %>
+            <%= f.collection_select(:workout_id, @user.workouts.all, :id, :label, {prompt: "None"}, {class: "form-control workout_select", disabled: @event.id.present?}) %>
           </div>
         </div>
       <% end %>
@@ -27,7 +27,7 @@
         <div class="col-sm-3">
           <div class="form-group">
             <%= f.label :macrocycle, "Plan" %><br>
-            <%= f.collection_select(:macrocycle_id, current_user.macrocycles.all, :id, :label, {prompt: "None"}, {class: "form-control macrocycle_select", disabled: @event.id.present?}) %>
+            <%= f.collection_select(:macrocycle_id, @user.macrocycles.all, :id, :label, {prompt: "None"}, {class: "form-control macrocycle_select", disabled: @event.id.present?}) %>
           </div>
         </div>
       <% end %>

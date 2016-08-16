@@ -55,12 +55,12 @@ class EventsController < ApplicationController
 
   def new
     if params[:user_id].present?
-      user = User.find(params[:user_id])
+      @user = User.find(params[:user_id])
     else
-      user = current_user
+      @user = current_user
     end
-    @event = user.events.new
-    @user_id = user.id
+    @event = @user.events.new
+    @user_id = @user.id
     @event.set_dates_to_now
     respond_to do |format|
       format.html
@@ -89,28 +89,28 @@ class EventsController < ApplicationController
       #Handle a coach creating an event for a student
       @coach_viewing = true
       user = User.find(params[:user_id])
-      if params[:event][:workout_id].present?
-        coach_workout = Workout.find(params[:event][:workout_id])
-        if user.workouts.where(reference_id: params[:event][:workout_id]).present?
-          workout = user.workouts.where(reference_id: params[:event][:workout_id]).first
-        elsif coach_workout.reference_id.present? && user.workouts.where(reference_id: coach_workout.reference_id).present?
-          workout = user.workouts.where(reference_id: coach_workout.reference_id).first
-        else
-          workout = coach_workout.duplicate(user)
-        end
-        params[:event][:workout_id] = workout.id
-      end
-      if params[:event][:macrocycle_id].present?
-        coach_macrocycle = Macrocycle.find(params[:event][:macrocycle_id])
-        if user.macrocycles.where(reference_id: params[:event][:macrocycle_id]).present?
-          macrocycle = user.macrocycles.where(reference_id: params[:event][:macrocycle_id]).first
-        elsif coach_macrocycle.reference_id.present? && user.macrocycles.where(reference_id: coach_macrocycle.reference_id).present?
-          macrocycle = user.macrocycles.where(reference_id: coach_macrocycle.reference_id).first
-        else
-          macrocycle = coach_macrocycle.duplicate(user)
-        end
-        params[:event][:macrocycle_id] = macrocycle.id
-      end
+#       if params[:event][:workout_id].present?
+#         coach_workout = Workout.find(params[:event][:workout_id])
+#         if user.workouts.where(reference_id: params[:event][:workout_id]).present?
+#           workout = user.workouts.where(reference_id: params[:event][:workout_id]).first
+#         elsif coach_workout.reference_id.present? && user.workouts.where(reference_id: coach_workout.reference_id).present?
+#           workout = user.workouts.where(reference_id: coach_workout.reference_id).first
+#         else
+#           workout = coach_workout.duplicate(user)
+#         end
+#         params[:event][:workout_id] = workout.id
+#       end
+#       if params[:event][:macrocycle_id].present?
+#         coach_macrocycle = Macrocycle.find(params[:event][:macrocycle_id])
+#         if user.macrocycles.where(reference_id: params[:event][:macrocycle_id]).present?
+#           macrocycle = user.macrocycles.where(reference_id: params[:event][:macrocycle_id]).first
+#         elsif coach_macrocycle.reference_id.present? && user.macrocycles.where(reference_id: coach_macrocycle.reference_id).present?
+#           macrocycle = user.macrocycles.where(reference_id: coach_macrocycle.reference_id).first
+#         else
+#           macrocycle = coach_macrocycle.duplicate(user)
+#         end
+#         params[:event][:macrocycle_id] = macrocycle.id
+#       end
       @event = user.events.new(event_params)
     else
       @event = current_user.events.new(event_params)
@@ -129,7 +129,12 @@ class EventsController < ApplicationController
   end
 
   def edit
-    @event = current_user.events.find_by_id(params[:id])
+    if params[:user_id].present?
+      @user = User.find(params[:user_id])
+    else
+      @user = current_user
+    end
+    @event = @user.events.find_by_id(params[:id])
     respond_to do |format|
       format.html
       format.js
@@ -154,6 +159,10 @@ class EventsController < ApplicationController
       end
     elsif start_date.present? && (start_date > @event.end_date || @event.workout_id.present?)
       @event.end_date = start_date
+    end
+
+    if params[:user_id].present? && params[:user_id] != current_user.id
+      @coach_viewing = true
     end
 
     respond_to do |format|
