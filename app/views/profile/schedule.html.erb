@@ -2,6 +2,9 @@
   <div class="col-sm-8">
     <h1><%= @user.smart_name %>'s Schedule</h1>
   </div>
+  <div class="col-xs-4 text-right">
+    <%= link_to raw("<span class='glyphicon glyphicon-plus'></span> Add Event"), profile_user_events_new_path(@user), remote: true, class: "btn btn-success btn-lg margin_top" %>
+  </div>
 </div>
 
 <div class="event_list margin_top">
