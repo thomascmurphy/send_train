@@ -25,11 +25,15 @@ TrainToSend::Application.routes.draw do
     resources :workouts do
       get "delete"
       get "duplicate"
+      get "assign", to: 'workouts#assign_new'
+      post "assign", to: 'workouts#assign_create'
     end
 
     resources :macrocycles, :path => "plans" do
       get "delete"
       get "duplicate"
+      get "assign", to: 'macrocycles#assign_new'
+      post "assign", to: 'macrocycles#assign_create'
     end
 
     resources :events do
