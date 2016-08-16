@@ -117,9 +117,9 @@ class ProfileController < ApplicationController
       redirect_to events_path
     end
     @events = @user.events
-    monday = DateTime.now.utc.beginning_of_week
-    @upcoming_weeks = {0=>{}, 1=>{}}
-    for week in 0..1
+    monday = DateTime.now.utc.beginning_of_week - 7.days
+    @upcoming_weeks = {0=>{}, 1=>{}, 2=>{}}
+    for week in 0..2
       for day in 0..6
         date = monday + (day + week * 7).days
         @upcoming_weeks[week][date.strftime("%b %e")] = @events.where("start_date >= ? AND start_date < ? AND (end_date <= ? OR end_date IS NULL)", date.beginning_of_day, date.end_of_day, date.end_of_day).order(start_date: :asc)

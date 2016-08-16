@@ -4,9 +4,9 @@ $("ul.errors").html("")
     $("ul.errors").append($("<li />").html("<%= message.html_safe %>"));
   <% end %>
 <% else %>
-  $(".calendar").html("<%= escape_javascript(render 'calendar') %>");
-  $(".current_events").html("<%= escape_javascript(render 'current_events') %>");
-  $(".upcoming_events").html("<%= escape_javascript(render 'upcoming_events') %>");
-  $(".past_events").html("<%= escape_javascript(render 'past_events') %>");
+  $(".calendar").html("<%= escape_javascript(render partial: 'events/calendar', locals: {coach_viewing: defined?(@coach_viewing) ? @coach_viewing : false}) %>");
+  $(".current_events").html("<%= escape_javascript(render partial: 'current_events', locals: {coach_viewing: defined?(@coach_viewing) ? @coach_viewing : false}) %>");
+  $(".upcoming_events").html("<%= escape_javascript(render partial: 'upcoming_events', locals: {coach_viewing: defined?(@coach_viewing) ? @coach_viewing : false}) %>");
+  $(".past_events").html("<%= escape_javascript(render partial: 'past_events', locals: {coach_viewing: defined?(@coach_viewing) ? @coach_viewing : false}) %>");
   $("#event_modal").modal("hide");
 <% end %>
