@@ -161,6 +161,35 @@ class MacrocyclesController < ApplicationController
     end
   end
 
+  def assign_new
+    @students = current_user.students
+    @macrocycle = current_user.macrocycles.find_by_id(params[:macrocycle_id])
+    respond_to do |format|
+      format.html
+      format.js
+      format.json
+    end
+  end
+
+  def assign_create
+    @macrocycles = current_user.macrocycles.order(created_at: :desc)
+    @macrocycle = current_user.macrocycles.find_by_id(params[:macrocycle_id])
+    student_ids = current_user.students.pluck(:user_id).uniq
+    if params[:student_ids].present?
+      params[:student_ids].map(&:to_i).each do |student_id|
+        if student_ids.include? student_id
+          student = User.find_by_id(student_id)
+          new_macrocycle = @macrocycle.duplicate(student)
+        end
+      end
+    end
+    respond_to do |format|
+      format.html
+      format.js
+      format.json
+    end
+  end
+
 
   private
 

@@ -103,7 +103,7 @@ class Macrocycle < ActiveRecord::Base
       if self.user_id != user.id
         self.workouts.uniq.each do |workout|
           if referenced_workouts.include? workout.reference_id
-            self.macrocycle_workouts.where(workout_id: workout.id).each do |macrocycle_workouts|
+            self.macrocycle_workouts.where(workout_id: workout.id).each do |macrocycle_workout|
               macrocycle_workout.duplicate(user, macrocycle_workout.workout_id, new_macrocycle.id)
             end
           else
