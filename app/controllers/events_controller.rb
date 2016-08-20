@@ -3,7 +3,7 @@ class EventsController < ApplicationController
   before_filter :set_field_data, :only => [:show, :edit]
 
   def set_events
-    if params[:user_id].present? && params[:user_id] != current_user.id
+    if params[:user_id].present? && params[:user_id].to_i != current_user.id
       user = User.find(params[:user_id])
       @events = user.events
     else
@@ -85,7 +85,7 @@ class EventsController < ApplicationController
       end
     end
 
-    if params[:user_id].present? && params[:user_id] != current_user.id
+    if params[:user_id].present? && params[:user_id].to_i != current_user.id
       #Handle a coach creating an event for a student
       @coach_viewing = true
       user = User.find(params[:user_id])
@@ -161,7 +161,7 @@ class EventsController < ApplicationController
       @event.end_date = start_date
     end
 
-    if params[:user_id].present? && params[:user_id] != current_user.id
+    if params[:user_id].present? && params[:user_id].to_i != current_user.id
       @coach_viewing = true
     end
 
