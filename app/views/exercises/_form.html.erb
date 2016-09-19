@@ -64,7 +64,7 @@
                   </td>
                 </tr>
                 <% if exercise_metric.exercise_metric_options.present? %>
-                  <% exercise_metric.exercise_metric_options.each do |exercise_metric_option| %>
+                  <% exercise_metric.exercise_metric_options.order(:order).each do |exercise_metric_option| %>
                     <tr class="options_row">
                       <td class="text-right small text-muted" style="border-width: 0;" colspan="2">Option for dropdown field:</td>
                       <td style="border-top-style: dashed;">
