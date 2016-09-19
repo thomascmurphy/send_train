@@ -31,7 +31,7 @@ exercises_ready = function() {
         return false;
       }
     });
-    if (type_value==1 || type_value==2 || type_value==3 || type_value==8) {
+    if (type_value==1 || type_value==2 || type_value==3 || type_value==8 || type_value==10) {
       metric_row.find('.default_value').show().prop('disabled', false);
     } else {
       metric_row.find('.default_value').hide().prop('disabled', true);

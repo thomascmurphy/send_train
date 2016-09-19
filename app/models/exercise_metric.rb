@@ -28,4 +28,24 @@ class ExerciseMetric < ActiveRecord::Base
     end
   end
 
+  def unit_string(parentheses=false)
+    case self.exercise_metric_type.slug
+    when "weight"
+      units = "#{self.exercise.user.default_weight_unit}s"
+    when "time"
+      units = "seconds"
+    when "hold-size"
+      units = "pads"
+    when "completion"
+      units = "%"
+    else
+      units = ""
+    end
+    if parentheses.present? && units.present?
+      return "(#{units})"
+    else
+      return units
+    end
+  end
+
 end

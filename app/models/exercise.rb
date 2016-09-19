@@ -13,6 +13,21 @@ class Exercise < ActiveRecord::Base
     end
   end
 
+  def update_workouts
+    workout_exercises = WorkoutExercise.where(exercise_id: self.id)
+    workout_exercises.each do |workout_exercise|
+      existing_workout_metric_ids = workout_exercise.workout_metrics.pluck(:id)
+      updated_workout_metric_ids = []
+      self.exercise_metrics.each do |exercise_metric|
+        if exercise_metric.id.present?
+          workout_metric = workout_exercise.workout_metrics.find_or_create_by(exercise_metric_id: exercise_metric.id)
+          updated_workout_metric_ids << workout_metric.id
+        end
+      end
+      WorkoutMetric.where(id: existing_workout_metric_ids - updated_workout_metric_ids).destroy_all
+    end
+  end
+
   def panel_class
     case self.exercise_type
     when "strength"
@@ -113,6 +128,7 @@ class Exercise < ActiveRecord::Base
     if (existing_exercise_metric_option_ids - updated_exercise_metric_option_ids).present?
       ExerciseMetricOption.where(id: existing_exercise_metric_option_ids - updated_exercise_metric_option_ids).destroy_all
     end
+    self.update_workouts()
   end
 
   def duplicate(user, old_workout_id=nil, new_workout_id=nil)

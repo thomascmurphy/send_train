@@ -84,7 +84,7 @@ class EventsController < ApplicationController
         params[:event][:end_date] = end_date
       end
     end
-
+    
     if params[:user_id].present? && params[:user_id].to_i != current_user.id
       #Handle a coach creating an event for a student
       @coach_viewing = true

@@ -37,6 +37,10 @@ class User < ActiveRecord::Base
       {label: "Back Two Fingers", value: "Back Two Fingers"},
       {label: "Front Three Fingers", value: "Front Three Fingers"}
     ])
+    deadhang_metric_hold_size = deadhang.exercise_metrics.create(
+      label: "Hold Size",
+      exercise_metric_type_id: ExerciseMetricType::HOLD_SIZE_ID
+    )
     deadhang_metric_weight = deadhang.exercise_metrics.create(
       label: "Weight",
       exercise_metric_type_id: ExerciseMetricType::WEIGHT_ID

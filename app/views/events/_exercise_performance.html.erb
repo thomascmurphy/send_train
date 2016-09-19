@@ -2,24 +2,19 @@
   <% the_workout_metric = exercise_performance.workout_metric %>
   <% the_exercise_metric = the_workout_metric.exercise_metric %>
   <label class="small">
-    <%= the_exercise_metric.label %>
-    <% if the_exercise_metric.exercise_metric_type.slug == "weight" %>
-      (<%= current_user.default_weight_unit %>s)
-    <% elsif the_exercise_metric.exercise_metric_type.slug == "time" %>
-      (seconds)
-    <% end %>
+    <%= the_exercise_metric.label %> <%= the_exercise_metric.unit_string(true) %>
   </label>
   <input name="exercise_performances[][workout_metric_id]" type="hidden" value="<%= the_workout_metric.id %>"/>
   <input name="exercise_performances[][id]" type="hidden" value="<%= exercise_performance.id %>"/>
   <% if the_exercise_metric.exercise_metric_type.input_field == "select" %>
 
     <select name="exercise_performances[][value]" class="form-control inline_block short_input" <% if defined?(disabled) && disabled.present? %>disabled="true"<% end %>>
-      <% if the_exercise_metric.exercise_metric_type.slug == "hold-type" %>
-        <%= options_from_collection_for_select(the_exercise_metric.exercise_metric_options, :value, :label, exercise_performance.value || the_workout_metric.value) %>
-      <% elsif the_exercise_metric.exercise_metric_type.slug == "boulder-grade" %>
+      <% if the_exercise_metric.exercise_metric_type.slug == "boulder-grade" %>
         <%= options_for_select(@boulder_grades, exercise_performance.value || the_workout_metric.value) %>
       <% elsif the_exercise_metric.exercise_metric_type.slug == "sport-grade" %>
         <%= options_for_select(@sport_grades, exercise_performance.value || the_workout_metric.value) %>
+      <% else %>
+        <%= options_from_collection_for_select(the_exercise_metric.exercise_metric_options, :value, :label, exercise_performance.value || the_workout_metric.value) %>
       <% end %>
     </select>
   <% elsif the_exercise_metric.exercise_metric_type.input_field == "range" %>
