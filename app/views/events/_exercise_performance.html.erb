@@ -1,4 +1,4 @@
-<div class="form-goup text-right">
+<div class="form-group text-right">
   <% the_workout_metric = exercise_performance.workout_metric %>
   <% the_exercise_metric = the_workout_metric.exercise_metric %>
   <label class="small">
@@ -14,7 +14,7 @@
       <% elsif the_exercise_metric.exercise_metric_type.slug == "sport-grade" %>
         <%= options_for_select(@sport_grades, exercise_performance.value || the_workout_metric.value) %>
       <% else %>
-        <%= options_from_collection_for_select(the_exercise_metric.exercise_metric_options.order(:order), :value, :label, exercise_performance.value || the_workout_metric.value) %>
+        <%= options_from_collection_for_select(the_exercise_metric.exercise_metric_options.order(:order_in_metric), :value, :label, exercise_performance.value || the_workout_metric.value) %>
       <% end %>
     </select>
   <% elsif the_exercise_metric.exercise_metric_type.input_field == "range" %>
