@@ -14,7 +14,7 @@
       <% elsif the_exercise_metric.exercise_metric_type.slug == "sport-grade" %>
         <%= options_for_select(@sport_grades, exercise_performance.value || the_workout_metric.value) %>
       <% else %>
-        <%= options_from_collection_for_select(the_exercise_metric.exercise_metric_options, :value, :label, exercise_performance.value || the_workout_metric.value) %>
+        <%= options_from_collection_for_select(the_exercise_metric.exercise_metric_options.order(:order), :value, :label, exercise_performance.value || the_workout_metric.value) %>
       <% end %>
     </select>
   <% elsif the_exercise_metric.exercise_metric_type.input_field == "range" %>

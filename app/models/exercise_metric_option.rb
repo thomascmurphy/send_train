@@ -19,4 +19,20 @@ class ExerciseMetricOption < ActiveRecord::Base
     pad_string = hold_size_value.to_f > 1 ? "Pads" : "Pad"
     "#{pad_count} #{pad_string}"
   end
+
+  def update_values(old_value)
+    if old_value != self.value
+      workout_metrics = self.exercise_metric.workout_metrics
+      workout_metrics.where(value: old_value).each do |workout_metric|
+        workout_metric.value = self.value
+        workout_metric.save
+        exercise_performances = workout_metric.exercise_performances
+        exercise_performances.where(value: old_value).each do |exercise_performance|
+          exercise_performance.value = self.value
+          exercise_performance.save
+        end
+      end
+    end
+  end
+
 end
