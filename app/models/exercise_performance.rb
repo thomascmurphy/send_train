@@ -50,8 +50,10 @@ class ExercisePerformance < ActiveRecord::Base
         performances.each do |performance|
           case exercise_metric_type_conversion[performance.workout_metric.exercise_metric.exercise_metric_type_id]
           when 'hold-size'
-            hold_size = performance.value.to_f
-            hold_size_string = "#{ExerciseMetricOption.pretty_hold_size(performance.value)} with "
+            if performance.value.present?
+              hold_size = performance.value.to_f
+              hold_size_string = "#{ExerciseMetricOption.pretty_hold_size(performance.value)} with "
+            end
           when 'hold-type'
             hold_type = performance.value
           when 'weight'
