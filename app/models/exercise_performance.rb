@@ -34,7 +34,8 @@ class ExercisePerformance < ActiveRecord::Base
     case exercise_metric_types.uniq.sort
     when ["hold-type", "rest-time", "time", "weight"],
          ["hold-type", "repetitions", "rest-time", "time", "weight"],
-         ["hold-size", "hold-type", "repetitions", "rest-time", "time", "weight"],
+         ["hold-size", "hold-type", "rest-time", "time", "weight"],
+         ["hold-size", "hold-type", "repetitions", "rest-time", "time", "weight"]
       quantifications = []
       weights = []
       hang_times = []
