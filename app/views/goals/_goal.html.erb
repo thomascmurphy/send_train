@@ -1,0 +1,14 @@
+<div class="col-md-3 col-sm-6 margin_bottom">
+  <div class="panel<%= goal.panel_class %>">
+    <div class="panel-heading">
+      <h3 class="panel-title"><%= goal.label %></h3>
+    </div>
+    <div class="panel-body">
+      Deadline: <%= goal.deadline.strftime('%m/%d/%Y') if goal.deadline.present? %>
+    </div>
+    <div class="panel-footer text-right">
+      <%= link_to "Edit", edit_goal_path(goal), remote: true, class: "btn btn-info" %>
+      <%= link_to "Delete", goal_delete_path(goal), remote: true, class: "btn btn-danger" %>
+    </div>
+  </div>
+</div>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160309143304) do
+ActiveRecord::Schema.define(version: 20160920010223) do
 
   create_table "attempts", force: :cascade do |t|
     t.datetime "date"
@@ -134,6 +134,20 @@ ActiveRecord::Schema.define(version: 20160309143304) do
 
   add_index "exercises", ["user_id"], name: "index_exercises_on_user_id"
 
+  create_table "goals", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "label"
+    t.integer  "parent_goal_id"
+    t.boolean  "public",         default: false
+    t.date     "deadline"
+    t.boolean  "completed",      default: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  add_index "goals", ["parent_goal_id"], name: "index_goals_on_parent_goal_id"
+  add_index "goals", ["user_id"], name: "index_goals_on_user_id"
+
   create_table "item_shares", force: :cascade do |t|
     t.integer  "sharer_id"
     t.integer  "recipient_id"
@@ -228,18 +242,18 @@ ActiveRecord::Schema.define(version: 20160309143304) do
   add_index "user_coaches", ["user_id"], name: "index_user_coaches_on_user_id"
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "",    null: false
-    t.string   "encrypted_password",     default: "",    null: false
+    t.string   "email",                  default: "",   null: false
+    t.string   "encrypted_password",     default: "",   null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,     null: false
+    t.integer  "sign_in_count",          default: 0,    null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.date     "birthdate"
     t.string   "gender"
     t.integer  "weight"
@@ -254,7 +268,7 @@ ActiveRecord::Schema.define(version: 20160309143304) do
     t.datetime "climbing_start_date"
     t.string   "grade_format"
     t.integer  "onboarding_step",        default: 0
-    t.boolean  "accept_shares",          default: false
+    t.boolean  "accept_shares",          default: true
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

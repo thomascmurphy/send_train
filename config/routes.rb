@@ -69,6 +69,10 @@ TrainToSend::Application.routes.draw do
       get "reject"
     end
 
+    resources :goals do
+      get "delete"
+    end
+
   end
 
   get 'comment', to: 'comments#new'

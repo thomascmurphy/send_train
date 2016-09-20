@@ -1,0 +1,69 @@
+<%= form_for(@goal, remote: true) do |f| %>
+  <div class="modal-body">
+    <ul class="errors"></ul>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= f.label :name %><br>
+          <%= f.text_field :label, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= f.label :deadline %><br>
+          <%= select_month(@goal.deadline.present? ? @goal.deadline.month : DateTime.now, {field_name: "month"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+          <%= select_day(@goal.deadline.present? ? @goal.deadline.day : DateTime.now, {field_name: "day"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+          <%= select_year(@goal.deadline.present? ? @goal.deadline.year : DateTime.now, {field_name: "year"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="form-group">
+          <%= f.check_box :completed %>
+          <%= f.label :completed %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <h4>Sub Goals</h4>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Deadline</th>
+                <th>Completed</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody class="sub_goal_list">
+              <% @goal.sub_goals.each do |sub_goal| %>
+                <tr>
+                  <td>
+                    <%= sub_goal.label %>
+                  </td>
+                  <td>
+                    <%= sub_goal.date.strftime('%m/%d/%Y') %>
+                  </td>
+                  <td>
+                    <%= f.check_box :completed, {disabled: true} %>
+                  </td>
+                  <td class="text-right">
+                    <%= link_to "Edit", edit_climb_attempt_path(@climb, attempt), remote: true, class: "btn btn-info" %>
+                    <%= link_to "Delete", climb_attempt_path(@climb, attempt), method: :delete, remote: true, class: "btn btn-danger" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <input type="submit" class="btn btn-primary" value="Save">
+  </div>
+<% end %>

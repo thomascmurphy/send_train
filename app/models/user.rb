@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
   has_many :exercise_performances, dependent: :destroy
   has_many :coaches, class_name: 'UserCoach', foreign_key: 'user_id', dependent: :destroy
   has_many :students, class_name: 'UserCoach', foreign_key: 'coach_id', dependent: :destroy
+  has_many :goals
   after_create :seed_exercises
 
   # Include default devise modules. Others available are:
