@@ -10,7 +10,7 @@
 
         <div class="row">
           <% @ongoing_goals.each_with_index do |goal, index| %>
-            <%= render goal %>
+            <%= render partial: 'goals/goal', object: goal, locals: {show_buttons: true} %>
             <% if index % 4 == 3 %>
           </div><div class="row">
             <% end %>
@@ -33,7 +33,7 @@
 
         <div class="row">
           <% @completed_goals.each_with_index do |goal, index| %>
-            <%= render goal %>
+            <%= render partial: 'goals/goal', object: goal, locals: {show_buttons: true} %>
             <% if index % 4 == 3 %>
           </div><div class="row">
             <% end %>

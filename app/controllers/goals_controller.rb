@@ -21,6 +21,9 @@ class GoalsController < ApplicationController
 
   def new
     @goal = current_user.goals.new
+    if params[:parent_goal_id].present?
+      @goal.parent_goal_id = params[:parent_goal_id]
+    end
     respond_to do |format|
       format.html
       format.js
@@ -31,7 +34,7 @@ class GoalsController < ApplicationController
   def create
     @ongoing_goals = Goal.where(user_id: current_user.id, parent_goal_id: nil, completed: false)
     @completed_goals = Goal.where(user_id: current_user.id, parent_goal_id: nil, completed: true)
-    deadline = params[:deadline]
+    deadline = params[:date]
     if deadline.present?
       if deadline[:day].present? && deadline[:month].present? && deadline[:year].present?
         goal_deadline = DateTime.strptime("#{deadline[:year]} #{deadline[:month]} #{deadline[:day]}", "%Y %m %d")
@@ -65,7 +68,7 @@ class GoalsController < ApplicationController
     @ongoing_goals = Goal.where(user_id: current_user.id, parent_goal_id: nil, completed: false)
     @completed_goals = Goal.where(user_id: current_user.id, parent_goal_id: nil, completed: true)
     @goal = current_user.goals.find_by_id(params[:id])
-    deadline = params[:deadline]
+    deadline = params[:date]
     if deadline.present?
       if deadline[:day].present? && deadline[:month].present? && deadline[:year].present?
         goal_deadline = DateTime.strptime("#{deadline[:year]} #{deadline[:month]} #{deadline[:day]}", "%Y %m %d")

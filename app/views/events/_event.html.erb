@@ -9,7 +9,7 @@
         <hr/>
         <%= event.duration_string %> <%= event.gym_session_string %> Session
       <% else %>
-        <%= event.start_date.strftime('%b %d %Y') %> - <%= event.end_date.strftime('%b %d %Y') %><br>
+        <%= event.start_date.strftime('%b %d %Y') %><% if event.start_date != event.end_date %> - <%= event.end_date.strftime('%b %d %Y') %><% end %><br>
 
         <% if event.notes.present? %>
           <hr/>

@@ -1,4 +1,5 @@
 <%= form_for(@goal, remote: true) do |f| %>
+  <%= hidden_field_tag "goal[parent_goal_id]", @goal.parent_goal_id %>
   <div class="modal-body">
     <ul class="errors"></ul>
     <div class="row">
@@ -25,42 +26,35 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-xs-12">
-        <h4>Sub Goals</h4>
-        <div class="table-responsive">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Deadline</th>
-                <th>Completed</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody class="sub_goal_list">
-              <% @goal.sub_goals.each do |sub_goal| %>
+    <% if @goal.id.present? %>
+      <div class="row">
+        <div class="col-xs-12">
+          <h4>Sub Goals</h4>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
                 <tr>
-                  <td>
-                    <%= sub_goal.label %>
-                  </td>
-                  <td>
-                    <%= sub_goal.date.strftime('%m/%d/%Y') %>
-                  </td>
-                  <td>
-                    <%= f.check_box :completed, {disabled: true} %>
-                  </td>
-                  <td class="text-right">
-                    <%= link_to "Edit", edit_climb_attempt_path(@climb, attempt), remote: true, class: "btn btn-info" %>
-                    <%= link_to "Delete", climb_attempt_path(@climb, attempt), method: :delete, remote: true, class: "btn btn-danger" %>
+                  <th>Name</th>
+                  <th>Deadline</th>
+                  <th>Completed</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody class="sub_goal_list">
+                <% @goal.sub_goals.each do |sub_goal| %>
+                  <%= render partial: 'goals/sub_goal', object: sub_goal, locals: {indent: 1, table_row: true} %>
+                <% end %>
+                <tr>
+                  <td colspan="4" class="text-right" style="border-top-width: 0;">
+                    <%= link_to "Add Subgoal", new_goal_path(parent_goal_id: @goal.id), remote: true, class: "btn btn-success" %>
                   </td>
                 </tr>
-              <% end %>
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
+    <% end %>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
