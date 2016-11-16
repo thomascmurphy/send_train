@@ -3,7 +3,7 @@ class CreateGoals < ActiveRecord::Migration
     create_table :goals do |t|
       t.references :user, index: true, foreign_key: true
       t.string :label
-      t.references :parent_goal, index: true, foreign_key: true
+      t.integer :parent_goal_id, index: true, foreign_key: true
       t.boolean :public, default: false
       t.date :deadline
       t.boolean :completed, default: false

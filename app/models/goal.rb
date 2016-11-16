@@ -19,7 +19,11 @@ class Goal < ActiveRecord::Base
     if self.completed.present?
       100.0
     elsif self.sub_goals.present?
-      100.0 * (self.sub_goals.where(completed: true).count.to_f / (self.sub_goals.count + 1).to_f)
+      total_completion = 0.0
+      self.sub_goals.each do |sub_goal|
+        total_completion += sub_goal.percent_complete
+      end
+      total_completion / (self.sub_goals.count.to_f + 1.0)
     else
       0.0
     end
