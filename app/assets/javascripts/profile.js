@@ -1,9 +1,12 @@
 var profile_ready;
 profile_ready = function() {
 
-  var donut_options = function(superior){
+  var donut_options = function(superior, complete){
     var main_color = '#FF9800';
-    if (superior) {
+    if (complete) {
+      main_color = '#5CB85C';
+    }
+    else if (superior) {
       main_color = '#00BCD4';
     }
     var return_options = {
@@ -33,7 +36,8 @@ profile_ready = function() {
       number_decorator: $(this).data('number-decorator')
     };
     var superior = user_value >= (goal_value/2);
-    $(this).drawDonut(donut_data, $.extend(specific_donut_options, donut_options(superior)));
+    var complete = user_value == goal_value
+    $(this).drawDonut(donut_data, $.extend(specific_donut_options, donut_options(superior, complete)));
   });
 
   var line_options = {

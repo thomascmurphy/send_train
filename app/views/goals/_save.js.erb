@@ -6,4 +6,5 @@ $("ul.errors").html("")
 <% else %>
   $(".goal_list").html("<%= escape_javascript(render 'index') %>")
   $("#goal_modal").modal("hide")
+  profile_ready()
 <% end %>
