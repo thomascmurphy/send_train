@@ -20,8 +20,8 @@ class EventsController < ApplicationController
     end
 
     @current_events = @events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).order(start_date: :asc)
-    @upcoming_events = @events.where("start_date > ?", DateTime.now.end_of_day).order(start_date: :asc)
-    @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
+    @upcoming_events = @events.where("start_date > ?", DateTime.now.end_of_day).order(start_date: :asc).limit(20)
+    @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc).limit(20)
   end
 
   def set_field_data
@@ -84,7 +84,7 @@ class EventsController < ApplicationController
         params[:event][:end_date] = end_date
       end
     end
-    
+
     if params[:user_id].present? && params[:user_id].to_i != current_user.id
       #Handle a coach creating an event for a student
       @coach_viewing = true

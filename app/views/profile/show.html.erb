@@ -76,6 +76,20 @@
   </div>
 </div>
 
+<% if @ongoing_goals.present? %>
+<div class="margin_bottom">
+  <h3>Current Goals</h3>
+  <div class="row">
+    <% @ongoing_goals.each_with_index do |goal, index| %>
+      <%= render partial: 'goals/goal', object: goal, locals: {show_buttons: false} %>
+      <% if index % 4 == 3 %>
+    </div><div class="row">
+      <% end %>
+    <% end %>
+  </div>
+</div>
+<% end %>
+
 <div class="row margin_bottom">
   <div class="col-sm-6">
     <h3>Most Effective Bouldering Workouts</h3>

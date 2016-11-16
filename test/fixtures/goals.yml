@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  title: MyString
+  parent_goal_id: 
+  public: false
+  deadline: 2016-09-19
+  completed: false
+
+two:
+  user_id: 
+  title: MyString
+  parent_goal_id: 
+  public: false
+  deadline: 2016-09-19
+  completed: false

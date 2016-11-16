@@ -1,9 +1,12 @@
 var profile_ready;
 profile_ready = function() {
 
-  var donut_options = function(superior){
+  var donut_options = function(superior, complete){
     var main_color = '#FF9800';
-    if (superior) {
+    if (complete) {
+      main_color = '#5CB85C';
+    }
+    else if (superior) {
       main_color = '#00BCD4';
     }
     var return_options = {
@@ -12,7 +15,8 @@ profile_ready = function() {
         '#EFEFEF'],
       donut_thickness: '10%',
       full_donut: false,
-      rounded: true
+      rounded: true,
+      no_tip: true
     };
     return return_options;
   };
@@ -20,22 +24,20 @@ profile_ready = function() {
 
   $('.build_donut').each(function(){
     var user_value = parseFloat($(this).data('user-value'));
-    var comparison_value = parseFloat($(this).data('comparison-value'));
+    var goal_value = parseFloat($(this).data('goal-value'));
     var donut_data = [{
-      name: $(this).data('summoner-name'),
+      name: $(this).data('goal-name'),
       value: user_value
     }];
     var specific_donut_options = {
       title: $(this).data('chart-title'),
-      goal_value: user_value + comparison_value,
-      goal_value_text: $(this).data('comparison-title'),
+      goal_value: goal_value,
+      goal_value_text: $(this).data('goal-value-text'),
       number_decorator: $(this).data('number-decorator')
     };
-    var superior = user_value >= comparison_value;
-    if ($(this).data('inverse-superiority')) {
-      superior = user_value <= comparison_value;
-    }
-    $(this).drawDonut(donut_data, $.extend(specific_donut_options, donut_options(superior)));
+    var superior = user_value >= (goal_value/2);
+    var complete = user_value == goal_value
+    $(this).drawDonut(donut_data, $.extend(specific_donut_options, donut_options(superior, complete)));
   });
 
   var line_options = {

@@ -134,6 +134,20 @@ ActiveRecord::Schema.define(version: 20160920153558) do
 
   add_index "exercises", ["user_id"], name: "index_exercises_on_user_id"
 
+  create_table "goals", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "label"
+    t.integer  "parent_goal_id"
+    t.boolean  "public",         default: false
+    t.date     "deadline"
+    t.boolean  "completed",      default: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  add_index "goals", ["parent_goal_id"], name: "index_goals_on_parent_goal_id"
+  add_index "goals", ["user_id"], name: "index_goals_on_user_id"
+
   create_table "item_shares", force: :cascade do |t|
     t.integer  "sharer_id"
     t.integer  "recipient_id"

@@ -1,0 +1,35 @@
+<% if table_row.present? %>
+  <tr>
+    <td>
+      <% for level in 1..(indent || 1) %>-<% end %> <%= sub_goal.label %>
+    </td>
+    <td>
+      <%= sub_goal.deadline.strftime('%m/%d/%Y') %>
+    </td>
+    <td>
+      <%= check_box_tag("completed", "", sub_goal.completed, {disabled: true}) %>
+    </td>
+    <td class="text-right">
+      <%= link_to "Edit", edit_goal_path(sub_goal), remote: true, class: "btn btn-info" %>
+      <%= link_to "Delete", goal_path(sub_goal), method: :delete, remote: true, class: "btn btn-danger" %>
+    </td>
+  </tr>
+  <% sub_goal.sub_goals.each do |sub_sub_goal| %>
+    <%= render partial: 'goals/sub_goal', object: sub_sub_goal, locals: {indent: indent + 1 || 1, table_row: table_row} %>
+  <% end %>
+<% else %>
+  <li>
+    <% if sub_goal.completed.present? %>
+      <s><%= sub_goal.label %></s>
+    <% else %>
+      <%= sub_goal.label %>
+    <% end %>
+    <% if sub_goal.sub_goals.present? %>
+      <ul>
+        <% sub_goal.sub_goals.each do |sub_sub_goal| %>
+          <%= render partial: 'goals/sub_goal', object: sub_sub_goal, locals: {indent: indent + 1 || 1, table_row: table_row} %>
+        <% end %>
+      </ul>
+    <% end %>
+  </li>
+<% end %>
