@@ -91,7 +91,7 @@ class Exercise < ActiveRecord::Base
         if exercise_metric_label.present?
           exercise_metric.label = exercise_metric_label
           exercise_metric.exercise_metric_type_id = exercise_metric_params.with_indifferent_access["exercise_metric_type_id"].to_i
-          exercise_metric.order = metric_index
+          exercise_metric.order_in_exercise = metric_index
           exercise_metric.default_value = exercise_metric_params.with_indifferent_access["default_value"]
           exercise_metric.save
         else
@@ -112,11 +112,13 @@ class Exercise < ActiveRecord::Base
             end
             exercise_metric_option_label = exercise_metric_option_params.with_indifferent_access["label"]
             if exercise_metric_option_label.present?
+              old_metric_option_value = exercise_metric_option.value
               exercise_metric_option.label = exercise_metric_option_params.with_indifferent_access["label"]
               #exercise_metric_option.value = exercise_metric_option_params.with_indifferent_access["label"].parameterize
               exercise_metric_option.value = exercise_metric_option_params.with_indifferent_access["label"]
-              exercise_metric_option.order = option_index
+              exercise_metric_option.order_in_metric = option_index
               exercise_metric_option.save
+              exercise_metric_option.update_values(old_metric_option_value)
             end
           end
         end

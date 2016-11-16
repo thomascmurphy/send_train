@@ -251,10 +251,9 @@ class Workout < ActiveRecord::Base
 
   def progress(filter_workout_exercise_ids=nil, start_date=(DateTime.now - 1.year), end_date=DateTime.now)
     progress = {}
-    events = self.events.where("start_date >= ? AND end_date <= ? AND completed = ?",
-                               start_date.beginning_of_day,
-                               end_date.end_of_day,
-                               true).order(end_date: :asc)
+    events = self.events.where(completed: true).where("start_date >= ? AND end_date <= ?",
+                                                      start_date.beginning_of_day,
+                                                      end_date.end_of_day).order(end_date: :asc)
     events.each do |event|
       quantifications = event.quantify(filter_workout_exercise_ids)
       quantifications.each do |quantification|

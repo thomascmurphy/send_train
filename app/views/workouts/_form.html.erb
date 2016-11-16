@@ -42,7 +42,7 @@
                   <input name="workout_exercises[][id]" type="hidden" value="<%= workout_exercise.id %>"/>
                 </td>
                 <td>
-                  <% workout_exercise.workout_metrics.each do |workout_metric| %>
+                  <% workout_exercise.workout_metrics.ordered_by_metric.each do |workout_metric| %>
                     <%= render partial: 'workout_metric', locals: {workout_metric: workout_metric} %>
                   <% end %>
                 </td>

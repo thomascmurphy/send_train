@@ -57,6 +57,9 @@
                            <% unless [1,2,3,8,10].include? exercise_metric.exercise_metric_type_id %>
                             style="display: none;"
                             disabled="disabled"
+                           <% end %>
+                           <% if exercise_metric.exercise_metric_type_id == ExerciseMetricType::HOLD_SIZE_ID %>
+                            step="any"
                            <% end %>/>
                   </td>
                   <td class="text-right">
@@ -64,7 +67,7 @@
                   </td>
                 </tr>
                 <% if exercise_metric.exercise_metric_options.present? %>
-                  <% exercise_metric.exercise_metric_options.order(:order).each do |exercise_metric_option| %>
+                  <% exercise_metric.exercise_metric_options.order(:order_in_metric).each do |exercise_metric_option| %>
                     <tr class="options_row">
                       <td class="text-right small text-muted" style="border-width: 0;" colspan="2">Option for dropdown field:</td>
                       <td style="border-top-style: dashed;">

@@ -34,7 +34,8 @@ class ExercisePerformance < ActiveRecord::Base
     case exercise_metric_types.uniq.sort
     when ["hold-type", "rest-time", "time", "weight"],
          ["hold-type", "repetitions", "rest-time", "time", "weight"],
-         ["hold-size", "hold-type", "repetitions", "rest-time", "time", "weight"],
+         ["hold-size", "hold-type", "rest-time", "time", "weight"],
+         ["hold-size", "hold-type", "repetitions", "rest-time", "time", "weight"]
       quantifications = []
       weights = []
       hang_times = []
@@ -49,8 +50,10 @@ class ExercisePerformance < ActiveRecord::Base
         performances.each do |performance|
           case exercise_metric_type_conversion[performance.workout_metric.exercise_metric.exercise_metric_type_id]
           when 'hold-size'
-            hold_size = performance.value.to_f
-            hold_size_string = ExerciseMetricOption.pretty_hold_size(performance.value)
+            if performance.value.present?
+              hold_size = performance.value.to_f
+              hold_size_string = "#{ExerciseMetricOption.pretty_hold_size(performance.value)} with "
+            end
           when 'hold-type'
             hold_type = performance.value
           when 'weight'
@@ -67,11 +70,11 @@ class ExercisePerformance < ActiveRecord::Base
         weights << weight_original
         hang_times << hang_time
       end
-      name = hold_type + hold_size_string
+      name = hold_type
       quantification = quantifications.inject{ |sum, el| sum + el }.to_f / quantifications.size
       average_weight = weights.inject{ |sum, el| sum + el }.to_f / weights.size
       average_hang_time = hang_times.inject{ |sum, el| sum + el }.to_f / hang_times.size
-      tooltip_value = "#{average_weight.round(2)}#{self.user.default_weight_unit} for #{average_hang_time.round(2)}s"
+      tooltip_value = "#{hold_size_string}#{average_weight.round(2)}#{self.user.default_weight_unit} for #{average_hang_time.round(2)}s"
     when ["repetitions"]
       name = exercise.label
       quantifications = sibling_performances.pluck(:value).map(&:to_i)

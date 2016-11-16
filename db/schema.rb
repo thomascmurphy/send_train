@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160920010223) do
+ActiveRecord::Schema.define(version: 20160920153558) do
 
   create_table "attempts", force: :cascade do |t|
     t.datetime "date"
@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(version: 20160920010223) do
     t.string   "label"
     t.string   "value"
     t.integer  "exercise_metric_id"
-    t.integer  "order"
+    t.integer  "order_in_metric"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
   end
@@ -98,7 +98,7 @@ ActiveRecord::Schema.define(version: 20160920010223) do
     t.string   "label"
     t.integer  "exercise_metric_type_id"
     t.integer  "exercise_id"
-    t.integer  "order"
+    t.integer  "order_in_exercise"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
     t.string   "default_value"

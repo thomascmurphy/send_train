@@ -203,9 +203,9 @@ class User < ActiveRecord::Base
   def should_show_workout_data?
     should_show = false
     completed_macrocycles_count = self.events.where.not(macrocycle_id: nil).count
-    oldest_completed = self.events.where.not(macrocycle_id: nil).order(start_date: :asc)
+    oldest_completed = self.events.where.not(macrocycle_id: nil).order(start_date: :asc).first
     if oldest_completed.present?
-      if completed_macrocycles_count > 2 && oldest_completed.date < DateTime.now - 6.weeks
+      if completed_macrocycles_count > 2 && oldest_completed.start_date < DateTime.now - 6.weeks
         should_show = true
       end
     end

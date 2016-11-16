@@ -1,4 +1,4 @@
-<div class="form-goup text-right">
+<div class="form-group text-right">
   <label>
     <%= workout_metric.exercise_metric.label %> <%= workout_metric.exercise_metric.unit_string(true) %>
   </label>
@@ -39,6 +39,9 @@
              type="<%= workout_metric.exercise_metric.exercise_metric_type.input_field %>"
              value="<%= workout_metric.value %>"
              placeholder="Baseline Value"
-             <% if defined?(disabled) && disabled.present? %>disabled="disabled"<% end %>/>
+             <% if defined?(disabled) && disabled.present? %>disabled="disabled"<% end %>
+             <% if workout_metric.exercise_metric.exercise_metric_type_id == ExerciseMetricType::HOLD_SIZE_ID %>
+              step="any"
+             <% end %>/>
   <% end %>
 </div>
