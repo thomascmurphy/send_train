@@ -22,7 +22,7 @@
     <% if sub_goal.completed.present? %>
       <s><%= sub_goal.label %></s>
     <% else %>
-      <%= sub_goal.label %>
+      <%= link_to sub_goal.label, edit_goal_path(sub_goal), remote: true %>
     <% end %>
     <% if sub_goal.sub_goals.present? %>
       <ul>
