@@ -44,6 +44,7 @@ class MacrocyclesController < ApplicationController
     @macrocycle = current_user.macrocycles.new(macrocycle_params)
     @event = nil
     if @macrocycle.save
+      @macrocycle.handle_workouts(params[:weeks])
       start_date_params = params[:start_date]
       if params[:add_events].present? && start_date_params.present?
         if start_date_params[:day].present? && start_date_params[:month].present? && start_date_params[:year].present?
@@ -55,7 +56,6 @@ class MacrocyclesController < ApplicationController
           @event.save
         end
       end
-      @macrocycle.handle_workouts(params[:weeks])
       respond_to do |format|
         if params[:add_events].present?
           format.html { redirect_to events_path, notice: 'Events were successfully created.' }
@@ -93,6 +93,7 @@ class MacrocyclesController < ApplicationController
     if @macrocycle.present?
       @event = nil
       if @macrocycle.update_attributes(macrocycle_params)
+        @macrocycle.handle_workouts(params[:weeks])
         start_date_params = params[:start_date]
         if params[:add_events].present? && start_date_params.present?
           if start_date_params[:day].present? && start_date_params[:month].present? && start_date_params[:year].present?
@@ -104,7 +105,6 @@ class MacrocyclesController < ApplicationController
             @event.save
           end
         end
-        @macrocycle.handle_workouts(params[:weeks])
         respond_to do |format|
           if params[:add_events].present?
             format.html { redirect_to events_path, notice: 'Events were successfully created.' }

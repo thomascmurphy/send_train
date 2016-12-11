@@ -63,7 +63,7 @@ class ProfileController < ApplicationController
         @date_upper = DateTime.strptime("#{date_params[:year_upper]} #{date_params[:month_upper]} #{date_params[:day_upper]}", "%Y %m %d").end_of_day
       end
     else
-      @date_lower = DateTime.now - 1.year;
+      @date_lower = DateTime.now - 3.month;
       @date_upper = DateTime.now;
     end
 
