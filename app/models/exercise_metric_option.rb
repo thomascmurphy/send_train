@@ -14,7 +14,7 @@ class ExerciseMetricOption < ActiveRecord::Base
     if hold_size_value.to_i != hold_size_value.to_f
       if hold_size_value.to_f > 1
         pad_count_int = hold_size_value.to_i
-        pad_count_fraction = (hold_size_value - pad_count_int).to_r
+        pad_count_fraction = (hold_size_value.to_f - pad_count_int).to_r
         pad_count = "#{pad_count_int} #{pad_count_fraction}"
       else
         pad_count = hold_size_value.to_s.to_r.to_s
