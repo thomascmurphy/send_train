@@ -11,41 +11,38 @@ class User < ActiveRecord::Base
   has_many :exercise_performances, dependent: :destroy
   has_many :coaches, class_name: 'UserCoach', foreign_key: 'user_id', dependent: :destroy
   has_many :students, class_name: 'UserCoach', foreign_key: 'coach_id', dependent: :destroy
+  has_many :goals
   after_create :seed_exercises
-  before_save :set_nil
-
-  validates_uniqueness_of :handle
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  def set_nil
-    [:handle].each do |att|
-      self[att] = nil if self[att].blank?
-    end
-  end
-
   def seed_exercises
     deadhang = self.exercises.create(
       label: "Deadhang",
       exercise_type: "strength",
-      description: "Hang"
+      description: "Hang",
+      reference_id: 1
     )
     deadhang_metric_hold = deadhang.exercise_metrics.create(
       label: "Hold",
       exercise_metric_type_id: ExerciseMetricType::HOLD_TYPE_ID
     )
     hold_options = deadhang_metric_hold.exercise_metric_options.create([
-      {label: "Crimp", value: "crimp"},
-      {label: "Sloper", value: "sloper"},
-      {label: "Pinch", value: "pinch"},
-      {label: "Front Two Fingers", value: "front-two-fingers"},
-      {label: "Middle Two Fingers", value: "middle-two-fingers"},
-      {label: "Back Two Fingers", value: "back-two-fingers"},
-      {label: "Front Three Fingers", value: "front-three-fingers"}
+      {label: "Crimp", value: "Crimp"},
+      {label: "Sloper", value: "Sloper"},
+      {label: "Pinch", value: "Pinch"},
+      {label: "Front Two Fingers", value: "Front Two Fingers"},
+      {label: "Middle Two Fingers", value: "Middle Two Fingers"},
+      {label: "Back Two Fingers", value: "Back Two Fingers"},
+      {label: "Front Three Fingers", value: "Front Three Fingers"}
     ])
+    deadhang_metric_hold_size = deadhang.exercise_metrics.create(
+      label: "Hold Size",
+      exercise_metric_type_id: ExerciseMetricType::HOLD_SIZE_ID
+    )
     deadhang_metric_weight = deadhang.exercise_metrics.create(
       label: "Weight",
       exercise_metric_type_id: ExerciseMetricType::WEIGHT_ID
@@ -58,16 +55,30 @@ class User < ActiveRecord::Base
       label: "Rest Time",
       exercise_metric_type_id: ExerciseMetricType::REST_TIME_ID
     )
+    deadhang_metric_reps = deadhang.exercise_metrics.create(
+      label: "Reps",
+      exercise_metric_type_id: ExerciseMetricType::REPETITIONS_ID
+    )
 
     campus = self.exercises.create(
       label: "Campus",
       exercise_type: "power",
-      description: "Campus moves"
+      description: "Campus moves",
+      reference_id: 2
     )
     campus_metric_campus_rungs = campus.exercise_metrics.create(
       label: "Rungs",
       exercise_metric_type_id: ExerciseMetricType::CAMPUS_RUNGS_ID
     )
+    campus_metric_rung_size = campus.exercise_metrics.create(
+      label: "Rung Size",
+      exercise_metric_type_id: ExerciseMetricType::HOLD_TYPE_ID
+    )
+    rung_options = campus_metric_rung_size.exercise_metric_options.create([
+      {label: "Large Edge", value: "Large Edge"},
+      {label: "Medium Edge", value: "Medium Edge"},
+      {label: "Small Edge", value: "Small Edge"}
+    ])
     campus_metric_rest_time = campus.exercise_metrics.create(
       label: "Rest Time",
       exercise_metric_type_id: ExerciseMetricType::REST_TIME_ID
@@ -76,12 +87,143 @@ class User < ActiveRecord::Base
     rest = self.exercises.create(
       label: "Rest",
       exercise_type: "",
-      description: "Rest time in between sets"
+      description: "Rest time in between sets",
+      reference_id: 3
     )
     rest_metric_rest_time = rest.exercise_metrics.create(
       label: "Rest Time",
       exercise_metric_type_id: ExerciseMetricType::REST_TIME_ID
     )
+
+    four_by_four = self.exercises.create(
+      label: "4x4",
+      exercise_type: "powerendurance",
+      description: "Four by four",
+      reference_id: 4
+    )
+    four_by_four_metric_climb_1 = four_by_four.exercise_metrics.create(
+      label: "Climb 1",
+      exercise_metric_type_id: ExerciseMetricType::BOULDER_GRADE_ID
+    )
+    four_by_four_metric_climb_2 = four_by_four.exercise_metrics.create(
+      label: "Climb 2",
+      exercise_metric_type_id: ExerciseMetricType::BOULDER_GRADE_ID
+    )
+    four_by_four_metric_climb_3 = four_by_four.exercise_metrics.create(
+      label: "Climb 3",
+      exercise_metric_type_id: ExerciseMetricType::BOULDER_GRADE_ID
+    )
+    four_by_four_metric_climb_4 = four_by_four.exercise_metrics.create(
+      label: "Climb 4",
+      exercise_metric_type_id: ExerciseMetricType::BOULDER_GRADE_ID
+    )
+    four_by_four_metric_completion = four_by_four.exercise_metrics.create(
+      label: "Completion",
+      exercise_metric_type_id: ExerciseMetricType::COMPLETION_ID
+    )
+
+    hangboard_workout = self.workouts.create(
+      label: "Hangboard Repeaters",
+      workout_type: "strength",
+      description: "Repeater hangboard workout",
+      reference_id: 1
+    )
+    holds = ["Sloper", "Pinch", "Crimp", "Front Two Fingers", "Middle Two Fingers", "Front Three Fingers"]
+    holds.each_with_index do |hold, hold_index|
+      hangboard_workout_exercise = hangboard_workout.workout_exercises.create(
+        exercise: deadhang,
+        order_in_workout: hold_index*2,
+        reps: 3
+      )
+      hangboard_workout_metrics = hangboard_workout_exercise.workout_metrics.create([
+        {exercise_metric: deadhang_metric_hold, value: hold},
+        {exercise_metric: deadhang_metric_hold_size, value: nil},
+        {exercise_metric: deadhang_metric_weight, value: 0},
+        {exercise_metric: deadhang_metric_hang_time, value: 7},
+        {exercise_metric: deadhang_metric_rest_time, value: 3},
+        {exercise_metric: deadhang_metric_reps, value: 6}
+      ])
+      if hold_index < holds.length - 1
+        hangboard_workout_exercise_rest = hangboard_workout.workout_exercises.create(
+          exercise: rest,
+          order_in_workout: hold_index*2 + 1,
+          reps: 1
+        )
+        hangboard_workout_metric_rest = hangboard_workout_exercise_rest.workout_metrics.create(
+          exercise_metric: rest_metric_rest_time,
+          value: 120
+        )
+      end
+    end
+
+    campus_workout = self.workouts.create(
+      label: "Campusboard",
+      workout_type: "power",
+      description: "General campusboard workout",
+      reference_id: 2
+    )
+    campus_moves = ["1 3 5", "1 6"]
+    campus_moves.each_with_index do |campus_move, campus_index|
+      campus_workout_exercise = campus_workout.workout_exercises.create(
+        exercise: campus,
+        order_in_workout: campus_index,
+        reps: 3
+      )
+      campus_workout_metrics = campus_workout_exercise.workout_metrics.create([
+        {exercise_metric: campus_metric_campus_rungs, value: campus_move},
+        {exercise_metric: campus_metric_rung_size, value: "Large Edge"},
+        {exercise_metric: campus_metric_rest_time, value: 60}
+      ])
+    end
+
+    four_by_four_workout = self.workouts.create(
+      label: "4x4",
+      workout_type: "powerendurance",
+      description: "4x4 workout",
+      reference_id: 3
+    )
+    four_by_four_workout_exercise = four_by_four_workout.workout_exercises.create(
+      exercise: four_by_four,
+      order_in_workout: 1,
+      reps: 4
+    )
+    four_by_four_workout_metrics = four_by_four_workout_exercise.workout_metrics.create([
+      {exercise_metric: four_by_four_metric_climb_1, value: nil},
+      {exercise_metric: four_by_four_metric_climb_2, value: nil},
+      {exercise_metric: four_by_four_metric_climb_3, value: nil},
+      {exercise_metric: four_by_four_metric_climb_4, value: nil},
+      {exercise_metric: four_by_four_metric_completion, value: 100}
+    ])
+
+    basic_plan = self.macrocycles.create(
+      label: "Periodized Training Plan",
+      reference_id: 1
+    )
+    hangboard_days = [2,4, 9,11, 16,18, 23,25]
+    hangboard_days.each do |hangboard_day|
+      basic_macrocycle_workout = basic_plan.macrocycle_workouts.create(
+        workout: hangboard_workout,
+        order_in_day: 0,
+        day_in_cycle: hangboard_day
+      )
+    end
+    campus_days = [30,32, 37,39, 44,46]
+    campus_days.each do |campus_day|
+      basic_macrocycle_workout = basic_plan.macrocycle_workouts.create(
+        workout: campus_workout,
+        order_in_day: 0,
+        day_in_cycle: campus_day
+      )
+    end
+    four_by_four_days = [51,53, 58,60, 65,67]
+    four_by_four_days.each do |four_by_four_day|
+      basic_macrocycle_workout = basic_plan.macrocycle_workouts.create(
+        workout: four_by_four_workout,
+        order_in_day: 0,
+        day_in_cycle: four_by_four_day
+      )
+    end
+
   end
 
   def advance_onboarding
@@ -96,14 +238,16 @@ class User < ActiveRecord::Base
     when 1
       "We've added a few common exercises to get you started, you can use these as a guide for additional exercises."
     when 2
-      "You can use these exercises to build workouts such as a hangboard or campusboard routine."
+      "We also created a few basic workouts to give you an idea of how to structure your own."
     when 3
-      "You can create a long-term plan by arranging these workouts onto specific days."
+      "Finally, we set up a basic training plan with these workouts to give you a starting point."
     when 4
-      "After you have a plan template created, you can schedule a set of events based on this template and start training!"
+      "With this plan template or any that you create, you can schedule a set of events based on this template and start training!"
     when 5
-      "You can also track your climbing progress so that we can try to determine the effectiveness of each individual workout."
+      "You can also track your climbing progress so that we can try to determine the effectiveness of each workout that you do."
     when 6
+      "Remember why you train: record your goals, break them down into subgoals, and tick them off as you progress."
+    when 7
       "Thanks so much for taking the tour! I hope this is a helpful tool for everyone."
     else
       nil
@@ -203,9 +347,9 @@ class User < ActiveRecord::Base
   def should_show_workout_data?
     should_show = false
     completed_macrocycles_count = self.events.where.not(macrocycle_id: nil).count
-    oldest_completed = self.events.where.not(macrocycle_id: nil).order(start_date: :asc)
+    oldest_completed = self.events.where.not(macrocycle_id: nil).order(start_date: :asc).first
     if oldest_completed.present?
-      if completed_macrocycles_count > 2 && oldest_completed.date < DateTime.now - 6.weeks
+      if completed_macrocycles_count > 2 && oldest_completed.start_date < DateTime.now - 6.weeks
         should_show = true
       end
     end
@@ -214,10 +358,14 @@ class User < ActiveRecord::Base
 
   def agnostic_weight(weight)
     agnostic_weight = weight
+    user_weight = self.weight || 0
+    if self.weight_unit == "lb"
+      user_weight = user_weight * 0.453592
+    end
     if self.default_weight_unit == "lb"
       agnostic_weight = weight * 0.453592
     end
-    return agnostic_weight
+    return user_weight + agnostic_weight
   end
 
   def smart_name

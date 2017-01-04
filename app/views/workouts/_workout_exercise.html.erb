@@ -6,32 +6,48 @@
   </span>
   <div class="hidden exercise_metrics">
     <% exercise.exercise_metrics.each do |exercise_metric| %>
-      <div class="form-goup text-right">
+      <div class="form-group text-right">
         <label>
-          <%= exercise_metric.label %>
-          <% if exercise_metric.exercise_metric_type.slug == "weight" %>
-            (<%= current_user.default_weight_unit %>s)
-          <% elsif exercise_metric.exercise_metric_type.slug == "time" %>
-            (seconds)
-          <% end %>
+          <%= exercise_metric.label %> <%= exercise_metric.unit_string(true) %>
         </label>
         <input type="hidden" name="workout_exercises[][workout_metrics][][exercise_metric_id]" value="<%= exercise_metric.id %>"/>
         <% if exercise_metric.exercise_metric_type.input_field == "select" %>
           <select name="workout_exercises[][workout_metrics][][value]" class="form-control inline_block" >
-            <% if exercise_metric.exercise_metric_type.slug == "hold-type" %>
-              <%= options_from_collection_for_select(exercise_metric.exercise_metric_options, :value, :label) %>
-            <% elsif exercise_metric.exercise_metric_type.slug == "boulder-grade" %>
+            <% if exercise_metric.exercise_metric_type.slug == "boulder-grade" %>
               <%= options_for_select(@boulder_grades) %>
             <% elsif exercise_metric.exercise_metric_type.slug == "sport-grade" %>
               <%= options_for_select(@sport_grades) %>
+            <% else %>
+              <%= options_from_collection_for_select(exercise_metric.exercise_metric_options, :value, :label) %>
             <% end %>
           </select>
+        <% elsif exercise_metric.exercise_metric_type.input_field == "range" %>
+          <div class="col-sm-9 pull-right">
+            <div class="row slider_container">
+              <div class="col-xs-9 no_padding_right">
+                <input type="range"
+                       name="workout_exercises[][workout_metrics][][value]"
+                       min="0"
+                       max="100"
+                       step="5"
+                       value="<%= exercise_metric.default_value.present? ? exercise_metric.default_value : 0 %>"
+                       class="completion_slider">
+              </div>
+              <div class="col-xs-3">
+                <span class="slider_value_wrapper alt_font"><span class="slider_value"><%= exercise_metric.default_value.present? ? exercise_metric.default_value : 0 %></span>%</span>
+              </div>
+            </div>
+          </div>
         <% else %>
           <input class="form-control inline_block"
                  name="workout_exercises[][workout_metrics][][value]"
                  type="<%= exercise_metric.exercise_metric_type.input_field %>"
                  value="<%= exercise_metric.default_value %>"
-                 placeholder="Baseline Value"/>
+                 placeholder="Baseline Value"
+                 <% if exercise_metric.exercise_metric_type_id == ExerciseMetricType::HOLD_SIZE_ID %>
+                  step="any"
+                 <% end %>
+          />
         <% end %>
       </div>
     <% end %>

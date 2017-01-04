@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h1>Goals</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-offset-8 col-xs-4 text-right">
+    <%= link_to raw("<span class='glyphicon glyphicon-plus'></span> Add Goal"), new_goal_path, remote: true, class: "btn btn-success btn-lg" %>
+  </div>
+</div>
+
+<div class="goal_list margin_top">
+  <%= render "index" %>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="goal_modal" tabindex="-1" role="dialog" aria-labelledby="goalModal">
+
+</div>

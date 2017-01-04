@@ -25,11 +25,15 @@ TrainToSend::Application.routes.draw do
     resources :workouts do
       get "delete"
       get "duplicate"
+      get "assign", to: 'workouts#assign_new'
+      post "assign", to: 'workouts#assign_create'
     end
 
     resources :macrocycles, :path => "plans" do
       get "delete"
       get "duplicate"
+      get "assign", to: 'macrocycles#assign_new'
+      post "assign", to: 'macrocycles#assign_create'
     end
 
     resources :events do
@@ -45,6 +49,8 @@ TrainToSend::Application.routes.draw do
     get 'profile/progress', to: 'profile#progress'
     get 'profile/:user_id/progress', to: 'profile#progress', as: 'profile_user_progress'
     get 'profile/:user_id/schedule', to: 'profile#schedule', as: 'profile_user_schedule'
+    get 'profile/:user_id/events/new', to: 'events#new', as: 'profile_user_events_new'
+    get 'profile/:user_id/events/create', to: 'events#create', as: 'profile_user_events_create'
     patch 'profile', to: 'profile#update'
 
     resources :user_coaches, :path => "coaches", only: [:new, :create, :destroy] do
@@ -67,6 +73,10 @@ TrainToSend::Application.routes.draw do
     get 'community/training', to: 'community#training'
     get 'community/users', to: 'community#users'
     get 'community/users/:user_id', to: 'community#user', as: 'community_user_view'
+
+    resources :goals do
+      get "delete"
+    end
 
   end
 

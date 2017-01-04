@@ -1,0 +1,46 @@
+<div class="panel-group" id="goals" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default">
+    <div class="panel-heading pointer" role="tab" data-toggle="collapse" data-parent="#goals" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+      <h4 class="panel-title">
+        Ongoing Goals
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body ongoing_goals">
+
+        <div class="row">
+          <% @ongoing_goals.each_with_index do |goal, index| %>
+            <%= render partial: 'goals/goal', object: goal, locals: {show_buttons: true} %>
+            <% if index % 4 == 3 %>
+          </div><div class="row">
+            <% end %>
+          <% end %>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <div class="panel panel-default">
+    <div class="panel-heading pointer" role="tab" class="collapsed" role="button" data-toggle="collapse" data-parent="#goals" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+      <h4 class="panel-title">
+          Completed Goals
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body upcoming_events">
+
+        <div class="row">
+          <% @completed_goals.each_with_index do |goal, index| %>
+            <%= render partial: 'goals/goal', object: goal, locals: {show_buttons: true} %>
+            <% if index % 4 == 3 %>
+          </div><div class="row">
+            <% end %>
+          <% end %>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

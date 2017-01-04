@@ -44,6 +44,7 @@ class MacrocyclesController < ApplicationController
     @macrocycle = current_user.macrocycles.new(macrocycle_params)
     @event = nil
     if @macrocycle.save
+      @macrocycle.handle_workouts(params[:weeks])
       start_date_params = params[:start_date]
       if params[:add_events].present? && start_date_params.present?
         if start_date_params[:day].present? && start_date_params[:month].present? && start_date_params[:year].present?
@@ -55,7 +56,6 @@ class MacrocyclesController < ApplicationController
           @event.save
         end
       end
-      @macrocycle.handle_workouts(params[:weeks])
       respond_to do |format|
         if params[:add_events].present?
           format.html { redirect_to events_path, notice: 'Events were successfully created.' }
@@ -93,6 +93,7 @@ class MacrocyclesController < ApplicationController
     if @macrocycle.present?
       @event = nil
       if @macrocycle.update_attributes(macrocycle_params)
+        @macrocycle.handle_workouts(params[:weeks])
         start_date_params = params[:start_date]
         if params[:add_events].present? && start_date_params.present?
           if start_date_params[:day].present? && start_date_params[:month].present? && start_date_params[:year].present?
@@ -104,7 +105,6 @@ class MacrocyclesController < ApplicationController
             @event.save
           end
         end
-        @macrocycle.handle_workouts(params[:weeks])
         respond_to do |format|
           if params[:add_events].present?
             format.html { redirect_to events_path, notice: 'Events were successfully created.' }
@@ -153,6 +153,35 @@ class MacrocyclesController < ApplicationController
     original_macrocycle = current_user.macrocycles.find_by_id(params[:macrocycle_id])
     if original_macrocycle.present?
       @macrocycle = original_macrocycle.duplicate(current_user)
+    end
+    respond_to do |format|
+      format.html
+      format.js
+      format.json
+    end
+  end
+
+  def assign_new
+    @students = current_user.students
+    @macrocycle = current_user.macrocycles.find_by_id(params[:macrocycle_id])
+    respond_to do |format|
+      format.html
+      format.js
+      format.json
+    end
+  end
+
+  def assign_create
+    @macrocycles = current_user.macrocycles.order(created_at: :desc)
+    @macrocycle = current_user.macrocycles.find_by_id(params[:macrocycle_id])
+    student_ids = current_user.students.pluck(:user_id).uniq
+    if params[:student_ids].present?
+      params[:student_ids].map(&:to_i).each do |student_id|
+        if student_ids.include? student_id
+          student = User.find_by_id(student_id)
+          new_macrocycle = @macrocycle.duplicate(student)
+        end
+      end
     end
     respond_to do |format|
       format.html

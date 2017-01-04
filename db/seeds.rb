@@ -15,5 +15,6 @@ exercise_metric_types = ExerciseMetricType.create([
                                                     { label: 'Boulder Grade', input_field: 'select', slug: 'boulder-grade' },
                                                     { label: 'Sport Grade', input_field: 'select', slug: 'sport-grade' },
                                                     { label: 'Rest Time', input_field: 'number', slug: 'rest-time' },
-                                                    { label: 'Completion', input_field: 'number', slug: 'completion' },
+                                                    { label: 'Completion', input_field: 'range', slug: 'completion' },
+                                                    { label: 'Hold Size', input_field: 'number', slug: 'hold-size' }
                                                   ])

@@ -53,7 +53,7 @@ class Climb < ActiveRecord::Base
     return Climb.climbing_grade_conversion_western[self.grade].with_indifferent_access[self.climb_type]
   end
 
-  def self.convert_score_to_grades(score, format="western")
+  def self.convert_score_to_grades(score, format="western", climb_type=nil)
     if format == "western"
       scores = self.climbing_grade_conversion_western.keys
       closest_score = scores.min_by { |x| (x.to_f - score).abs }
@@ -63,7 +63,14 @@ class Climb < ActiveRecord::Base
       closest_score = scores.min_by { |x| (x.to_f - score).abs }
       closest_grade = self.climbing_grade_conversion_european[closest_score]
     end
-    return "#{closest_grade[:boulder]} / #{closest_grade[:sport]}"
+    if climb_type == "boulder"
+      converted_string = "#{closest_grade[:boulder]}"
+    elsif climb_type == "sport"
+      converted_string = "#{closest_grade[:sport]}"
+    else
+      converted_string = "#{closest_grade[:boulder]} / #{closest_grade[:sport]}"
+    end
+    return converted_string
   end
 
   def self.climbing_grade_conversion_western

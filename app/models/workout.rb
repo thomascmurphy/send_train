@@ -73,34 +73,69 @@ class Workout < ActiveRecord::Base
     return color_class
   end
 
+#   def efficacy(type="all")
+#     event_scores = []
+#     completed_events = self.events.where(completed: true)
+#     mesocycle_event_ids = []
+#     completed_events.each do |event|
+#       microcycle_event = event.parent_event
+#       if microcycle_event.present?
+#         mesocycle_event_ids << microcycle_event.parent_event_id
+#       end
+#     end
+#     mesocycle_events = self.user.events.where(id: mesocycle_event_ids.uniq)
+#     mesocycle_events.each do |event|
+#       duration = event.end_date - event.start_date
+#       end_date = event.end_date + 2 * duration
+#       if end_date < DateTime.now
+#         user_score = self.user.climb_score_for_period(event.end_date - 1.year, event.end_date, type)
+#         score_difference = self.user.climb_score_difference_for_periods(event.start_date,
+#                                                                         end_date,
+#                                                                         event.start_date - 3 * duration,
+#                                                                         event.start_date,
+#                                                                         type)
+#         if user_score != 0
+#           event_scores << (score_difference / user_score)
+#         else
+#           if score_difference != 0
+#             event_scores << 1.0
+#           else
+#             event_scores << 0.0
+#           end
+#         end
+#       end
+#     end
+#     if event_scores.size > 0
+#       efficacy = ((event_scores.inject{ |sum, el| sum + el }.to_f / event_scores.size) * 100).round
+#     else
+#       efficacy = 0
+#     end
+#     return efficacy
+#   end
+
   def efficacy(type="all")
     event_scores = []
-    completed_events = self.events.where(completed: true)
-    mesocycle_event_ids = []
-    completed_events.each do |event|
-      microcycle_event = event.parent_event
-      if microcycle_event.present?
-        mesocycle_event_ids << microcycle_event.parent_event_id
-      end
-    end
-    mesocycle_events = self.user.events.where(id: mesocycle_event_ids.uniq)
-    mesocycle_events.each do |event|
+    macrocycle_event_ids = self.events.where(completed: true).pluck(:parent_event_id).compact
+    macrocycle_events = self.user.events.where(id: macrocycle_event_ids.uniq)
+    macrocycle_events.each do |event|
       duration = event.end_date - event.start_date
-      end_date = event.end_date + 2 * duration
-      if end_date < DateTime.now
+      progress_cutoff = event.end_date + 2 * duration
+      if progress_cutoff < DateTime.now
         user_score = self.user.climb_score_for_period(event.end_date - 1.year, event.end_date, type)
         score_difference = self.user.climb_score_difference_for_periods(event.start_date,
-                                                                        end_date,
+                                                                        progress_cutoff,
                                                                         event.start_date - 3 * duration,
                                                                         event.start_date,
                                                                         type)
-        if user_score != 0
-          event_scores << (score_difference / user_score)
-        else
-          if score_difference != 0
-            event_scores << 1.0
+        for event_number in 1..macrocycle_event_ids.count(event.id)
+          if user_score != 0
+            event_scores << (score_difference / user_score)
           else
-            event_scores << 0.0
+            if score_difference != 0
+              event_scores << 1.0
+            else
+              event_scores << 0.0
+            end
           end
         end
       end
@@ -216,10 +251,9 @@ class Workout < ActiveRecord::Base
 
   def progress(filter_workout_exercise_ids=nil, start_date=(DateTime.now - 1.year), end_date=DateTime.now)
     progress = {}
-    events = self.events.where("start_date >= ? AND end_date <= ? AND completed = ?",
-                               start_date.beginning_of_day,
-                               end_date.end_of_day,
-                               true).order(end_date: :asc)
+    events = self.events.where(completed: true).where("start_date >= ? AND end_date <= ?",
+                                                      start_date.beginning_of_day,
+                                                      end_date.end_of_day).order(end_date: :asc)
     events.each do |event|
       quantifications = event.quantify(filter_workout_exercise_ids)
       quantifications.each do |quantification|

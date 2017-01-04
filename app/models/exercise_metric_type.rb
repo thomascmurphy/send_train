@@ -7,4 +7,6 @@ class ExerciseMetricType < ActiveRecord::Base
   BOULDER_GRADE_ID = 6.freeze
   SPORT_GRADE_ID = 7.freeze
   REST_TIME_ID = 8.freeze
+  COMPLETION_ID = 9.freeze
+  HOLD_SIZE_ID = 10.freeze
 end

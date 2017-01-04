@@ -65,9 +65,25 @@ class ClimbsController < ApplicationController
   def create
     @climbs = current_user.climbs.order(created_at: :desc)
     @climb = current_user.climbs.new(climb_params)
+    attempt_params = {}
+    if params[:date].present?
+      date = params[:date][:redpoint_date]
+      if date.present?
+        if date[:day].present? && date[:month].present? && date[:year].present?
+          redpoint_date = DateTime.strptime("#{date[:year]} #{date[:month]} #{date[:day]}", "%Y %m %d")
+          attempt_params[:date] = redpoint_date
+          attempt_params[:onsight] = params[:onsight]
+          attempt_params[:flash] = params[:flash]
+          attempt_params[:completion] = 100
+        end
+      end
+    end
 
     respond_to do |format|
       if @climb.save
+        if attempt_params.present?
+          attempt = @climb.attempts.create(attempt_params)
+        end
         @climbs = @climbs.sort_by{|c| [c.redpointed ? 0 : 1, c.redpoint_date]}.reverse
         format.html { redirect_to @climb, notice: 'Climb was successfully created.' }
         format.js

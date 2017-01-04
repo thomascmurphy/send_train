@@ -36,6 +36,8 @@ class UsersController < ApplicationController
       redirect_to events_path
     when 5
       redirect_to climbs_path
+    when 6
+      redirect_to goals_path
     else
       redirect_to root_path
     end

@@ -128,6 +128,30 @@
           </div>
         </div>
       </div>
+      <% else %>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <%= f.label "Redpoint Date" %><br>
+              <%= select_month(nil, {field_name: "redpoint_date[month]", prompt: 'Month'}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+              <%= select_day(nil, {field_name: "redpoint_date[day]", prompt: 'Day'}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+              <%= select_year(nil, {field_name: "redpoint_date[year]", prompt: 'Year'}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <%= check_box_tag "onsight" %>
+              <%= f.label "Onsight" %>
+            </div>
+            <div class="form-group">
+              <%= check_box_tag "flash" %>
+              <%= f.label "Flash" %>
+            </div>
+          </div>
+        </div>
+
       <% end %>
     <div class="row">
       <div class="col-xs-12">

@@ -1,3 +1,13 @@
 // Place all the styles related to the Macrocycles controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+#macrocycle_form_workouts {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+#my_workouts{
+  max-height: 600px;
+  overflow-y: auto;
+}

@@ -1,0 +1,63 @@
+<%= form_for(@goal, remote: true) do |f| %>
+  <%= hidden_field_tag "goal[parent_goal_id]", @goal.parent_goal_id %>
+  <div class="modal-body">
+    <ul class="errors"></ul>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= f.label :name %><br>
+          <%= f.text_field :label, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= f.label :deadline %><br>
+          <%= select_month(@goal.deadline.present? ? @goal.deadline.month : DateTime.now, {field_name: "month"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+          <%= select_day(@goal.deadline.present? ? @goal.deadline.day : DateTime.now, {field_name: "day"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+          <%= select_year(@goal.deadline.present? ? @goal.deadline.year : DateTime.now, {field_name: "year"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="form-group">
+          <%= f.check_box :completed %>
+          <%= f.label :completed %>
+        </div>
+      </div>
+    </div>
+    <% if @goal.id.present? %>
+      <div class="row">
+        <div class="col-xs-12">
+          <h4>Sub Goals</h4>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Deadline</th>
+                  <th>Completed</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody class="sub_goal_list">
+                <% @goal.sub_goals.each do |sub_goal| %>
+                  <%= render partial: 'goals/sub_goal', object: sub_goal, locals: {indent: 1, table_row: true} %>
+                <% end %>
+                <tr>
+                  <td colspan="4" class="text-right" style="border-top-width: 0;">
+                    <%= link_to "Add Subgoal", new_goal_path(parent_goal_id: @goal.id), remote: true, class: "btn btn-success" %>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <input type="submit" class="btn btn-primary" value="Save">
+  </div>
+<% end %>

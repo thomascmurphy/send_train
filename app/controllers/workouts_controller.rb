@@ -108,6 +108,35 @@ class WorkoutsController < ApplicationController
     end
   end
 
+  def assign_new
+    @students = current_user.students
+    @workout = current_user.workouts.find_by_id(params[:workout_id])
+    respond_to do |format|
+      format.html
+      format.js
+      format.json
+    end
+  end
+
+  def assign_create
+    @workouts = current_user.workouts.order(created_at: :desc)
+    @workout = current_user.workouts.find_by_id(params[:workout_id])
+    student_ids = current_user.students.pluck(:user_id).uniq
+    if params[:student_ids].present?
+      params[:student_ids].map(&:to_i).each do |student_id|
+        if student_ids.include? student_id
+          student = User.find_by_id(student_id)
+          new_workout = @workout.duplicate(student)
+        end
+      end
+    end
+    respond_to do |format|
+      format.html
+      format.js
+      format.json
+    end
+  end
+
   private
 
   def workout_params

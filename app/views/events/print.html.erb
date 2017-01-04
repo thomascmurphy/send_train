@@ -31,7 +31,7 @@
                     <% if exercise_performance.value.present? %>
                       <%= exercise_performance.value %>
                     <% elsif the_workout_metric.value.present? %>
-                      <small>(Goal: <%= the_workout_metric.value %> seconds)</small>
+                      <small>(Goal: <%= the_workout_metric.value %> <%= the_workout_metric.exercise_metric.unit_string %>)</small>
                     <% end %>
                   </div>
                 </div>
@@ -55,33 +55,31 @@
               <% if (performances.keys & workout_exercise.workout_metrics.pluck(:id)).present? %>
                 <% workout_exercise.workout_metrics.each do |workout_metric| %>
                   <% exercise_performance = performances[workout_metric.id] %>
-                  <% the_workout_metric = performances[workout_metric.id].workout_metric %>
-                  <% the_exercise_metric = the_workout_metric.exercise_metric %>
-                  <div class="col-xs-<%= (12 / workout_exercise.workout_metrics.count).to_i %> no_padding" style="max-width: 200px; border-right: 1px solid #dddddd;">
-                    <label class="separate">
-                      <%= the_exercise_metric.label %>
-                    </label>
-                    <div class="exercise_performance">
-                      <% if exercise_performance.value.present? %>
-                        <%= exercise_performance.value %>
-                        <% if the_exercise_metric.exercise_metric_type.slug == "weight" %>
-                          <%= current_user.default_weight_unit %>s
-                        <% elsif the_exercise_metric.exercise_metric_type.slug == "time" || the_exercise_metric.exercise_metric_type.slug == "rest-time"%>
-                          seconds
-                        <% end %>
-                      <% elsif the_workout_metric.value.present? %>
-                        <small>
-                          (Goal: <%= the_workout_metric.value %>
-                          <% if the_exercise_metric.exercise_metric_type.slug == "weight" %>
-                            <%= current_user.default_weight_unit %>s
-                          <% elsif the_exercise_metric.exercise_metric_type.slug == "time" || the_exercise_metric.exercise_metric_type.slug == "rest-time"%>
-                            seconds
+                  <% if exercise_performance.present? %>
+                    <% the_workout_metric = exercise_performance.workout_metric %>
+                    <% the_exercise_metric = the_workout_metric.exercise_metric %>
+                    <div class="col-xs-<%= (12 / workout_exercise.workout_metrics.count).to_i %> no_padding" style="max-width: 200px; border-right: 1px solid #dddddd;">
+                      <label class="separate">
+                        <%= the_exercise_metric.label %>
+                      </label>
+                      <div class="exercise_performance">
+                        <% if exercise_performance.value.present? %>
+                          <% if the_exercise_metric.exercise_metric_type.slug == "boulder-grade" %>
+                            <%= Climb.convert_score_to_grades(exercise_performance.value.to_i, exercise_performance.user.grade_format, "boulder") %>
+                          <% elsif the_exercise_metric.exercise_metric_type.slug == "sport-grade" %>
+                            <%= Climb.convert_score_to_grades(exercise_performance.value.to_i, exercise_performance.user.grade_format, "sport") %>
+                          <% else %>
+                            <%= exercise_performance.value %>
                           <% end %>
-                          )
-                        </small>
-                      <% end %>
+                          <%= the_exercise_metric.unit_string %>
+                        <% elsif the_workout_metric.value.present? %>
+                          <small>
+                            (Goal: <%= the_workout_metric.value %> <%= the_workout_metric.exercise_metric.unit_string %>)
+                          </small>
+                        <% end %>
+                      </div>
                     </div>
-                  </div>
+                  <% end %>
                 <% end %>
                 <!-- <div class="no_padding">
                   <label class="separate">

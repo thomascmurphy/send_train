@@ -8,11 +8,13 @@
   <div class="col-sm-9 col-xs-6">
     <%= render "form" %>
   </div>
-  <div class="col-sm-3 col-xs-6" id="my_exercises">
+  <div class="col-sm-3 col-xs-6">
     <h2>My Exercises</h2>
     <p>(you can drag your exercises to the list and rearrange them)</p>
-    <% @exercises.each do |exercise| %>
-      <%= render partial: 'workout_exercise', locals: {exercise: exercise} %>
-    <% end %>
+    <div id="my_exercises">
+      <% @exercises.each do |exercise| %>
+        <%= render partial: 'workout_exercise', locals: {exercise: exercise} %>
+      <% end %>
+    </div>
   </div>
 </div>
