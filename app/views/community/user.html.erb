@@ -1,0 +1,156 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h1>
+      <%= @user.smart_name %>'s Profile
+    </h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-6">
+    <h3>Recent Progress</h3>
+    <% if @user.should_show_climb_data? %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Best Climbs</h3>
+        </div>
+        <div class="panel-body">
+            <div class="build_line" <% @user.climb_graph_data.each_with_index do |line_data, index| %>
+                                        data-primary-name-<%= index %> = "<%= line_data[:name] %>"
+                                        data-primary-value-<%= index %> = "<%= line_data[:value] %>"
+                                        data-primary-tooltip-value-<%= index %> = "<%= line_data[:tooltip_value] %>"
+                                    <% end %>></div>
+        </div>
+      </div>
+    <% else %>
+      <div class="row">
+        <div class="col-xs-10">
+          <div class="well">
+            This user doesn't have enough climbing data yet.
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <h3>Exercises</h3>
+    <div class="side_scrolling">
+      <% @user.exercises.each do |exercise| %>
+        <div class="col-md-3 col-sm-6 inline_block float_none valign_top">
+          <div class="panel<%= exercise.panel_class %>">
+            <div class="panel-heading">
+              <h3 class="panel-title"><%= exercise.label %></h3>
+            </div>
+            <div class="panel-body">
+              <%= simple_format(truncate(exercise.description, length: 50, separator: ' ')) %>
+            </div>
+            <div class="panel-footer text-right">
+              <%= link_to "Duplicate", exercise_duplicate_path(exercise), remote: true, class: "btn btn-success disable_after_click_remote" %>
+              <%= link_to "View", exercise_path(exercise), remote: true, class: "btn btn-info" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <h3>Workouts</h3>
+    <div class="side_scrolling">
+      <% @user.workouts.each do |workout| %>
+        <div class="col-md-3 col-sm-6 inline_block float_none valign_top">
+          <div class="panel<%= workout.panel_class %>">
+            <div class="panel-heading">
+              <h3 class="panel-title"><%= workout.label %></h3>
+            </div>
+            <div class="panel-body">
+              <%= simple_format(truncate(workout.description, length: 50, separator: ' ')) %>
+            </div>
+            <div class="panel-footer text-right">
+              <%= link_to "Duplicate", workout_duplicate_path(workout), remote: true, class: "btn btn-success disable_after_click_remote" %>
+              <%= link_to "View", workout_path(workout), remote: true, class: "btn btn-info" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <h3>Plans</h3>
+    <div class="side_scrolling">
+      <% @user.macrocycles.each do |macrocycle| %>
+        <div class="col-md-3 col-sm-6 inline_block float_none valign_top">
+          <div class="panel<%= macrocycle.panel_class %>">
+            <div class="panel-heading">
+              <h3 class="panel-title"><%= macrocycle.label %></h3>
+            </div>
+            <div class="panel-body">
+              <%= pluralize(macrocycle.duration_weeks, 'Week') %>
+            </div>
+            <div class="panel-footer text-right">
+              <%= link_to "Duplicate", macrocycle_duplicate_path(macrocycle), remote: true, class: "btn btn-success disable_after_click_remote" %>
+              <%= link_to "View", macrocycle_path(macrocycle), remote: true, class: "btn btn-info" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <h3>Goals</h3>
+    <div class="side_scrolling">
+      <% @user.parent_goals.each do |goal| %>
+        <div class="col-md-3 col-sm-6 inline_block float_none valign_top">
+          <div class="panel<%= goal.panel_class %>">
+            <div class="panel-heading">
+              <h3 class="panel-title"><%= goal.label %></h3>
+            </div>
+            <div class="panel-body">
+              <div class="build_donut"
+                   data-goal-name="<%= goal.label %>"
+                   data-goal-value="100"
+                   data-user-value="<%= goal.percent_complete %>"
+                   data-number-decorator="%"></div>
+              Deadline: <%= goal.deadline.strftime('%m/%d/%Y') if goal.deadline.present? %><br/>
+              <% if goal.sub_goals.present? %>
+                Subgoals:<br/>
+                <ul>
+                  <% goal.sub_goals.each do |sub_goal| %>
+                    <%= render partial: 'goals/sub_goal', object: sub_goal, locals: {indent: 1, table_row: false} %>
+                  <% end %>
+                </ul>
+              <% end %>
+            </div>
+            <div class="panel-footer text-right">
+
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Modals -->
+<div class="modal fade" id="exercise_modal" tabindex="-1" role="dialog" aria-labelledby="exerciseModal">
+
+</div>
+
+<div class="modal fade" id="workout_modal" tabindex="-1" role="dialog" aria-labelledby="workoutModal">
+
+</div>
+
+<div class="modal fade" id="macrocycle_modal" tabindex="-1" role="dialog" aria-labelledby="macrocycleModal">
+
+</div>

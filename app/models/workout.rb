@@ -220,8 +220,12 @@ class Workout < ActiveRecord::Base
   def duplicate(user, old_macrocycle_id=nil, new_macrocycle_id=nil)
     new_workout = self.dup
     new_workout.user_id = user.id
-    if new_macrocycle_id.blank? && self.user_id == user.id
-      new_workout.label += " (copy)"
+    if new_macrocycle_id.blank?
+      if self.user_id == user.id
+        new_workout.label += " (copy)"
+      else
+        new_workout.label += " (from #{self.user.smart_name})"
+      end
     end
     referenced_exercises = user.exercises.pluck(:reference_id)
     if new_workout.save

@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-xs-6">
+    <h1>My Users</h1>
+  </div>
+  <div class="col-xs-6 text-right">
+    <%= link_to "View All Users", community_users_path, class: "btn btn-success btn-lg margin_top" %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="table-responsive">
+      <table class="table table-striped" id="community_users">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Member Since</th>
+            <th>Workouts</th>
+            <th>Followers</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody class="community_users_list">
+          <%= render partial: "users", locals: {my_users: true} %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

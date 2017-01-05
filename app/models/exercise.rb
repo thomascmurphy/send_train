@@ -138,7 +138,11 @@ class Exercise < ActiveRecord::Base
     new_exercise = self.dup
     new_exercise.user_id = user.id
     if new_workout_id.blank?
-      new_exercise.label += " (copy)"
+      if self.user_id == user.id
+        new_exercise.label += " (copy)"
+      else
+        new_exercise.label += " (from #{self.user.smart_name})"
+      end
     end
     if new_exercise.save
       self.exercise_metrics.each do |exercise_metric|

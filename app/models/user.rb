@@ -11,6 +11,8 @@ class User < ActiveRecord::Base
   has_many :exercise_performances, dependent: :destroy
   has_many :coaches, class_name: 'UserCoach', foreign_key: 'user_id', dependent: :destroy
   has_many :students, class_name: 'UserCoach', foreign_key: 'coach_id', dependent: :destroy
+  has_many :followers, class_name: 'UserFollower', foreign_key: 'user_id', dependent: :destroy
+  has_many :following, class_name: 'UserFollower', foreign_key: 'follower_id', dependent: :destroy
   has_many :goals
   after_create :seed_exercises
 
@@ -368,12 +370,40 @@ class User < ActiveRecord::Base
     return user_weight + agnostic_weight
   end
 
-  def smart_name
-    if self.first_name.present? || self.last_name.present?
+  def smart_name(display_email=false)
+    if self.handle.present?
+      return self.handle
+    elsif self.first_name.present? || self.last_name.present?
       return "#{self.first_name} #{self.last_name}"
-    else
+    elsif display_email.present?
       return self.email
     end
+  end
+
+  def my_users
+    user_ids = UserFollower.where(follower_id: self.id).pluck(:user_id)
+    if user_ids.present?
+      users = User.where(id: user_ids).sort_by(&:current_sign_in_at).reverse
+    else
+      users = nil
+    end
+    users
+  end
+
+  def is_following(user_id)
+    user_id.present? && self.following.where(user_id: user_id).present?
+  end
+
+  def follower_count
+    UserFollower.where(user_id: self.id).count
+  end
+
+  def workout_count
+    self.workouts.count
+  end
+
+  def parent_goals
+    self.goals.where(parent_goal_id: nil)
   end
 
 end

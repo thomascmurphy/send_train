@@ -713,6 +713,12 @@ input[type=range]:focus::-ms-fill-upper {
   color: #d9534f;
 }
 
+.side_scrolling {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
 
 
 /* ============ Header Area */

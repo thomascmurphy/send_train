@@ -9,7 +9,7 @@
            data-goal-value="100"
            data-user-value="<%= goal.percent_complete %>"
            data-number-decorator="%"></div>
-      Deadline: <%= goal.deadline.strftime('%m/%d/%Y') if goal.deadline.present? %>
+      Deadline: <%= goal.deadline.strftime('%m/%d/%Y') if goal.deadline.present? %><br/>
       <% if goal.sub_goals.present? %>
         Subgoals:<br/>
         <ul>

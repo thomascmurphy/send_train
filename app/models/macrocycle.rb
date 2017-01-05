@@ -97,6 +97,8 @@ class Macrocycle < ActiveRecord::Base
     new_macrocycle.user_id = user.id
     if self.user_id == user.id
       new_macrocycle.label += " (copy)"
+    else
+      new_macrocycle.label += " (from #{self.user.smart_name})"
     end
     referenced_workouts = user.workouts.pluck(:reference_id)
     if new_macrocycle.save

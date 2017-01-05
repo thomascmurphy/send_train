@@ -5,13 +5,13 @@
       <div class="col-sm-6">
         <div class="form-group">
           <%= f.label :name %><br>
-          <%= f.text_field :label, class: "form-control" %>
+          <%= f.text_field :label, class: "form-control", disabled: (defined?(disable_fields) && disable_fields.present?) %>
         </div>
       </div>
       <div class="col-sm-6">
         <div class="form-group">
           <%= f.label :exercise_type %><br>
-          <%= f.select(:exercise_type, [['None', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']], {}, {class: "form-control"}) %>
+          <%= f.select(:exercise_type, [['None', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']], {}, {class: "form-control", disabled: (defined?(disable_fields) && disable_fields.present?)}) %>
         </div>
       </div>
     </div>
@@ -19,7 +19,7 @@
       <div class="col-xs-12">
         <div class="form-group">
           <%= f.label :description %><br>
-          <%= f.text_area :description, class: "form-control", size: "60x3" %>
+          <%= f.text_area :description, class: "form-control", size: "60x3", disabled: (defined?(disable_fields) && disable_fields.present?) %>
         </div>
       </div>
     </div>
@@ -41,10 +41,10 @@
                 <tr>
                   <td>
                     <%= hidden_field_tag "exercise_metrics[][id]", exercise_metric.id %>
-                    <input type="text" name="exercise_metrics[][label]" value="<%= exercise_metric.label %>" class="form-control"/>
+                    <input type="text" name="exercise_metrics[][label]" value="<%= exercise_metric.label %>" class="form-control" <%= defined?(disable_fields) && disable_fields.present? ? 'disabled="disabled"' : '' %>/>
                   </td>
                   <td>
-                    <select name="exercise_metrics[][exercise_metric_type_id]" class="form-control metric_type_select">
+                    <select name="exercise_metrics[][exercise_metric_type_id]" class="form-control metric_type_select" <%= defined?(disable_fields) && disable_fields.present? ? 'disabled="disabled"' : '' %>>
                       <%= options_from_collection_for_select(ExerciseMetricType.all, :id, :label, exercise_metric.exercise_metric_type_id) %>
                     </select>
                   </td>
@@ -54,16 +54,21 @@
                            value="<%= exercise_metric.default_value %>"
                            class="form-control default_value"
                            placeholder="Default Value"
-                           <% unless [1,2,3,8,10].include? exercise_metric.exercise_metric_type_id %>
+                           <% if [1,2,3,8,10].include? exercise_metric.exercise_metric_type_id %>
+                            <%= defined?(disable_fields) && disable_fields.present? ? 'disabled="disabled"' : '' %>
+                           <% else %>
                             style="display: none;"
                             disabled="disabled"
                            <% end %>
                            <% if exercise_metric.exercise_metric_type_id == ExerciseMetricType::HOLD_SIZE_ID %>
                             step="any"
-                           <% end %>/>
+                           <% end %>
+                           />
                   </td>
                   <td class="text-right">
-                    <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
+                    <% unless defined?(disable_fields) && disable_fields.present? %>
+                      <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
+                    <% end %>
                   </td>
                 </tr>
                 <% if exercise_metric.exercise_metric_options.present? %>
@@ -72,17 +77,21 @@
                       <td class="text-right small text-muted" style="border-width: 0;" colspan="2">Option for dropdown field:</td>
                       <td style="border-top-style: dashed;">
                         <%= hidden_field_tag "exercise_metrics[][exercise_metric_options][][id]", exercise_metric_option.id %>
-                        <input type="text" name="exercise_metrics[][exercise_metric_options][][label]" value="<%= exercise_metric_option.label %>" class="form-control"/>
+                        <input type="text" name="exercise_metrics[][exercise_metric_options][][label]" value="<%= exercise_metric_option.label %>" class="form-control" <%= defined?(disable_fields) && disable_fields.present? ? 'disabled="disabled"' : '' %>/>
                       </td>
                       <td class="text-right" style="border-top-style: dashed;">
-                        <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
+                        <% unless defined?(disable_fields) && disable_fields.present? %>
+                          <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
+                        <% end %>
                       </td>
                     </tr>
                   <% end %>
                 <% end %>
                 <tr class="add_option_button_row" <% unless exercise_metric.exercise_metric_options.present? %>style="display:none;"<% end %>>
                   <td colspan="3" class="text-right" style="border-top-width: 0;">
-                    <a href="javascript:void(0);" class="add_expense_metric_option btn btn-success">Add Option</a>
+                    <% unless defined?(disable_fields) && disable_fields.present? %>
+                      <a href="javascript:void(0);" class="add_expense_metric_option btn btn-success">Add Option</a>
+                    <% end %>
                   </td>
                 </tr>
 
@@ -91,38 +100,46 @@
 
               <tr class="add_metric_button_row">
                 <td colspan="4" class="text-right" style="border-top-width: 0;">
-                  <a href="javascript:void(0);" class="add_expense_metric btn btn-success">Add Metric</a>
+                  <% unless defined?(disable_fields) && disable_fields.present? %>
+                    <a href="javascript:void(0);" class="add_expense_metric btn btn-success">Add Metric</a>
+                  <% end %>
                 </td>
               </tr>
 
               <tr class="metric_template_row hidden">
                 <td>
-                  <input type="text" name="exercise_metrics[][label]" value="" class="form-control"/>
+                  <input type="text" name="exercise_metrics[][label]" value="" class="form-control" <%= defined?(disable_fields) && disable_fields.present? ? 'disabled="disabled"' : '' %>/>
                 </td>
                 <td>
-                  <select name="exercise_metrics[][exercise_metric_type_id]" class="form-control metric_type_select">
+                  <select name="exercise_metrics[][exercise_metric_type_id]" class="form-control metric_type_select" <%= defined?(disable_fields) && disable_fields.present? ? 'disabled="disabled"' : '' %>>
                     <%= options_from_collection_for_select(ExerciseMetricType.all, :id, :label) %>
                   </select>
                 </td>
                 <td>
-                  <input type="number" name="exercise_metrics[][default_value]" value="" class="form-control default_value" placeholder="Default Value"/>
+                  <input type="number" name="exercise_metrics[][default_value]" value="" class="form-control default_value" placeholder="Default Value" <%= defined?(disable_fields) && disable_fields.present? ? 'disabled="disabled"' : '' %>/>
                 </td>
                 <td class="text-right">
-                  <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
+                  <% unless defined?(disable_fields) && disable_fields.present? %>
+                    <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
+                  <% end %>
                 </td>
               </tr>
               <tr class="option_template_row hidden">
                 <td class="text-right small text-muted" style="border-width: 0;" colspan="2">Option for dropdown field:</td>
                 <td style="border-top-style: dashed;">
-                  <input type="text" name="exercise_metrics[][exercise_metric_options][][label]" value="" class="form-control"/>
+                  <input type="text" name="exercise_metrics[][exercise_metric_options][][label]" value="" class="form-control" <%= defined?(disable_fields) && disable_fields.present? ? 'disabled="disabled"' : '' %>/>
                 </td>
                 <td class="text-right" style="border-top-style: dashed;">
-                  <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
+                  <% unless defined?(disable_fields) && disable_fields.present? %>
+                    <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
+                  <% end %>
                 </td>
               </tr>
               <tr class="add_option_button_template_row" style="display:none;">
                 <td colspan="4" class="text-right" style="border-top-width: 0;">
-                  <a href="javascript:void(0);" class="add_expense_metric_option btn btn-success">Add Option</a>
+                  <% unless defined?(disable_fields) && disable_fields.present? %>
+                    <a href="javascript:void(0);" class="add_expense_metric_option btn btn-success">Add Option</a>
+                  <% end %>
                 </td>
               </tr>
             </tbody>
@@ -133,6 +150,8 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-    <input type="submit" class="btn btn-primary" value="Save">
+    <% unless defined?(disable_fields) && disable_fields.present? %>
+      <input type="submit" class="btn btn-primary" value="Save">
+    <% end %>
   </div>
 <% end %>

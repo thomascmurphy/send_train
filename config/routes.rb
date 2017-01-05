@@ -72,7 +72,10 @@ TrainToSend::Application.routes.draw do
     get 'community', to: 'community#index'
     get 'community/training', to: 'community#training'
     get 'community/users', to: 'community#users'
-    get 'community/users/:user_id', to: 'community#user', as: 'community_user_view'
+    get 'community/my_users', to: 'community#my_users'
+    get 'community/users/:user_id', to: 'community#user', as: 'community_user'
+    get 'community/users/follow/:user_id', to: 'community#user_follow', as: 'community_user_follow'
+    get 'community/users/unfollow/:user_id', to: 'community#user_unfollow', as: 'community_user_unfollow'
 
     resources :goals do
       get "delete"

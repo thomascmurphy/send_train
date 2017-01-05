@@ -2,30 +2,32 @@
   <div class="row">
     <div class="col-sm-4">
       <div class="form-group">
-        <%= f.text_field :label, {placeholder: "Name", class: "form-control"} %>
+        <%= f.text_field :label, {placeholder: "Name", class: "form-control", disabled: (defined?(disable_fields) && disable_fields.present?)} %>
       </div>
     </div>
     <div class="col-sm-4">
       <div class="form-group">
-        <%= f.select(:workout_type, [['Type', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']], {}, {class: "form-control"}) %>
+        <%= f.select(:workout_type, [['Type', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']], {}, {class: "form-control", disabled: (defined?(disable_fields) && disable_fields.present?)}) %>
       </div>
     </div>
     <div class="col-xs-4 text-right">
-      <input type="submit" class="btn btn-success margin_bottom" value="Save Workout">
+      <% unless defined?(disable_fields) && disable_fields.present? %>
+        <input type="submit" class="btn btn-success margin_bottom" value="Save Workout">
+      <% end %>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12">
       <div class="form-group">
-        <%= f.text_area :description, {placeholder:"Description", class: "form-control", size: "60x3"} %>
+        <%= f.text_area :description, {placeholder:"Description", class: "form-control", size: "60x3", disabled: (defined?(disable_fields) && disable_fields.present?)} %>
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12">
       <h4>Exercises</h4>
-      <div class="table-responsive" id="workout_form_exercises">
-        <table class="table table-striped exercise_list droppable_table sortable_table">
+      <div class="table-responsive" <% unless defined?(disable_fields) && disable_fields.present? %> id="workout_form_exercises"<% end %>>
+        <table class="table table-striped exercise_list <% unless defined?(disable_fields) && disable_fields.present? %>droppable_table sortable_table<% end %>">
           <thead>
             <tr>
               <th>Exercise</th>
@@ -43,14 +45,16 @@
                 </td>
                 <td>
                   <% workout_exercise.workout_metrics.ordered_by_metric.each do |workout_metric| %>
-                    <%= render partial: 'workout_metric', locals: {workout_metric: workout_metric} %>
+                    <%= render partial: 'workout_metric', locals: {workout_metric: workout_metric, disabled: defined?(disable_fields) ? disable_fields : false} %>
                   <% end %>
                 </td>
                 <td class="text-right">
-                  <input class="form-control inline_block" type="number" name="workout_exercises[][reps]" value="<%= workout_exercise.reps %>"/>
+                  <input class="form-control inline_block" type="number" name="workout_exercises[][reps]" value="<%= workout_exercise.reps %>" <%= defined?(disable_fields) && disable_fields.present? ? 'disabled="disabled"' : '' %>/>
                 </td>
                 <td class="text-right">
-                  <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
+                  <% unless defined?(disable_fields) && disable_fields.present? %>
+                    <a href="javascript:void(0);" class="remove_table_row btn btn-danger">Remove</a>
+                  <% end %>
                 </td>
               </tr>
             <% end %>
@@ -67,7 +71,9 @@
   </div>
   <div class="row">
     <div class="col-xs-12 text-right">
-      <input type="submit" class="btn btn-success margin_bottom" value="Save Workout">
+      <% unless defined?(disable_fields) && disable_fields.present? %>
+        <input type="submit" class="btn btn-success margin_bottom" value="Save Workout">
+      <% end %>
     </div>
   </div>
 <% end %>
