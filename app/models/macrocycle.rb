@@ -3,13 +3,19 @@ class Macrocycle < ActiveRecord::Base
   has_many :macrocycle_workouts, dependent: :destroy
   has_many :workouts, through: :macrocycle_workouts
   has_many :events, dependent: :destroy
-  after_create :set_reference_id
+  has_many :votes, as: :voteable
+  has_many :messages, as: :messageable
+  after_create :set_reference_id, :auto_upvote
 
   def set_reference_id
     if self.reference_id.blank?
       self[:reference_id] = self.id
       self.save
     end
+  end
+
+  def auto_upvote
+    Vote.item_auto_upvote(self)
   end
 
   def panel_class

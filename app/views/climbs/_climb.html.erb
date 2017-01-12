@@ -6,7 +6,7 @@
   <td><% unless climb.length.blank? %><%= climb.length %> <%= climb.length_unit_short %><% end %></td>
   <td><%= climb.redpoint_text %></td>
   <td class="text-right">
-    <%= link_to "Add Attempt", new_climb_attempt_path(climb), remote: true, class: "btn btn-success" %>
+    <!-- <%= link_to "Add Attempt", new_climb_attempt_path(climb), remote: true, class: "btn btn-success" %> -->
     <%= link_to "Edit", edit_climb_path(climb), remote: true, class: "btn btn-info" %>
     <%= link_to "Delete", climb_delete_path(climb), remote: true, class: "btn btn-danger" %>
   </td>

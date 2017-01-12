@@ -72,53 +72,41 @@
                 <div class="collapse navbar-collapse" id="navbar-collapse">
                   <ul class="nav navbar-nav">
                     <% if user_signed_in? %>
-                      <li class="<% if ["profile", "goals"].include?(controller.controller_name) %>active<% end %>">
+                      <li class="<% if ["exercises", "workouts", "macrocycles", "events", "profile"].include?(controller.controller_name) %>active<% end %>">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                          Profile <span class="caret"></span>
-                          <% if ["profile", "goals"].include?(controller.controller_name) %> <span class="sr-only">(current)</span><% end %>
+                          Training <span class="caret"></span>
+                          <% if ["exercises", "workouts", "macrocycles", "events", "profile"].include?(controller.controller_name) %> <span class="sr-only">(current)</span><% end %>
                         </a>
                         <ul class="dropdown-menu">
-                          <li><a href="<%= url_for controller: '/profile', action: 'show' %>">Dashboard</a></li>
+                          <li><a href="<%= url_for controller: '/exercises', action: 'index' %>">Exercises</a></li>
+                          <li><a href="<%= url_for controller: '/workouts', action: 'index' %>">Workouts</a></li>
+                          <li><a href="<%= url_for controller: '/macrocycles', action: 'index' %>">Plan Templates</a></li>
+                          <li><a href="<%= url_for controller: '/events', action: 'index' %>">Schedule</a></li>
                           <li><a href="<%= url_for controller: '/profile', action: 'progress' %>">Progress</a></li>
+                        </ul>
+                      </li>
+
+                      <li class="<% if ["climbs", "goals"].include?(controller.controller_name) %>active<% end %>">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                          Motivation <span class="caret"></span>
+                          <% if ["climbs", "goals"].include?(controller.controller_name) %> <span class="sr-only">(current)</span><% end %>
+                        </a>
+                        <ul class="dropdown-menu">
+                          <li><a href="<%= url_for controller: '/climbs', action: 'index' %>">Climbing Log</a></li>
                           <li><a href="<%= url_for controller: '/goals', action: 'index' %>">Goals</a></li>
                         </ul>
                       </li>
 
-                      <li class="<% if controller.controller_name == "climbs" %>active<% end %>">
-                        <a href="<%= url_for controller: '/climbs', action: 'index' %>">
-                          Climbs
-                          <% if controller.controller_name == "climbs" %> <span class="sr-only">(current)</span><% end %>
-                        </a>
-                      </li>
-
-                      <li class="dropdown <% if ["exercises", "workouts", "macrocycles"].include?(controller.controller_name) %>active<% end %>">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                          Plans <span class="caret"></span>
-                          <% if ["exercises", "workouts", "macrocycles"].include?(controller.controller_name) %> <span class="sr-only">(current)</span><% end %>
-                        </a>
-                        <ul class="dropdown-menu">
-                          <li><a href="<%= url_for controller: '/exercises', action: 'index' %>">My Exercises</a></li>
-                          <li><a href="<%= url_for controller: '/workouts', action: 'index' %>">My Workouts</a></li>
-                          <li><a href="<%= url_for controller: '/macrocycles', action: 'index' %>">My Plans</a></li>
-                        </ul>
-                      </li>
-
-                      <li class="<% if controller.controller_name == "events" %>active<% end %>">
-                        <a href="<%= url_for controller: '/events', action: 'index' %>">
-                          Schedule
-                          <% if controller.controller_name == "events" %> <span class="sr-only">(current)</span><% end %>
-                        </a>
-                      </li>
-
-                      <li class="<% if controller.controller_name == "community" %>active<% end %>">
+                      <li class="<% if ["community", "messages"].include?(controller.controller_name) %>active<% end %>">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                           Community <span class="caret"></span>
-                          <% if controller.controller_name == "community" %> <span class="sr-only">(current)</span><% end %>
+                          <% if ["community", "messages"].include?(controller.controller_name) %> <span class="sr-only">(current)</span><% end %>
                         </a>
                         <ul class="dropdown-menu">
                           <li><a href="<%= url_for controller: '/community', action: 'index' %>">Dashboard</a></li>
-                          <li><a href="<%= url_for controller: '/community', action: 'training' %>">Training</a></li>
-                          <li><a href="<%= url_for controller: '/community', action: 'my_users' %>">My Users</a></li>
+                          <li><a href="<%= url_for controller: '/community', action: 'training' %>">Training Ideas</a></li>
+                          <li><a href="<%= url_for controller: '/community', action: 'my_users' %>">My Community</a></li>
+                          <li><a href="<%= url_for controller: '/messages', action: 'index' %>">Discussions</a></li>
                         </ul>
                       </li>
 
@@ -129,13 +117,13 @@
                       <li class="dropdown">
                         <a href="#" class="dropdown-toggle no_bg" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= current_user.email %> <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                          <li><%= link_to('Edit Profile', {controller: '/profile', action: 'edit'}, class: "no_bg") %></li>
-                          <li><%= link_to('Edit Password/Email', edit_user_registration_path, class: "no_bg") %></li>
+                          <li><%= link_to('Edit Profile', {controller: '/profile', action: 'edit'}, class: "") %></li>
+                          <li><%= link_to('Edit Password/Email', edit_user_registration_path, class: "") %></li>
                           <% if current_user.students.present? %>
-                            <li><%= link_to('My Students', coaches_my_students_path, class: "no_bg") %></li>
+                            <li><%= link_to('My Students', coaches_my_students_path, class: "") %></li>
                           <% end %>
                           <li role="separator" class="divider"></li>
-                          <li><%= link_to('Logout', destroy_user_session_path, method: :delete, class: "no_bg") %></li>
+                          <li><%= link_to('Logout', destroy_user_session_path, method: :delete, class: "") %></li>
                           <% if true_user.is_admin? %>
                             <li role="separator" class="divider"></li>
                             <% if current_user != true_user %>

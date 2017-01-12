@@ -81,6 +81,12 @@ TrainToSend::Application.routes.draw do
       get "delete"
     end
 
+    resources :messages do
+      get "delete"
+    end
+
+    resources :votes, only: [:new]
+
   end
 
   get 'comment', to: 'comments#new'

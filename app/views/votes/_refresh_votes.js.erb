@@ -1,0 +1,12 @@
+$('.voting_area*[data-voteable-item="<%= @voted_object.class.name %><%= @voted_object.id %>"]').each(function() {
+  if ($(this).hasClass("voting_area_inline")) {
+    $(this).html("<%= escape_javascript(render partial: 'votes/voting_area', object: @voted_object, as: 'voteable', locals: {version: 'inline'}) %>")
+  } else if ($(this).hasClass("voting_area_button")) {
+    $(this).html("<%= escape_javascript(render partial: 'votes/voting_area', object: @voted_object, as: 'voteable', locals: {version: 'button'}) %>")
+  } else if ($(this).hasClass("voting_area_button_small")) {
+    $(this).html("<%= escape_javascript(render partial: 'votes/voting_area', object: @voted_object, as: 'voteable', locals: {version: 'button_small'}) %>")
+  } else {
+    $(this).html("<%= escape_javascript(render partial: 'votes/voting_area', object: @voted_object, as: 'voteable', locals: {}) %>")
+  }
+});
+$('[data-toggle="tooltip"]').tooltip();

@@ -21,7 +21,6 @@ class MacrocyclesController < ApplicationController
     end
     if @macrocycle.present?
       @workouts = current_user.workouts
-      @wide_content = true
       respond_to do |format|
         format.html
         format.js
@@ -192,7 +191,6 @@ class MacrocyclesController < ApplicationController
       format.json
     end
   end
-
 
   private
 

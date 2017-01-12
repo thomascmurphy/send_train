@@ -150,7 +150,9 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-    <% unless defined?(disable_fields) && disable_fields.present? %>
+    <% if defined?(disable_fields) && disable_fields.present? %>
+      <%= link_to "Copy to My Exercises", exercise_duplicate_path(@exercise), remote: true, class: "btn btn-success", data: {dismiss: "modal"} %>
+    <% else %>
       <input type="submit" class="btn btn-primary" value="Save">
     <% end %>
   </div>

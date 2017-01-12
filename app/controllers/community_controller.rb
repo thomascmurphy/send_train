@@ -1,16 +1,18 @@
 class CommunityController < ApplicationController
-  before_filter :set_users, :only => [:users, :user_follow, :user_unfollow]
+  before_filter :set_users, :only => [:users, :my_users, :user_follow, :user_unfollow]
 
   def set_users
-    if params[:show_my_users] == "true"
-      @users = current_user.my_users
-    else
-      @users = User.where(allow_profile_view: true).sort_by(&:follower_count).reverse
-    end
+    @all_users = User.where(allow_profile_view: true).sort_by(&:follower_count).reverse
+    @my_users = current_user.my_users
+    @my_followers = current_user.my_followers
   end
 
   def index
-
+    my_message_ids = current_user.sent_messages.pluck(:id)
+    replies = Message.where(parent_message_id: my_message_ids)
+    direct_messages = current_user.messages.where(parent_message_id: nil)
+    @all_messages = (replies + direct_messages).sort_by{|x| [Vote.item_score(x), x.updated_at]}.reverse
+    @new_messages = (replies.where(read: false) + direct_messages.where(read: false)).sort_by{|x| [Vote.item_score(x), x.updated_at]}.reverse
   end
 
   def training
@@ -22,7 +24,7 @@ class CommunityController < ApplicationController
   end
 
   def my_users
-    @users = current_user.my_users
+
   end
 
   def user

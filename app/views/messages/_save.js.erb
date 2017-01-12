@@ -1,0 +1,15 @@
+$("ul.errors").html("")
+<% if @message.errors.any? %>
+  <% @message.errors.full_messages.each do |message| %>
+    $("ul.errors").append($("<li />").html("<%= message.html_safe %>"))
+  <% end %>
+<% else %>
+  if ($(".message_list").length > 0) {
+    $(".message_list").html("<%= escape_javascript(render 'messages/index') %>")
+  } else if ($(".reply_list").length > 0) {
+    $(".reply_list").html("<%= escape_javascript(render 'messages/replies') %>")
+  } else if ($(".messageable_message_list").length > 0) {
+    $(".messageable_message_list").html("<%= escape_javascript(render partial: 'messages/replies', object: @message.messageable, as: 'messageable') %>")
+  }
+  $("#message_modal").modal("hide")
+<% end %>

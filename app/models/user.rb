@@ -14,6 +14,9 @@ class User < ActiveRecord::Base
   has_many :followers, class_name: 'UserFollower', foreign_key: 'user_id', dependent: :destroy
   has_many :following, class_name: 'UserFollower', foreign_key: 'follower_id', dependent: :destroy
   has_many :goals
+  has_many :sent_messages, class_name: 'Message', foreign_key: 'user_id', dependent: :destroy
+  has_many :votes
+  has_many :messages, as: :messageable
   after_create :seed_exercises
 
   # Include default devise modules. Others available are:
@@ -377,11 +380,23 @@ class User < ActiveRecord::Base
       return "#{self.first_name} #{self.last_name}"
     elsif display_email.present?
       return self.email
+    else
+      return "User #{self.id}"
     end
   end
 
   def my_users
     user_ids = UserFollower.where(follower_id: self.id).pluck(:user_id)
+    if user_ids.present?
+      users = User.where(id: user_ids).sort_by(&:current_sign_in_at).reverse
+    else
+      users = nil
+    end
+    users
+  end
+
+  def my_followers
+    user_ids = UserFollower.where(user_id: self.id).pluck(:follower_id)
     if user_ids.present?
       users = User.where(id: user_ids).sort_by(&:current_sign_in_at).reverse
     else
@@ -404,6 +419,132 @@ class User < ActiveRecord::Base
 
   def parent_goals
     self.goals.where(parent_goal_id: nil)
+  end
+
+  def dashboard_activity
+    activity = []
+
+    my_user_ids = self.my_users.present? ? self.my_users.map{|x| x.id} : []
+    my_exercise_ids = self.exercises.pluck(:id)
+    my_workout_ids = self.workouts.pluck(:id)
+    my_macrocycle_ids = self.macrocycles.pluck(:id)
+    my_goal_ids = self.goals.pluck(:id)
+
+    followed_user_exercise_activity = Exercise.where(user_id: my_user_ids, created_at: DateTime.now-7.days..DateTime.now.end_of_day)
+    followed_user_workout_activity = Workout.where(user_id: my_user_ids, created_at: DateTime.now-7.days..DateTime.now.end_of_day)
+    followed_user_macrocycle_activity = Macrocycle.where(user_id: my_user_ids, created_at: DateTime.now-7.days..DateTime.now.end_of_day)
+
+    voted_climb_ids = self.votes.where(voteable_type: "Attempt").pluck(:voteable_id)
+    #dunno if I want to keep these here
+    voted_climb_ids = []
+    my_user_climb_ids = Climb.where(user_id: my_user_ids).pluck(:id)
+    user_new_climbs = Attempt.where(completion: 100, climb_id: my_user_climb_ids).where.not(id: voted_climb_ids)
+
+    user_achieved_goals = Goal.where(completed: true, updated_at: DateTime.now-7.days..DateTime.now.end_of_day, user_id: my_user_ids)
+
+    follower_activity = UserFollower.where(user_id: self.id, created_at: DateTime.now-7.days..DateTime.now.end_of_day)
+
+    my_daily_events = self.events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).where.not(workout_id: nil, completed: true).order(start_date: :asc)
+    daily_event_count = my_daily_events.count
+
+    my_message_ids = self.sent_messages.pluck(:id)
+    replies = Message.where(parent_message_id: my_message_ids).where(read: false)
+    direct_messages = self.messages.where(parent_message_id: nil, read: false)
+    new_message_count = replies.length + direct_messages.length
+
+    new_exercise_votes = Vote.where.not(user_id: self.id).where(voteable_type: "Exercise", voteable_id: my_exercise_ids, updated_at: DateTime.now-7.days..DateTime.now.end_of_day, value: 1).group(:voteable_id).count.sort_by { |id, votes| votes }.reverse.to_h
+    new_workout_votes = Vote.where.not(user_id: self.id).where(voteable_type: "Workout", voteable_id: my_workout_ids, updated_at: DateTime.now-7.days..DateTime.now.end_of_day, value: 1).group(:voteable_id).count.sort_by { |id, votes| votes }.reverse.to_h
+    new_macrocycle_votes = Vote.where.not(user_id: self.id).where(voteable_type: "Macrocycle", voteable_id: my_macrocycle_ids, updated_at: DateTime.now-7.days..DateTime.now.end_of_day, value: 1).group(:voteable_id).count.sort_by { |id, votes| votes }.reverse.to_h
+    new_goal_votes = Vote.where.not(user_id: self.id).where(voteable_type: "Goal", voteable_id: my_goal_ids, updated_at: DateTime.now-7.days..DateTime.now.end_of_day, value: 1).group(:voteable_id).count.sort_by { |id, votes| votes }.reverse.to_h
+
+
+
+
+    followed_user_exercise_activity.each do |exercise|
+      activity << {label: "New Exercise",
+                   description: "#{exercise.user.smart_name} added a new exercise.",
+                   item: exercise,
+                   date: exercise.created_at}
+    end
+
+    followed_user_workout_activity.each do |workout|
+      activity << {label: "New Workout",
+                   description: "#{workout.user.smart_name} added a new workout.",
+                   item: workout,
+                   date: workout.created_at}
+    end
+
+    followed_user_macrocycle_activity.each do |macrocycle|
+      activity << {label: "New Plan Template",
+                   description: "#{macrocycle.user.smart_name} added a new plan template.",
+                   item: macrocycle,
+                   date: macrocycle.created_at}
+    end
+
+    user_new_climbs.each do |attempt|
+      activity << {label: "Sendage!",
+                   description: "#{attempt.climb.user.smart_name} has sent #{attempt.climb.name}.",
+                   item: attempt,
+                   date: attempt.created_at,
+                   custom_link: "/community/users/#{attempt.climb.user.id}"}
+    end
+
+    user_achieved_goals.each do |goal|
+      activity << {label: "Goal Achieved!",
+                   description: "#{goal.user.smart_name} has completed their goal: \"#{goal.label}\".",
+                   item: goal,
+                   date: goal.updated_at,
+                   custom_link: "/community/users/#{goal.user.id}"}
+    end
+
+    follower_activity.each do |user_follower|
+      activity << {label: "New Follower",
+                   description: "#{user_follower.follower.smart_name} is now following you.",
+                   item: nil,
+                   date: user_follower.created_at,
+                   disable_votes: true,
+                   custom_link: "/community/users/#{user_follower.follower.id}"}
+    end
+
+    activity = activity.sort_by{|x| x[:date]}.reverse
+
+    if new_exercise_votes.present? || new_workout_votes.present? || new_macrocycle_votes.present? || new_goal_votes.present?
+      combined_votes = new_exercise_votes.map{|id, votes| {type: "Exercise", id: id, votes: votes}} +
+                       new_workout_votes.map{|id, votes| {type: "Workout", id: id, votes: votes}} +
+                       new_macrocycle_votes.map{|id, votes| {type: "Macrocycle", id: id, votes: votes}} +
+                       new_goal_votes.map{|id, votes| {type: "Goal", id: id, votes: votes}}
+      top_voted = combined_votes.sort_by{|x| x[:votes]}.reverse[0..4]
+      description = "You have gotten some praise in the last week:<ul>"
+      top_voted.each_with_index do |voted_item, index|
+        item_klass = Object.const_get voted_item[:type]
+        item = item_klass.find(voted_item[:id])
+        description << "<li>#{item.label}: #{ActionController::Base.helpers.pluralize(voted_item[:votes], 'like')}"
+      end
+      description << "</ul>"
+      activity.unshift({label: "New Praise",
+                        description: description,
+                        item: nil,
+                        date: DateTime.now})
+    end
+
+    if new_message_count > 0
+      activity.unshift({label: "New Messages",
+                        description: "You have #{ActionController::Base.helpers.pluralize(new_message_count, 'new message')}",
+                        item: nil,
+                        date: DateTime.now,
+                        custom_link: "/community"})
+    end
+
+    if my_daily_events.present?
+      activity.unshift({label: "Today's Workouts",
+                        description: "You have #{ActionController::Base.helpers.pluralize(daily_event_count, 'workout')} on the schedule today.",
+                        item: nil,
+                        date: DateTime.now,
+                        custom_link: "/events"})
+    end
+
+    activity[0..11]
+
   end
 
 end

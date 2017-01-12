@@ -7,13 +7,19 @@ class Workout < ActiveRecord::Base
   has_many :exercises, through: :workout_exercises
   has_many :workout_metrics, through: :workout_exercises
   has_many :exercise_performances, through: :workout_metrics
-  after_create :set_reference_id
+  has_many :votes, as: :voteable
+  has_many :messages, as: :messageable
+  after_create :set_reference_id, :auto_upvote
 
   def set_reference_id
     if self.reference_id.blank?
       self[:reference_id] = self.id
       self.save
     end
+  end
+
+  def auto_upvote
+    Vote.item_auto_upvote(self)
   end
 
   def workout_exercises_ordered
@@ -31,46 +37,54 @@ class Workout < ActiveRecord::Base
     return useful_workout_exercises
   end
 
-  def panel_class
+  def color_class(alert=false)
     case self.workout_type
     when "strength"
-      color_class = " panel-danger"
+      color_class = "danger"
     when "power"
-      color_class = " panel-orange"
+      color_class = "orange"
     when "powerendurance"
-      color_class = " panel-warning"
+      color_class = "warning"
     when "endurance"
-      color_class = " panel-success"
+      color_class = "success"
     when "technique"
-      color_class = " panel-info"
+      color_class = "info"
     when "cardio"
-      color_class = " panel-default"
+      color_class = alert.present? ? "info" : "default"
     else
-      color_class = " panel-default"
+      color_class = alert.present? ? "info" : "default"
     end
 
     return color_class
   end
 
+  def panel_class
+    return " panel-#{self.color_class}"
+  end
+
   def alert_class
+    return " alert-#{self.color_class(true)}"
+  end
+
+  def pretty_type
     case self.workout_type
     when "strength"
-      color_class = " alert-danger"
+      pretty_type = "Strength"
     when "power"
-      color_class = " alert-orange"
+      pretty_type = "Power"
     when "powerendurance"
-      color_class = " alert-warning"
+      pretty_type = "Power Endurance"
     when "endurance"
-      color_class = " alert-success"
+      pretty_type = "Endurance"
     when "technique"
-      color_class = " alert-info"
+      pretty_type = "Technique"
     when "cardio"
-      color_class = " alert-info"
+      pretty_type = "Cardio"
     else
-      color_class = " alert-info"
+      pretty_type = ""
     end
 
-    return color_class
+    return pretty_type
   end
 
 #   def efficacy(type="all")

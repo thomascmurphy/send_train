@@ -53,8 +53,10 @@ $shader_white: rgba(255, 255, 255, 0.8);
 $shader_white_light: rgba(255, 255, 255, 0.2);
 
 $cyan: #00BCD4;
+$cyan_dull: #31a8b7;
 $cyan_dark: #0097A7;
 $cyan_translucent: rgba(0, 188, 212, 0.8);
+$cyan_light: #a5dfe6;
 $orange: #FF9800;
 $orange_dark: #EF6C00;
 $orange_translucent: rgba(255, 152, 0, 0.8);
@@ -127,6 +129,10 @@ $font_stack_alt: "Oswald", sans-serif;
 
 /* ============ Bootstrap Elements */
 
+a.btn:visited {
+  color: $white;
+}
+
 .btn-primary{
     background-color: $cyan;
     border-color: $cyan_dark;
@@ -167,6 +173,10 @@ $font_stack_alt: "Oswald", sans-serif;
   color: #8A563B;
   background-color: #FFE2C9;
   border-color: #F9CBB2;
+}
+
+.label-orange {
+  background-color: $orange;
 }
 
 .btn.btn-wide{
@@ -306,8 +316,16 @@ a.row, a.block, img.block{
     vertical-align: top;
 }
 
+.valign_text_top{
+    vertical-align: text-top;;
+}
+
 .valign_bottom{
     vertical-align: bottom;
+}
+
+.valign_text_bottom{
+    vertical-align: text-bottom;;
 }
 
 .pointer{
@@ -717,6 +735,75 @@ input[type=range]:focus::-ms-fill-upper {
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
+}
+
+.message_title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+a.message_title:visited{
+  color: $cyan_light;
+}
+
+.message_score {
+  color: $text_medium;
+  font-weight: bold;
+}
+
+.time_ago {
+  color: $text_light;
+}
+
+.message_reply {
+  padding-left: 10px;
+  border-left: 1px dotted #cccccc;
+  margin-bottom: 20px;
+}
+
+.message_reply:last-child {
+  margin-bottom: 0px;
+}
+
+.message_direct_reply > .message_reply {
+  border: none;
+}
+
+.message_replies {
+  margin-top: 20px;
+}
+
+.voting_area {
+  font-size: 16px;
+  font-weight: bold;
+  color: $text_medium;
+  text-align: center;
+  margin-top: 12px;
+
+  a, a:visited {
+    color: $text_medium;
+    display: inline-block;
+  }
+
+  a.upvoted {
+    color: $cyan;
+  }
+
+  a.downvoted {
+    color: $orange;
+  }
+}
+
+.voting_area.voting_area_inline, .voting_area.voting_area_button, .voting_area.voting_area_button_small {
+  margin-top: 0px;
+  font-weight: normal;
+  display: inline-block;
+}
+
+.voting_area.large {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 24px;
 }
 
 
