@@ -95,10 +95,12 @@ class ProfileController < ApplicationController
     end
     if @show_climbs.present? && @user.should_show_climb_data?
       if dates.present?
-        @climb_data = @user.climb_graph_data_for_dates(dates.uniq).to_json
+        climb_graph_data = @user.climb_graph_data_for_dates(dates.uniq)
       else
-        @climb_data = @user.climb_graph_data.to_json
+        climb_graph_data = @user.climb_graph_data
       end
+      @climb_data = {'title': 'Climb Progress', 'values': climb_graph_data}.to_json
+      table_progress.unshift({title: "Climb Progress", values: climb_graph_data.map{|x| [x[:name], x[:tooltip_value]]}.to_h}) if climb_graph_data.present? && table_progress.present?
     end
     respond_to do |format|
       format.html {

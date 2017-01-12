@@ -259,45 +259,73 @@ class User < ActiveRecord::Base
     end
   end
 
-  def climb_score_at_date(end_date, type="all")
-    climb_ids = self.attempts.where("completion = 100 AND date < ?", end_date).map(&:climb_id)
+  def climb_score_at_date(end_date)
+    climb_ids = self.attempts.where("completion = 100 AND date <= ?", end_date).map(&:climb_id)
     climbs = self.climbs.where(id: climb_ids)
-    if type != "all"
-      climbs = climbs.where(climb_type: type)
-    end
+    boulders = climbs.where(climb_type: "boulder")
+    ropes = climbs.where(climb_type: ["sport", "trad"])
     best_climbs = climbs.order(grade: :desc).first(10)
     if best_climbs.size > 0
       climb_score = best_climbs.map(&:grade).inject(0){|sum,x| sum + x }.to_f / best_climbs.size
     else
       climb_score = 0
     end
-    return climb_score
+
+    best_boulders = boulders.order(grade: :desc).first(10)
+    if best_boulders.size > 0
+      boulder_score = best_boulders.map(&:grade).inject(0){|sum,x| sum + x }.to_f / best_boulders.size
+    else
+      boulder_score = nil
+    end
+
+    best_ropes = ropes.order(grade: :desc).first(10)
+    if best_ropes.size > 0
+      rope_score = best_ropes.map(&:grade).inject(0){|sum,x| sum + x }.to_f / best_ropes.size
+    else
+      rope_score = nil
+    end
+
+    return {all: climb_score, boulder: boulder_score, sport: rope_score}
   end
 
   def climb_score_difference_at_dates(end_date_1, end_date_2, type="all")
-    first_score = self.climb_score_at_date(end_date_1, type)
-    second_score = self.climb_score_at_date(end_date_2, type)
+    first_score = self.climb_score_at_date(end_date_1).with_indifferent_access[type]
+    second_score = self.climb_score_at_date(end_date_2).with_indifferent_access[type]
     return first_score - second_score
   end
 
-  def climb_score_for_period(start_date, end_date, type="all")
-    climb_ids = self.attempts.where("completion = 100 AND date > ? AND date < ?", start_date, end_date).map(&:climb_id)
+  def climb_score_for_period(start_date, end_date)
+    climb_ids = self.attempts.where("completion = 100 AND date >= ? AND date <= ?", start_date, end_date).map(&:climb_id)
     climbs = self.climbs.where(id: climb_ids)
-    if type != "all"
-      climbs = climbs.where(climb_type: type)
-    end
+    boulders = climbs.where(climb_type: "boulder")
+    ropes = climbs.where(climb_type: ["sport", "trad"])
     best_climbs = climbs.order(grade: :desc).first(10)
     if best_climbs.size > 0
       climb_score = best_climbs.map(&:grade).inject(0){|sum,x| sum + x }.to_f / best_climbs.size
     else
       climb_score = 0
     end
-    return climb_score
+
+    best_boulders = boulders.order(grade: :desc).first(10)
+    if best_boulders.size > 0
+      boulder_score = best_boulders.map(&:grade).inject(0){|sum,x| sum + x }.to_f / best_boulders.size
+    else
+      boulder_score = nil
+    end
+
+    best_ropes = ropes.order(grade: :desc).first(10)
+    if best_ropes.size > 0
+      rope_score = best_ropes.map(&:grade).inject(0){|sum,x| sum + x }.to_f / best_ropes.size
+    else
+      rope_score = nil
+    end
+
+    return {all: climb_score, boulder: boulder_score, sport: rope_score}
   end
 
   def climb_score_difference_for_periods(start_date_1, end_date_1, start_date_2, end_date_2, type="all")
-    first_score = self.climb_score_for_period(start_date_1, end_date_1, type)
-    second_score = self.climb_score_for_period(start_date_2, end_date_2, type)
+    first_score = self.climb_score_for_period(start_date_1, end_date_1).with_indifferent_access[type]
+    second_score = self.climb_score_for_period(start_date_2, end_date_2).with_indifferent_access[type]
     return first_score - second_score
   end
 
@@ -305,10 +333,20 @@ class User < ActiveRecord::Base
     graph_data = []
     dates.each do |date|
       name_string = "#{date.strftime('%b %d, %Y')}"
-      score = self.climb_score_at_date(date)
+      scores = self.climb_score_at_date(date.end_of_day)
+      if scores[:boulder].present? && scores[:sport].present?
+        grade_string = "#{Climb.convert_score_to_grades(scores[:boulder], self.grade_format, 'boulder')} / #{Climb.convert_score_to_grades(scores[:sport], self.grade_format, 'sport')}"
+      elsif scores[:boulder].present?
+        grade_string = Climb.convert_score_to_grades(scores[:boulder], self.grade_format, 'boulder')
+      elsif scores[:sport].present?
+        grade_string = Climb.convert_score_to_grades(scores[:sport], self.grade_format, 'sport')
+      else
+        grade_string = Climb.convert_score_to_grades(scores[:all], self.grade_format)
+      end
+      grade_strings =
       graph_data << {'name': name_string,
-                     'value': score,
-                     'tooltip_value': Climb.convert_score_to_grades(score, self.grade_format)}
+                     'value': scores[:all],
+                     'tooltip_value': grade_string}
     end
     return graph_data
   end
