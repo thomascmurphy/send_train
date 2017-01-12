@@ -10,8 +10,9 @@ TrainToSend::Application.routes.draw do
 
       resources :attempts
     end
-    get 'quick_send', to: 'climbs#quick_new'
-    post 'quick_send', to: 'climbs#quick_create'
+    get 'quick_send', to: 'climbs#quick_new', as: 'climbs_quick_send_new'
+    post 'quick_send', to: 'climbs#quick_create', as: 'climbs_quick_send_create'
+    get 'sync_mountain_project', to: 'climbs#sync_mountain_project', as: 'climbs_sync_mountain_project'
 
     resources :exercise_metrics do
       get "delete"
@@ -46,6 +47,9 @@ TrainToSend::Application.routes.draw do
 
     get 'profile', to: 'profile#show'
     get 'profile/edit', to: 'profile#edit'
+    get 'profile/start_mountain_project', to: 'profile#start_mountain_project'
+    patch 'profile/connect_mountain_project', to: 'profile#connect_mountain_project'
+    get 'profile/disconnect_mountain_project', to: 'profile#disconnect_mountain_project'
     get 'profile/progress', to: 'profile#progress'
     get 'profile/:user_id/progress', to: 'profile#progress', as: 'profile_user_progress'
     get 'profile/:user_id/schedule', to: 'profile#schedule', as: 'profile_user_schedule'

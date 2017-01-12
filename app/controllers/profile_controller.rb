@@ -134,6 +134,45 @@ class ProfileController < ApplicationController
     @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
   end
 
+  def start_mountain_project
+    @user = current_user
+    respond_to do |format|
+      format.html
+      format.js
+      format.json
+    end
+  end
+
+  def connect_mountain_project
+    @user = current_user
+    respond_to do |format|
+      if @user.create_mountain_project_integration(params[:login])
+        format.html { redirect_to profile_edit_path, notice: 'Mountain Project connection successful!' }
+        format.js
+        format.json { render json: @user, status: :ok, location: @user }
+      else
+        @user.errors.add(:base, "We couldn't connect a Mountain Project account with that username/email.")
+        format.html { redirect_to profile_edit_path, notice: 'Something\'s wrong.' }
+        format.js
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def disconnect_mountain_project
+    @user = current_user
+    respond_to do |format|
+      if @user.update_attributes(mountain_project_user_id: nil)
+        format.html { redirect_to profile_edit_path, notice: 'Disconnection successful!' }
+        format.js
+        format.json { render json: @user, status: :ok, location: @user }
+      else
+        format.html { redirect_to profile_edit_path, notice: 'Something\'s wrong.' }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
 
   def profile_params

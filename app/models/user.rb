@@ -585,4 +585,51 @@ class User < ActiveRecord::Base
 
   end
 
+  def create_mountain_project_integration(login)
+    require 'mountain_project/request'
+    mountain_project = MountainProject::Request.new
+    if login.present?
+      user = mountain_project.get_user_by_email(login)
+      user_id = user["id"].to_i if user["id"].present?
+      if user_id.present?
+        self.mountain_project_user_id = user_id
+        self.handle = user["name"] if self.handle.blank?
+        self.save
+        return user_id
+      end
+    end
+    return false
+  end
+
+  def sync_mountain_project_climbs
+    require 'mountain_project/request'
+    mountain_project = MountainProject::Request.new
+    if self.mountain_project_user_id.present?
+      ticks = mountain_project.get_ticks(self.mountain_project_user_id)
+      if ticks["ticks"].present?
+        climb_ids = ticks["ticks"].map{|x| x["routeId"]}
+        if climb_ids.present?
+          climbs = mountain_project.get_routes(climb_ids)
+          if climbs["routes"].present?
+            climbs["routes"].each do |route|
+              climb = Climb.find_or_initialize_by(mountain_project_id: route["id"].to_i, user_id: self.id)
+              if climb.new_record?
+                climb = climb.from_mountain_project(route)
+                climb.save
+              end
+              tick = ticks["ticks"].select{|x| x["routeId"] == route["id"].to_i}.first
+              attempt = Attempt.find_or_initialize_by(climb_id: climb.id, date: DateTime.strptime(tick["date"], "%Y-%m-%d"))
+              if attempt.new_record?
+                attempt = attempt.from_mountain_project(tick)
+                attempt.save
+              end
+            end
+            return true
+          end
+        end
+      end
+    end
+    return false
+  end
+
 end

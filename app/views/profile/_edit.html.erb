@@ -35,6 +35,14 @@
           </div>
         </div>
         <div class="col-sm-6">
+          <div class="text-right">
+            <label></label><br/>
+            <% if @user.mountain_project_user_id.present? %>
+              <%= link_to raw("<span class='glyphicon glyphicon-minus-sign'></span> Disconnect Mountain Project"), profile_disconnect_mountain_project_path, class: "btn btn-danger" %>
+            <% else %>
+              <%= link_to raw("<span class='glyphicon glyphicon-link'></span> Connect Mountain Project"), profile_start_mountain_project_path, remote: true, class: "btn btn-success" %>
+            <% end %>
+          </div>
         </div>
       </div>
 

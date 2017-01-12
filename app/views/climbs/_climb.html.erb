@@ -1,5 +1,5 @@
 <tr data-climb-id="<%= climb.id %>">
-  <td><strong><%= climb.name %></strong></td>
+  <td><strong><%= simple_format(truncate(climb.name, length: 22)) %></strong></td>
   <td><%= climb.location %></td>
   <td><%= climb.climb_type %></td>
   <td><%= climb.grade_string %></td>

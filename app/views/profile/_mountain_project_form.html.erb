@@ -1,0 +1,25 @@
+<%= form_for(@user, url: "/profile/connect_mountain_project", remote: true) do |f| %>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Connect to your Mountain Project account</h3>
+      </div>
+      <div class="modal-body">
+        <div class="errors alert alert-danger hidden"></div>
+        <p>This way we can sync your climbs easily and you won't have to input them manually.</p>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <%= f.label "Mountain Project Username or Email" %><br>
+              <input type="text" name="login" class="form-control"/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <input type="submit" class="btn btn-primary" value="Connect">
+      </div>
+    </div>
+  </div>
+<% end %>

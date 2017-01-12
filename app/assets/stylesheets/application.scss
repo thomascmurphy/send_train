@@ -96,6 +96,12 @@ $font_stack_alt: "Oswald", sans-serif;
     to {transform:rotate(360deg);}
 }
 
+.spinning {
+  animation: spinnerRotate 2s infinite linear;
+	-moz-animation: spinnerRotate 2s infinite linear;
+	-webkit-animation: spinnerRotate 2s infinite linear;
+}
+
 
 /* ============ Material Design Aspects */
 
@@ -502,20 +508,9 @@ a.shader_light_bg:hover{
 	overflow: hidden;
 	-webkit-mask-image: image-url("spinner.png");
 	background-color: $cyan;
-	animation-name: spinnerRotate;
-	animation-duration: 2s;
-	animation-iteration-count: infinite;
-	animation-timing-function: linear;
-
-	-moz-animation-name: spinnerRotate;
-	-moz-animation-duration: 2s;
-	-moz-animation-iteration-count: infinite;
-	-moz-animation-timing-function: linear;
-
-	-webkit-animation-name: spinnerRotate;
-	-webkit-animation-duration: 2s;
-	-webkit-animation-iteration-count: infinite;
-	-webkit-animation-timing-function: linear;
+	animation: spinnerRotate 2s infinite linear;
+	-moz-animation: spinnerRotate 2s infinite linear;
+	-webkit-animation: spinnerRotate 2s infinite linear;
 	z-index: 501;
 }
 

@@ -27,6 +27,10 @@ ready = function() {
     $(this).attr("disabled", "disabled");
   });
 
+  $('body').on('click', '.spin_after_click', function(e){
+    $(this).find('.glyphicon').addClass('spinning');
+  });
+
   $('.disable_after_click_remote').on("ajax:success", function(){
       $(this).attr("disabled", "disabled");
   });

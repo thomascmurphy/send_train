@@ -173,6 +173,21 @@ class ClimbsController < ApplicationController
     @climbs = @climbs.sort_by{|c| [c.redpointed ? 0 : 1, c.redpoint_date]}.reverse
   end
 
+
+  def sync_mountain_project
+    respond_to do |format|
+      if current_user.sync_mountain_project_climbs
+        format.html { redirect_to climbs_path, notice: 'Sync complete!' }
+        format.js
+        format.json { render json: current_user.climbs, status: :ok, location: current_user.climbs }
+      else
+        format.html { redirect_to climbs_path, notice: 'Something went wrong with the sync :(' }
+        format.js
+        format.json { render json: nil, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
     def climb_params
       params.require(:climb).permit(:name, :location, :climb_type, :grade, :length,

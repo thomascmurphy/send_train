@@ -50,6 +50,7 @@ gem 'devise'
 gem 'bootstrap-sass'
 gem 'pg'
 gem 'pretender'
+gem 'httparty'
 
 group :development, :test do
   gem 'pry'
