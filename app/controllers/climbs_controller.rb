@@ -1,15 +1,15 @@
 class ClimbsController < ApplicationController
+  helper_method :sort_by, :sort_direction
 
   def index
-    @climbs = current_user.climbs.order(created_at: :desc)
-    attempts = current_user.attempts
-    @first_attempt = attempts.order(date: :asc).first()
-    @last_attempt = attempts.order(date: :desc).first()
-    if @first_attempt.present?
-      @date_lower = @first_attempt.date
-    end
-    if @last_attempt.present?
-      @date_upper = @last_attempt.date
+    if sort_by == "redpoint_date"
+      require 'will_paginate/array'
+      @climbs = current_user.climbs.sort_by{|c| [c.redpointed ? 0 : 1, c.redpoint_date, c.created_at]}
+      if sort_direction.downcase == "desc"
+        @climbs = @climbs.reverse
+      end
+    else
+      @climbs = current_user.climbs.order("#{sort_by} #{sort_direction}", "id ASC")
     end
 
     if params[:climb_type].present?
@@ -20,21 +20,12 @@ class ClimbsController < ApplicationController
       @climbs = @climbs.where(outdoor: params[:outdoor] == "true")
     end
 
-    date = params[:date]
-    if date.present?
-      if date[:day_lower].present? && date[:month_lower].present? && date[:year_lower].present?
-        lower_date = DateTime.strptime("#{date[:year_lower]} #{date[:month_lower]} #{date[:day_lower]}", "%Y %m %d")
-        lower_attempt_climb_ids = attempts.where("date > ?", lower_date).pluck(:climb_id).compact.uniq
-      end
+    #@climbs = @climbs.sort_by{|c| [c.redpointed ? 0 : 1, c.redpoint_date, c.created_at]}.reverse
 
-      if date[:day_upper].present? && date[:month_upper].present? && date[:year_upper].present?
-        upper_date = DateTime.strptime("#{date[:year_upper]} #{date[:month_upper]} #{date[:day_upper]}", "%Y %m %d").end_of_day
-        upper_attempt_climb_ids = attempts.where("date < ?", upper_date).pluck(:climb_id).compact.uniq
-      end
-      @climbs = @climbs.where(id: lower_attempt_climb_ids && upper_attempt_climb_ids)
-    end
+    page = (params[:page] || 1).to_i
+    per_page = (params[:per_page] || 20).to_i
+    @climbs = @climbs.paginate(:page => page, :per_page => per_page)
 
-    @climbs = @climbs.sort_by{|c| [c.redpointed ? 0 : 1, c.redpoint_date, c.created_at]}.reverse
     respond_to do |format|
       format.html
       format.js { render :reload }
@@ -193,5 +184,14 @@ class ClimbsController < ApplicationController
       params.require(:climb).permit(:name, :location, :climb_type, :grade, :length,
                                     :length_unit, :outdoor, :crimpy, :slopey, :pinchy,
                                     :pockety, :powerful, :dynamic, :endurance, :technical, :notes)
+    end
+
+    def sort_by
+      legal_sorts = Climb.column_names + ['redpoint_date']
+      legal_sorts.include?(params[:sort_by]) ? params[:sort_by] : "redpoint_date"
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:sort_direction]) ? params[:sort_direction] : "desc"
     end
 end

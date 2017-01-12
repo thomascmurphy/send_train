@@ -1,5 +1,13 @@
 <tr data-climb-id="<%= climb.id %>">
-  <td><strong><%= simple_format(truncate(climb.name, length: 22)) %></strong></td>
+  <td>
+    <strong>
+      <% if climb.mountain_project_url.present? %>
+        <%= link_to simple_format(truncate(climb.name, length: 22)), climb.mountain_project_url, :target => "_blank" %>
+      <% else %>
+        <%= simple_format(truncate(climb.name, length: 22)) %>
+      <% end %>
+    </strong>
+  </td>
   <td><%= climb.location %></td>
   <td><%= climb.climb_type %></td>
   <td><%= climb.grade_string %></td>

@@ -70,11 +70,12 @@ class Message < ActiveRecord::Base
     elsif self.parent_message.present?
       "Respond to #{self.parent_message.user.smart_name}'s message"
     else
+      "Start Discussion"
     end
   end
 
   def belongs_to_user(user)
-    self.messageable == user || (self.messageable.present? && self.messageable.user == user)
+    self.messageable == user || (self.messageable.present? && self.messageable.user == user) || self.parent_message.user == user
   end
 
 end

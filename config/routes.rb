@@ -74,9 +74,11 @@ TrainToSend::Application.routes.draw do
     end
 
     get 'community', to: 'community#index'
+    get 'community/messages', to: 'community#all_messages'
     get 'community/training', to: 'community#training'
     get 'community/users', to: 'community#users'
     get 'community/my_users', to: 'community#my_users'
+    get 'community/my_followers', to: 'community#my_followers'
     get 'community/users/:user_id', to: 'community#user', as: 'community_user'
     get 'community/users/follow/:user_id', to: 'community#user_follow', as: 'community_user_follow'
     get 'community/users/unfollow/:user_id', to: 'community#user_unfollow', as: 'community_user_unfollow'

@@ -1,17 +1,19 @@
 <div class="row">
   <div class="col-xs-6">
-    <h1>Top Discussions</h1>
+    <h1>All Messages</h1>
   </div>
   <div class="col-xs-6 text-right">
-    <%= link_to raw("<span class='glyphicon glyphicon-plus'></span> Start a Discussion"), new_message_path, remote: true, class: "btn btn-success btn-lg margin_top" %>
+    <%= link_to "New Messages", community_path, class: "btn btn-info btn-lg margin_top" %>
   </div>
 </div>
 <div class="message_list margin_top">
-  <%= render "index" %>
+  <div id="user_messages">
+    <%= render partial: "user_messages", object: @all_messages, as: 'messages' %>
+  </div>
 </div>
 <div class="row">
   <div class="col-xs-12 text-center">
-    <%= will_paginate @nmessages, :renderer => BootstrapPagination::Rails %>
+    <%= will_paginate @all_messages, :renderer => BootstrapPagination::Rails %>
   </div>
 </div>
 

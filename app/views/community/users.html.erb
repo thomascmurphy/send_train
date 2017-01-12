@@ -3,6 +3,7 @@
     <h1>All Users</h1>
   </div>
   <div class="col-xs-6 text-right">
+    <%= link_to "View My Followers", community_my_followers_path, class: "btn btn-info btn-lg margin_top" %>
     <%= link_to "View My Users", community_my_users_path, class: "btn btn-success btn-lg margin_top" %>
   </div>
 </div>
@@ -12,10 +13,10 @@
       <table class="table table-striped" id="community_users">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Member Since</th>
-            <th>Workouts</th>
-            <th>Followers</th>
+            <th><%= sortable "name" %></th>
+            <th><%= sortable "created_at", "Member Since" %></th>
+            <th><%= sortable "workout_count", "Workouts" %></th>
+            <th><%= sortable "follower_count", "Followers" %></th>
             <th></th>
           </tr>
         </thead>
@@ -24,5 +25,10 @@
         </tbody>
       </table>
     </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 text-center">
+    <%= will_paginate @all_users, :renderer => BootstrapPagination::Rails %>
   </div>
 </div>

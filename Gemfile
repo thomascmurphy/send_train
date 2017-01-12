@@ -51,6 +51,7 @@ gem 'bootstrap-sass'
 gem 'pg'
 gem 'pretender'
 gem 'httparty'
+gem 'will_paginate-bootstrap'
 
 group :development, :test do
   gem 'pry'

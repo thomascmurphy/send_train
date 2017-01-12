@@ -1,7 +1,10 @@
 class MessagesController < ApplicationController
+  helper_method :page, :per_page
 
   def index
+    require 'will_paginate/array'
     @messages = Message.where(parent_message_id: nil, messageable_id: nil).sort_by{|x| [Vote.item_score(x), x.updated_at]}.reverse
+    @messages = @messages.paginate(:page => page, :per_page => per_page)
     respond_to do |format|
       format.html
       format.js
@@ -52,7 +55,9 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
       if @message.save
+        require 'will_paginate/array'
         @messages = Message.where(parent_message_id: nil, messageable_id: nil).sort_by{|x| [Vote.item_score(x), x.updated_at]}.reverse
+        @messages = @messages.paginate(:page => page, :per_page => per_page)
         format.html { redirect_to @message, notice: 'Message was successfully created.' }
         format.js
         format.json { render json: @message, status: :created, location: @message }
@@ -107,5 +112,13 @@ class MessagesController < ApplicationController
   def message_params
     params.require(:message).permit(:title, :body, :parent_message_id, :messageable_id,
                                     :messageable_type, :read, :views)
+  end
+
+  def page
+    (params[:page] || 1).to_i
+  end
+
+  def per_page
+    (params[:per_page] || 20).to_i
   end
 end

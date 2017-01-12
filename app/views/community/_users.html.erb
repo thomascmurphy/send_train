@@ -16,9 +16,9 @@
       <td class="text-right">
         <% unless current_user == user || user.allow_followers.blank? %>
           <% if current_user.is_following(user.id) %>
-            <%= link_to "Unfollow", community_user_unfollow_path(user.id, show_my_users:(defined?(my_users) ? my_users : false)), remote: true, class: "btn btn-danger" %>
+            <%= link_to "Unfollow", community_user_unfollow_path(user.id, sort_by: sort_by, sort_direction: sort_direction, page: page, per_page: per_page), remote: true, class: "btn btn-danger" %>
           <% else %>
-            <%= link_to "Follow", community_user_follow_path(user.id, show_my_users:(defined?(my_users) ? my_users : false)), remote: true, class: "btn btn-info" %>
+            <%= link_to "Follow", community_user_follow_path(user.id, sort_by: sort_by, sort_direction: sort_direction, page: page, per_page: per_page), remote: true, class: "btn btn-info" %>
           <% end %>
         <% end %>
       </td>

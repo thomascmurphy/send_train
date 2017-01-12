@@ -423,20 +423,26 @@ class User < ActiveRecord::Base
     end
   end
 
-  def my_users
+  def my_users(allow_profile_view=true)
     user_ids = UserFollower.where(follower_id: self.id).pluck(:user_id)
     if user_ids.present?
-      users = User.where(id: user_ids).sort_by(&:current_sign_in_at).reverse
+      users = User.where(id: user_ids)
+      if allow_profile_view.present?
+        users = users.where(allow_profile_view: true)
+      end
     else
       users = nil
     end
     users
   end
 
-  def my_followers
+  def my_followers(allow_profile_view=true)
     user_ids = UserFollower.where(user_id: self.id).pluck(:follower_id)
     if user_ids.present?
-      users = User.where(id: user_ids).sort_by(&:current_sign_in_at).reverse
+      users = User.where(id: user_ids)
+      if allow_profile_view.present?
+        users = users.where(allow_profile_view: true)
+      end
     else
       users = nil
     end
@@ -476,7 +482,7 @@ class User < ActiveRecord::Base
     #dunno if I want to keep these here
     voted_climb_ids = []
     my_user_climb_ids = Climb.where(user_id: my_user_ids).pluck(:id)
-    user_new_climbs = Attempt.where(completion: 100, climb_id: my_user_climb_ids).where.not(id: voted_climb_ids)
+    user_new_climbs = Attempt.where(completion: 100, climb_id: my_user_climb_ids, date: DateTime.now-7.days..DateTime.now.end_of_day).where.not(id: voted_climb_ids)
 
     user_achieved_goals = Goal.where(completed: true, updated_at: DateTime.now-7.days..DateTime.now.end_of_day, user_id: my_user_ids)
 

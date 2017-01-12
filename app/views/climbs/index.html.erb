@@ -14,14 +14,14 @@
         <%= select_tag(:outdoor, options_for_select([['Location', ''], ['Outdoor', true], ['Indoor', false]]), class: "form-control") %>
       </div>
 
-      <%= submit_tag("Filter", class: "btn btn-default margin_left") %>
+      <!-- <%= submit_tag("Filter", class: "btn btn-default margin_left") %>
       <a class="btn" role="button" data-toggle="collapse" href="#advanced_filtering" aria-expanded="false" aria-controls="advanced_filtering">
         More Filters <span class="caret"></span>
       </a>
 
       <div class="collapse" id="advanced_filtering">
         <div class="margin_top margin_bottom">
-          <!-- <% if @date_lower.present? %>
+          <% if @date_lower.present? %>
             <div class="form-group margin_left">
               <%= label_tag(:climb_type, "From:") %>
               <%= select_month(@date_lower, {field_name: "month_lower"}, {class: "form-control"}) %>
@@ -36,9 +36,9 @@
               <%= select_day(@date_upper, {field_name: "day_upper"}, {class: "form-control"}) %>
               <%= select_year(@date_upper, {field_name: "year_upper"}, {class: "form-control"}) %>
             </div>
-          <% end %> -->
+          <% end %>
         </div>
-      </div>
+      </div> -->
     <% end %>
   </div>
   <div class="col-xs-5 text-right">
@@ -56,12 +56,12 @@
       <table class="table table-striped" id="climbs">
         <thead>
           <tr>
-            <th>Climb Name</th>
-            <th>Location</th>
-            <th>Type</th>
-            <th>Grade</th>
-            <th>Length</th>
-            <th>Redpointed</th>
+            <th><%= sortable "name", "Climb Name" %></th>
+            <th><%= sortable "location" %></th>
+            <th><%= sortable "type" %></th>
+            <th><%= sortable "grade" %></th>
+            <th><%= sortable "length" %></th>
+            <th><%= sortable "redpoint_date", "Redpointed" %></th>
             <th></th>
           </tr>
         </thead>
@@ -70,6 +70,11 @@
         </tbody>
       </table>
     </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 text-center">
+    <%= will_paginate @climbs, :renderer => BootstrapPagination::Rails %>
   </div>
 </div>
 
