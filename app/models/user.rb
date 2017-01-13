@@ -433,7 +433,7 @@ class User < ActiveRecord::Base
         users = users.where(allow_profile_view: true)
       end
     else
-      users = nil
+      users = []
     end
     users
   end
@@ -446,7 +446,7 @@ class User < ActiveRecord::Base
         users = users.where(allow_profile_view: true)
       end
     else
-      users = nil
+      users = []
     end
     users
   end
