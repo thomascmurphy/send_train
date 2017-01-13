@@ -1,6 +1,5 @@
 class Message < ActiveRecord::Base
   belongs_to :user
-  belongs_to :parent_message
   belongs_to :parent_message, class_name: 'Message', foreign_key: 'parent_message_id'
   has_many :replies, class_name: 'Message', foreign_key: 'parent_message_id', dependent: :destroy
   belongs_to :messageable, polymorphic: true
