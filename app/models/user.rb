@@ -476,9 +476,9 @@ class User < ActiveRecord::Base
     my_macrocycle_ids = self.macrocycles.pluck(:id)
     my_goal_ids = self.goals.pluck(:id)
 
-    followed_user_exercise_activity = Exercise.where(user_id: my_user_ids, created_at: DateTime.now-7.days..DateTime.now.end_of_day)
-    followed_user_workout_activity = Workout.where(user_id: my_user_ids, created_at: DateTime.now-7.days..DateTime.now.end_of_day)
-    followed_user_macrocycle_activity = Macrocycle.where(user_id: my_user_ids, created_at: DateTime.now-7.days..DateTime.now.end_of_day)
+    followed_user_exercise_activity = Exercise.where(user_id: my_user_ids, created_at: DateTime.now-7.days..DateTime.now.end_of_day).where.not(reference_id: Exercise::SEEDED_REFERENCE_IDS)
+    followed_user_workout_activity = Workout.where(user_id: my_user_ids, created_at: DateTime.now-7.days..DateTime.now.end_of_day).where.not(reference_id: Workout::SEEDED_REFERENCE_IDS)
+    followed_user_macrocycle_activity = Macrocycle.where(user_id: my_user_ids, created_at: DateTime.now-7.days..DateTime.now.end_of_day).where.not(reference_id: Macrocycle::SEEDED_REFERENCE_IDS)
 
     voted_climb_ids = self.votes.where(voteable_type: "Attempt").pluck(:voteable_id)
     #dunno if I want to keep these here
@@ -508,21 +508,21 @@ class User < ActiveRecord::Base
 
     followed_user_exercise_activity.each do |exercise|
       activity << {label: "New Exercise",
-                   description: "#{exercise.user.smart_name} added a new exercise.",
+                   description: "#{exercise.user.smart_name} added a new exercise \"#{exercise.label}\".",
                    item: exercise,
                    date: exercise.created_at}
     end
 
     followed_user_workout_activity.each do |workout|
       activity << {label: "New Workout",
-                   description: "#{workout.user.smart_name} added a new workout.",
+                   description: "#{workout.user.smart_name} added a new workout \"#{workout.label}\".",
                    item: workout,
                    date: workout.created_at}
     end
 
     followed_user_macrocycle_activity.each do |macrocycle|
       activity << {label: "New Plan Template",
-                   description: "#{macrocycle.user.smart_name} added a new plan template.",
+                   description: "#{macrocycle.user.smart_name} added a new plan template \"#{macrocycle.label}\".",
                    item: macrocycle,
                    date: macrocycle.created_at}
     end

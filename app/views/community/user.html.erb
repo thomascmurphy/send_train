@@ -49,7 +49,9 @@
             <div class="panel-heading">
               <div class="row">
                 <div class="col-xs-9">
-                  <h3 class="panel-title"><%= simple_format(truncate(exercise.label, length: 22)) %></h3>
+                  <h3 class="panel-title">
+                    <%= link_to simple_format(truncate(exercise.label, length: 22)), exercise_path(exercise) %>
+                  </h3>
                 </div>
                 <div class="col-xs-3 text-right">
                   <span class="voting_area voting_area_button_small" data-voteable-item="Exercise<%= exercise.id %>">
@@ -82,7 +84,9 @@
             <div class="panel-heading">
               <div class="row">
                 <div class="col-xs-9">
-                  <h3 class="panel-title"><%= simple_format(truncate(workout.label, length: 22)) %></h3>
+                  <h3 class="panel-title">
+                    <%= link_to simple_format(truncate(workout.label, length: 22)), workout_path(workout) %>
+                  </h3>
                 </div>
                 <div class="col-xs-3 text-right">
                   <span class="voting_area voting_area_button_small" data-voteable-item="Workout<%= workout.id %>">
@@ -115,7 +119,9 @@
             <div class="panel-heading">
               <div class="row">
                 <div class="col-xs-9">
-                  <h3 class="panel-title"><%= simple_format(truncate(macrocycle.label, length: 22)) %></h3>
+                  <h3 class="panel-title">
+                    <%= link_to simple_format(truncate(macrocycle.label, length: 22)), macrocycle_path(macrocycle) %>
+                  </h3>
                 </div>
                 <div class="col-xs-3 text-right">
                   <span class="voting_area voting_area_button_small" data-voteable-item="Macrocycle<%= macrocycle.id %>">

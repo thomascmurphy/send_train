@@ -7,6 +7,8 @@ class Macrocycle < ActiveRecord::Base
   has_many :messages, as: :messageable
   after_create :set_reference_id, :auto_upvote
 
+  SEEDED_REFERENCE_IDS = [1, 2, 3]
+
   def set_reference_id
     if self.reference_id.blank?
       self[:reference_id] = self.id

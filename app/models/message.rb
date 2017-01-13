@@ -74,7 +74,7 @@ class Message < ActiveRecord::Base
   end
 
   def belongs_to_user(user)
-    self.messageable == user || (self.messageable.present? && self.messageable.user == user) || self.parent_message.user == user
+    self.messageable == user || (self.messageable.present? && self.messageable.user == user) || (self.parent_message.present? && self.parent_message.user == user)
   end
 
 end
