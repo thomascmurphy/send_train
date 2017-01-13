@@ -15,7 +15,7 @@
   <td><%= climb.redpoint_text %></td>
   <td class="text-right">
     <!-- <%= link_to "Add Attempt", new_climb_attempt_path(climb), remote: true, class: "btn btn-success" %> -->
-    <%= link_to "Edit", edit_climb_path(climb), remote: true, class: "btn btn-info" %>
-    <%= link_to "Delete", climb_delete_path(climb), remote: true, class: "btn btn-danger" %>
+    <%= link_to "Edit", edit_climb_path(climb, sort_by: sort_by, sort_direction: sort_direction, page: page, per_page: per_page), remote: true, class: "btn btn-info" %>
+    <%= link_to "Delete", climb_delete_path(climb, sort_by: sort_by, sort_direction: sort_direction, page: page, per_page: per_page), remote: true, class: "btn btn-danger" %>
   </td>
 </tr>
