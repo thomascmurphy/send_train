@@ -137,11 +137,11 @@ class CommunityController < ApplicationController
 
     def sort_by
       legal_sorts = User.column_names + ['workout_count', 'follower_count', 'name']
-      legal_sorts.include?(params[:sort_by]) ? params[:sort_by] : "follower_count"
+      legal_sorts.include?(params[:sort_by]) ? params[:sort_by] : "id"
     end
 
     def sort_direction
-      %w[asc desc].include?(params[:sort_direction]) ? params[:sort_direction] : "desc"
+      %w[asc desc].include?(params[:sort_direction]) ? params[:sort_direction] : "asc"
     end
 
     def page
