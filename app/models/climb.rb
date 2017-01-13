@@ -50,11 +50,6 @@ class Climb < ActiveRecord::Base
   end
 
   def grade_string
-    if Climb.climbing_grade_conversion_western[self.grade].blank?
-      binding.pry
-
-    end
-
     return Climb.climbing_grade_conversion_western[self.grade].with_indifferent_access[self.climb_type]
   end
 

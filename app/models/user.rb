@@ -251,8 +251,10 @@ class User < ActiveRecord::Base
     when 5
       "You can also track your climbing progress so that we can try to determine the effectiveness of each workout that you do."
     when 6
-      "Remember why you train: record your goals, break them down into subgoals, and tick them off as you progress."
+      "We have Mountain Project integration so you can just import and sync all of your climbs easily."
     when 7
+      "Remember why you train: record your goals, break them down into subgoals, and tick them off as you progress."
+    when 8
       "Thanks so much for taking the tour! I hope this is a helpful tool for everyone."
     else
       nil
