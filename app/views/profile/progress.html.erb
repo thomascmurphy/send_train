@@ -4,7 +4,7 @@
       <% if current_user == @user %>
         My Progress
       <% else %>
-        <%= @user.smart_name %>'s Progress
+        <%= @user.smart_name(true) %>'s Progress
       <% end %>
     </h1>
   </div>

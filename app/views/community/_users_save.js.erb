@@ -1,0 +1,11 @@
+if ($(".community_users_list").length > 0) {
+  $(".community_users_list").html("<%= escape_javascript(render 'community/users') %>");
+}
+
+if ($(".community_my_users_list").length > 0) {
+  $(".community_my_users_list").html("<%= escape_javascript(render partial: 'community/users', locals: {my_users: true}) %>");
+}
+
+if ($(".community_my_followers_list").length > 0) {
+  $(".community_my_followers_list").html("<%= escape_javascript(render partial: 'community/users', locals: {my_followers: true}) %>");
+}

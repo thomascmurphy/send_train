@@ -1,0 +1,33 @@
+<div class="row large_margin_bottom">
+  <div class="col-xs-1">
+    <div class="voting_area large" data-voteable-item="Message<%= @primary_message.id %>">
+      <%= render partial: "votes/voting_area", object: @primary_message, as: 'voteable', locals: {} %>
+    </div>
+  </div>
+  <div class="col-xs-8">
+    <h1><%= @primary_message.title %></h1>
+  </div>
+  <div class="col-xs-3 text-right">
+    <%= link_to raw("<span class='glyphicon glyphicon-share-alt'></span> Reply"), new_message_path(parent_message_id: @primary_message.id, primary_message_id: @primary_message.id), remote: true, class: "btn btn-success btn-lg margin_top" %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <%= @primary_message.body %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>Replies</h3>
+<div class="reply_list">
+  <%= render "replies" %>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="message_modal" tabindex="-1" role="dialog" aria-labelledby="messageModal">
+
+</div>

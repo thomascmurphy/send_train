@@ -1,0 +1,12 @@
+<% version = defined?(version) ? version : "block" %>
+<% if version == "inline" %>
+  <%= link_to raw("<span class='glyphicon glyphicon-thumbs-up'></span>"), new_vote_path(voteable_id: voteable.id, voteable_type: voteable.class.name), remote: true, class: "#{'upvoted' if Vote.item_upvoted_by_user(voteable, current_user.id).present?}" %>
+  <%= pluralize(Vote.item_score(voteable), 'point') %>
+<% elsif version == "button" %>
+  <%= link_to raw("<span class='glyphicon glyphicon-thumbs-up'></span>"), new_vote_path(voteable_id: voteable.id, voteable_type: voteable.class.name), remote: true, data: { toggle: 'tooltip', placement: 'top' }, title: "#{pluralize(Vote.item_score(voteable), 'point')}", class: "btn btn-default #{'upvoted' if Vote.item_upvoted_by_user(voteable, current_user.id).present?}" %>
+<% elsif version == "button_small" %>
+  <%= link_to raw("<span class='glyphicon glyphicon-thumbs-up'></span>"), new_vote_path(voteable_id: voteable.id, voteable_type: voteable.class.name), remote: true, data: { toggle: 'tooltip', placement: 'left' }, title: "#{pluralize(Vote.item_score(voteable), 'point')}", class: "btn btn-xs btn-default #{'upvoted' if Vote.item_upvoted_by_user(voteable, current_user.id).present?}" %>
+<% else %>
+  <%= link_to raw("<span class='glyphicon glyphicon-thumbs-up'></span>"), new_vote_path(voteable_id: voteable.id, voteable_type: voteable.class.name), remote: true, class: "block #{'upvoted' if Vote.item_upvoted_by_user(voteable, current_user.id).present?}" %>
+  <%= Vote.item_score(voteable) %>
+<% end %>

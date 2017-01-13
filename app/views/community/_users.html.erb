@@ -1,0 +1,39 @@
+<% if defined?(my_users) && my_users.present?
+    @users = @my_users
+  elsif defined?(my_followers) && my_followers.present?
+    @users = @my_followers
+  else
+    @users = @all_users
+  end %>
+
+<% if @users.present? %>
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= link_to user.smart_name, community_user_path(user.id) %></td>
+      <td><%= user.created_at.strftime("%b %d, %Y") %></td>
+      <td><%= user.workout_count %></td>
+      <td><%= user.follower_count %></td>
+      <td class="text-right">
+        <% unless current_user == user || user.allow_followers.blank? %>
+          <% if current_user.is_following(user.id) %>
+            <%= link_to "Unfollow", community_user_unfollow_path(user.id, sort_by: sort_by, sort_direction: sort_direction, page: page, per_page: per_page), remote: true, class: "btn btn-danger" %>
+          <% else %>
+            <%= link_to "Follow", community_user_follow_path(user.id, sort_by: sort_by, sort_direction: sort_direction, page: page, per_page: per_page), remote: true, class: "btn btn-info" %>
+          <% end %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+<% else %>
+  <tr>
+    <td colspan="5" class="text-center">
+      <% if defined?(my_users) && my_users.present? %>
+        Be sure to follow other users so that you can view and copy their workouts.
+      <% elsif defined?(my_followers) && my_followers.present? %>
+        You don't have any followers yet. Be sure to create some new workouts that might benefit the community.
+      <% else %>
+        There are no users here, something seems to have gone awry
+      <% end %>
+    </td>
+  </tr>
+<% end %>

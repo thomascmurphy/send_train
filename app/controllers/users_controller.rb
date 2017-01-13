@@ -37,6 +37,8 @@ class UsersController < ApplicationController
     when 5
       redirect_to climbs_path
     when 6
+      redirect_to '/profile/edit'
+    when 7
       redirect_to goals_path
     else
       redirect_to root_path
@@ -50,4 +52,5 @@ class UsersController < ApplicationController
       format.js
     end
   end
+
 end

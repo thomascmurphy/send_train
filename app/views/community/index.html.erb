@@ -1,0 +1,24 @@
+<div class="row">
+  <div class="col-xs-8">
+    <h1>New Messages</h1>
+  </div>
+  <div class="col-xs-4 text-right">
+    <%= link_to "All Messages", community_messages_path, class: "btn btn-info btn-lg margin_top" %>
+  </div>
+</div>
+<div class="message_list margin_top">
+  <div id="user_messages">
+    <%= render partial: "user_messages", object: @new_messages, as: 'messages' %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 text-center">
+    <%= will_paginate @new_messages, :renderer => BootstrapPagination::Rails %>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="message_modal" tabindex="-1" role="dialog" aria-labelledby="messageModal">
+
+</div>

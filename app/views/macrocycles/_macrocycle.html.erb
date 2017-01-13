@@ -1,7 +1,18 @@
 <div class="col-md-4 col-sm-6 margin_bottom">
   <div class="panel<%= macrocycle.panel_class %>">
     <div class="panel-heading">
-      <h3 class="panel-title"><%= macrocycle.label %></h3>
+      <div class="row">
+        <div class="col-xs-9">
+          <h3 class="panel-title">
+            <%= link_to simple_format(truncate(macrocycle.label, length: 30)), macrocycle_path(macrocycle) %>
+          </h3>
+        </div>
+        <div class="col-xs-3 text-right">
+          <span class="voting_area voting_area_button_small" data-voteable-item="Macrocycle<%= macrocycle.id %>">
+            <%= render partial: "votes/voting_area", object: macrocycle, as: 'voteable', locals: {version: "button_small"} %>
+          </span>
+        </div>
+      </div>
     </div>
     <div class="panel-body">
       <%= pluralize(macrocycle.duration_weeks, 'Week') %>

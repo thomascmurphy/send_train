@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="col-xs-6">
+    <h1>Top Discussions</h1>
+  </div>
+  <div class="col-xs-6 text-right">
+    <%= link_to raw("<span class='glyphicon glyphicon-plus'></span> Start a Discussion"), new_message_path, remote: true, class: "btn btn-success btn-lg margin_top" %>
+  </div>
+</div>
+<div class="message_list margin_top">
+  <%= render "index" %>
+</div>
+<div class="row">
+  <div class="col-xs-12 text-center">
+    <%= will_paginate @nmessages, :renderer => BootstrapPagination::Rails %>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="message_modal" tabindex="-1" role="dialog" aria-labelledby="messageModal">
+
+</div>

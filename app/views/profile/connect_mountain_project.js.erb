@@ -1,0 +1,9 @@
+$("#mountain_project_modal div.errors").html("").addClass('hidden');
+<% if @user.errors.any? %>
+  <% @user.errors.full_messages.each do |message| %>
+    $("#mountain_project_modal div.errors").removeClass('hidden').append($("<p />").html("<%= message.html_safe %>"));
+  <% end %>
+<% else %>
+  $(".profile_edit").html("<%= escape_javascript(render 'profile/edit') %>");
+  $("#mountain_project_modal").modal("hide");
+<% end %>

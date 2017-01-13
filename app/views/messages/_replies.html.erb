@@ -1,0 +1,17 @@
+<% if defined?(messageable) && messageable.present? %>
+  <% Message.item_messages_ordered(messageable).each do |reply| %>
+    <div class="panel panel-default">
+      <div class="panel-body message_direct_reply">
+        <%= render partial: 'messages/reply', object: reply, locals: {indent: 1} %>
+      </div>
+    </div>
+  <% end %>
+<% else %>
+  <% @primary_message.replies_ordered.each do |reply| %>
+    <div class="panel panel-default">
+      <div class="panel-body message_direct_reply">
+        <%= render partial: 'messages/reply', object: reply, locals: {indent: 1} %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

@@ -22,7 +22,10 @@ class WorkoutsController < ApplicationController
   end
 
   def show
-    @workout = current_user.workouts.find_by_id(params[:id])
+    @workout = Workout.find_by_id(params[:id])
+    if @workout.user.allow_profile_view.blank?
+      @workout = nil
+    end
     respond_to do |format|
       format.html
       format.js
@@ -97,8 +100,8 @@ class WorkoutsController < ApplicationController
 
   def duplicate
     @workouts = current_user.workouts.order(created_at: :desc)
-    original_workout = current_user.workouts.find_by_id(params[:workout_id])
-    if original_workout.present?
+    original_workout = Workout.find_by_id(params[:workout_id])
+    if original_workout.present? && original_workout.user.allow_profile_view.present?
       @workout = original_workout.duplicate(current_user)
     end
     respond_to do |format|

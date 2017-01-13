@@ -1,12 +1,20 @@
 <tr data-climb-id="<%= climb.id %>">
-  <td><strong><%= climb.name %></strong></td>
+  <td>
+    <strong>
+      <% if climb.mountain_project_url.present? %>
+        <%= link_to simple_format(truncate(climb.name, length: 22)), climb.mountain_project_url, :target => "_blank" %>
+      <% else %>
+        <%= simple_format(truncate(climb.name, length: 22)) %>
+      <% end %>
+    </strong>
+  </td>
   <td><%= climb.location %></td>
   <td><%= climb.climb_type %></td>
   <td><%= climb.grade_string %></td>
   <td><% unless climb.length.blank? %><%= climb.length %> <%= climb.length_unit_short %><% end %></td>
   <td><%= climb.redpoint_text %></td>
   <td class="text-right">
-    <%= link_to "Add Attempt", new_climb_attempt_path(climb), remote: true, class: "btn btn-success" %>
+    <!-- <%= link_to "Add Attempt", new_climb_attempt_path(climb), remote: true, class: "btn btn-success" %> -->
     <%= link_to "Edit", edit_climb_path(climb), remote: true, class: "btn btn-info" %>
     <%= link_to "Delete", climb_delete_path(climb), remote: true, class: "btn btn-danger" %>
   </td>

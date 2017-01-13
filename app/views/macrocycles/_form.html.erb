@@ -1,18 +1,24 @@
 <%= form_for(@macrocycle) do |f| %>
-  <div class="row large_margin_top">
-    <div class="col-sm-6">
-      <%= f.text_field :label, {placeholder: "Name", class: "form-control margin_right margin_bottom", style: "display: inline-block; width: auto; vertical-align: middle;"} %>
-      <input type="submit" class="btn btn-primary margin_bottom" value="Save Template">
+  <% unless defined?(workout_links) && workout_links.present? %>
+    <div class="row large_margin_top">
+      <div class="col-sm-6">
+        <%= f.text_field :label, {placeholder: "Name", class: "form-control margin_right margin_bottom", style: (defined?(disable_fields) && disable_fields.present?) ? "" : "display: inline-block; width: auto; vertical-align: middle;", disabled: (defined?(disable_fields) && disable_fields.present?)} %>
+        <% unless defined?(disable_fields) && disable_fields.present? %>
+          <input type="submit" class="btn btn-primary margin_bottom" value="Save Template">
+        <% end %>
+      </div>
+      <div class="col-sm-6">
+        <% unless defined?(disable_fields) && disable_fields.present? %>
+          <%= select_month(Date.today, {field_name: "month", prefix: "start_date"}, {class: "form-control margin_bottom", style: "display: inline-block; width: auto; vertical-align: middle;"}) %>
+          <%= select_day(Date.today, {field_name: "day", prefix: "start_date"}, {class: "form-control margin_bottom", style: "display: inline-block; width: auto; vertical-align: middle;"}) %>
+          <%= select_year(Date.today, {field_name: "year", prefix: "start_date"}, {class: "form-control margin_bottom", style: "display: inline-block; width: auto; vertical-align: middle;"}) %>
+          <input type="submit" name="add_events" class="btn btn-success margin_bottom" value="Save and Add to Schedule">
+        <% end %>
+      </div>
     </div>
-    <div class="col-sm-6">
-      <%= select_month(Date.today, {field_name: "month", prefix: "start_date"}, {class: "form-control margin_bottom", style: "display: inline-block; width: auto; vertical-align: middle;"}) %>
-      <%= select_day(Date.today, {field_name: "day", prefix: "start_date"}, {class: "form-control margin_bottom", style: "display: inline-block; width: auto; vertical-align: middle;"}) %>
-      <%= select_year(Date.today, {field_name: "year", prefix: "start_date"}, {class: "form-control margin_bottom", style: "display: inline-block; width: auto; vertical-align: middle;"}) %>
-      <input type="submit" name="add_events" class="btn btn-success margin_bottom" value="Save and Add to Schedule">
-    </div>
+  <% end %>
 
-  </div>
-  <div class="col-xs-12 calendar droppable margin_bottom" id="macrocycle_form_workouts">
+  <div class="col-xs-12 calendar droppable margin_bottom" <% unless defined?(disable_fields) && disable_fields.present? %> id="macrocycle_form_workouts"<% end %>>
     <div class="row calendar_days_header hidden-xs">
       <div class="col-sm-1 calendar_day">
         <h5>Day 1</h5>
@@ -45,14 +51,22 @@
             <% if @macrocycle.workouts_by_day[(week-1)*7 + day].present? %>
               <% @macrocycle.workouts_by_day[(week-1)*7 + day].each do |macrocycle_workout| %>
                 <div class="planner_workout alert<%= macrocycle_workout.workout.alert_class %>" data-workout-id="<%= macrocycle_workout.workout.id %>" data-macrocycle-workout-id="<%= macrocycle_workout.id %>" data-event-id=0>
-                  <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <%= macrocycle_workout.workout.label %>
+                  <% unless defined?(disable_fields) && disable_fields.present? %>
+                    <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <% end %>
+                  <% if defined?(workout_links) && workout_links.present? %>
+                    <%= link_to macrocycle_workout.workout.label, workout_path(macrocycle_workout.workout), remote: true %>
+                  <% else %>
+                    <%= macrocycle_workout.workout.label %>
+                  <% end %>
                 </div>
               <% end %>
             <% end %>
-            <%= hidden_field_tag "weeks[#{week}]days[#{day}]workout_ids", '', class: "workout_ids" %>
-            <%= hidden_field_tag "weeks[#{week}]days[#{day}]macrocycle_workout_ids", '', class: "macrocycle_workout_ids" %>
-            <%= hidden_field_tag "weeks[#{week}]days[#{day}]event_ids", '', class: "workout_event_ids" %>
+            <% unless defined?(disable_fields) && disable_fields.present? %>
+              <%= hidden_field_tag "weeks[#{week}]days[#{day}]workout_ids", '', class: "workout_ids" %>
+              <%= hidden_field_tag "weeks[#{week}]days[#{day}]macrocycle_workout_ids", '', class: "macrocycle_workout_ids" %>
+              <%= hidden_field_tag "weeks[#{week}]days[#{day}]event_ids", '', class: "workout_event_ids" %>
+            <% end %>
           </div>
         <% end %>
       </div>
@@ -60,6 +74,8 @@
 
   </div>
   <div class="text-right">
-    <a href="javascript:void(0);" class="btn btn-default calendar_add_week">Add Week</a>
+    <% unless defined?(disable_fields) && disable_fields.present? %>
+      <a href="javascript:void(0);" class="btn btn-default calendar_add_week">Add Week</a>
+    <% end %>
   </div>
 <% end %>

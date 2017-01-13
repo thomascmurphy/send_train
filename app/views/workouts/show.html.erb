@@ -1,18 +1,70 @@
-<div class="row">
-  <div class="col-xs-12">
-    <h1 class="inline_block valign_middle margin_right">Update Workout</h1>
-    <p>Create a workout.</p>
+<div class="row large_margin_bottom">
+  <div class="col-xs-8">
+    <span class="voting_area voting_area_button valign_middle margin_right" data-voteable-item="Workout<%= @workout.id %>">
+      <%= render partial: "votes/voting_area", object: @workout, as: 'voteable', locals: {version: "button"} %>
+    </span>
+    <h1 class="inline_block valign_middle" style="margin-top: 10px;">
+      <%= @workout.label %><small><span class="margin_left valign_text_top label label-<%= @workout.color_class %>"><%= @workout.pretty_type %></span></small>
+    </h1>
+  </div>
+  <div class="col-xs-4 text-right">
+    <h3>User: <%= link_to @workout.user.smart_name, community_user_path(@workout.user.id) %></h3>
   </div>
 </div>
 <div class="row">
-  <div class="col-sm-9 col-xs-6">
-    <%= render "form" %>
+  <div class="col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <%= @workout.description %>
+      </div>
+    </div>
   </div>
-  <div class="col-sm-3 col-xs-6" id="my_exercises">
-    <h2>My Exercises</h2>
-    <p>(you can drag your exercises to the list and rearrange them)</p>
-    <% @exercises.each do |exercise| %>
-      <%= render partial: 'workout_exercise', locals: {exercise: exercise} %>
-    <% end %>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <h4>Metrics</h4>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Exercise</th>
+            <th>Options</th>
+            <th>Sets</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @workout.workout_exercises_ordered.each do |workout_exercise| %>
+            <tr>
+              <td>
+                <%= link_to workout_exercise.exercise.label, exercise_path(workout_exercise.exercise), remote: true %>
+              </td>
+              <td>
+                <% workout_exercise.workout_metrics.ordered_by_metric.each do |workout_metric| %>
+                  <label>
+                    <%= workout_metric.exercise_metric.label %> <%= workout_metric.exercise_metric.unit_string(true) %>
+                  </label>: <%= workout_metric.value %><br/>
+                <% end %>
+              </td>
+              <td>
+                <%= workout_exercise.reps %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
+</div>
+
+
+<%= render partial: "messages/messaging_area", object: @workout, as: 'messageable', locals: {} %>
+
+
+<!-- Modals -->
+<div class="modal fade" id="message_modal" tabindex="-1" role="dialog" aria-labelledby="messageModal">
+
+</div>
+
+<div class="modal fade" id="exercise_modal" tabindex="-1" role="dialog" aria-labelledby="exerciseModal">
+
 </div>

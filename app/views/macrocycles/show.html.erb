@@ -1,21 +1,35 @@
-<div class="row">
-  <div class="col-xs-12">
-    <h1 class="inline_block valign_middle margin_right">Update Plan Template</h1>
-    <p>Create a training cycle template that can be reused multiple times and optionally set a start date to add all the workouts directly to your schedule.</p>
+<div class="row large_margin_bottom">
+  <div class="col-xs-8">
+    <span class="voting_area voting_area_button valign_middle margin_right" data-voteable-item="Macrocycle<%= @macrocycle.id %>">
+      <%= render partial: "votes/voting_area", object: @macrocycle, as: 'voteable', locals: {version: "button"} %>
+    </span>
+    <h1 class="inline_block valign_middle" style="margin-top: 10px;">
+      <%= @macrocycle.label %>
+    </h1>
+  </div>
+  <div class="col-xs-4 text-right">
+    <h3>User: <%= link_to @macrocycle.user.smart_name, community_user_path(@macrocycle.user.id) %></h3>
   </div>
 </div>
 <div class="row">
-  <div class="col-sm-9 col-xs-6">
-    <%= render "form" %>
-  </div>
-  <div class="col-sm-3 col-xs-6" id="my_workouts">
-    <h3>My Workouts</h3>
-    <p>(you can drag your workouts to the calendar and rearrange them)</p>
-    <% @workouts.each do |workout| %>
-      <div class="planner_workout alert<%= workout.alert_class %>" data-workout-id="<%= workout.id %>" data-macrocycle-workout-id="0" data-event-id="0">
-        <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <%= workout.label %>
+  <div class="col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <%= pluralize(@macrocycle.duration_weeks, 'Week') %>
       </div>
-    <% end %>
+    </div>
   </div>
+</div>
+<%= render partial: 'form', locals: {disable_fields: true, workout_links: true} %>
+
+<%= render partial: "messages/messaging_area", object: @macrocycle, as: 'messageable', locals: {} %>
+
+
+<!-- Modals -->
+<div class="modal fade" id="message_modal" tabindex="-1" role="dialog" aria-labelledby="messageModal">
+
+</div>
+
+<div class="modal fade" id="workout_modal" tabindex="-1" role="dialog" aria-labelledby="workoutModal">
+
 </div>

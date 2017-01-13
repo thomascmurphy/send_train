@@ -10,8 +10,9 @@ TrainToSend::Application.routes.draw do
 
       resources :attempts
     end
-    get 'quick_send', to: 'climbs#quick_new'
-    post 'quick_send', to: 'climbs#quick_create'
+    get 'quick_send', to: 'climbs#quick_new', as: 'climbs_quick_send_new'
+    post 'quick_send', to: 'climbs#quick_create', as: 'climbs_quick_send_create'
+    get 'sync_mountain_project', to: 'climbs#sync_mountain_project', as: 'climbs_sync_mountain_project'
 
     resources :exercise_metrics do
       get "delete"
@@ -46,6 +47,9 @@ TrainToSend::Application.routes.draw do
 
     get 'profile', to: 'profile#show'
     get 'profile/edit', to: 'profile#edit'
+    get 'profile/start_mountain_project', to: 'profile#start_mountain_project'
+    patch 'profile/connect_mountain_project', to: 'profile#connect_mountain_project'
+    get 'profile/disconnect_mountain_project', to: 'profile#disconnect_mountain_project'
     get 'profile/progress', to: 'profile#progress'
     get 'profile/:user_id/progress', to: 'profile#progress', as: 'profile_user_progress'
     get 'profile/:user_id/schedule', to: 'profile#schedule', as: 'profile_user_schedule'
@@ -69,9 +73,25 @@ TrainToSend::Application.routes.draw do
       get "reject"
     end
 
+    get 'community', to: 'community#index'
+    get 'community/messages', to: 'community#all_messages'
+    get 'community/training', to: 'community#training'
+    get 'community/users', to: 'community#users'
+    get 'community/my_users', to: 'community#my_users'
+    get 'community/my_followers', to: 'community#my_followers'
+    get 'community/users/:user_id', to: 'community#user', as: 'community_user'
+    get 'community/users/follow/:user_id', to: 'community#user_follow', as: 'community_user_follow'
+    get 'community/users/unfollow/:user_id', to: 'community#user_unfollow', as: 'community_user_unfollow'
+
     resources :goals do
       get "delete"
     end
+
+    resources :messages do
+      get "delete"
+    end
+
+    resources :votes, only: [:new]
 
   end
 

@@ -24,7 +24,15 @@ var ready;
 ready = function() {
 
   $('body').on('click', '.disable_after_click', function(e){
-    $(this).prop("disabled", true);
+    $(this).attr("disabled", "disabled");
+  });
+
+  $('body').on('click', '.spin_after_click', function(e){
+    $(this).find('.glyphicon').addClass('spinning');
+  });
+
+  $('.disable_after_click_remote').on("ajax:success", function(){
+      $(this).attr("disabled", "disabled");
   });
 
   $('body').on('change, input', '.slider_container input[type="range"]', function(){
@@ -72,6 +80,8 @@ ready = function() {
       $(this).remove();
     });
   });
+
+  $('[data-toggle="tooltip"]').tooltip();
 
 }
 

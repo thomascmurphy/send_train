@@ -1,0 +1,65 @@
+<div class="row large_margin_bottom">
+  <div class="col-xs-8">
+    <span class="voting_area voting_area_button valign_middle margin_right" data-voteable-item="Exercise<%= @exercise.id %>">
+      <%= render partial: "votes/voting_area", object: @exercise, as: 'voteable', locals: {version: "button"} %>
+    </span>
+    <h1 class="inline_block valign_middle" style="margin-top: 10px;">
+      <%= @exercise.label %> <small><span class="margin_left valign_text_top label label-<%= @exercise.color_class %>"><%= @exercise.pretty_type %></span></small>
+    </h1>
+  </div>
+  <div class="col-xs-4 text-right">
+    <h3>User: <%= link_to @exercise.user.smart_name, community_user_path(@exercise.user.id) %></h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <%= @exercise.description %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <h4>Metrics</h4>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Label</th>
+            <th>Metric Type</th>
+            <th>Default Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @exercise.exercise_metrics.each do |exercise_metric| %>
+            <tr>
+              <td>
+                <%= exercise_metric.label %>
+              </td>
+              <td>
+                <%= exercise_metric.exercise_metric_type.label %>
+                <% if exercise_metric.exercise_metric_options.present? %>
+                  <br/><span class="text-muted">(<%= exercise_metric.exercise_metric_options.order(:order_in_metric).map{|x| x.label}.join(", ") %>)</span>
+                <% end %>
+              </td>
+              <td>
+                <%= exercise_metric.default_value %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<%= render partial: "messages/messaging_area", object: @exercise, as: 'messageable', locals: {} %>
+
+
+<!-- Modal -->
+<div class="modal fade" id="message_modal" tabindex="-1" role="dialog" aria-labelledby="messageModal">
+
+</div>

@@ -15,10 +15,12 @@ class MacrocyclesController < ApplicationController
   end
 
   def show
-    @macrocycle = current_user.macrocycles.find_by_id(params[:id])
+    @macrocycle = Macrocycle.find_by_id(params[:id])
+    if @macrocycle.user.allow_profile_view.blank?
+      @macrocycle = nil
+    end
     if @macrocycle.present?
       @workouts = current_user.workouts
-      @wide_content = true
       respond_to do |format|
         format.html
         format.js
@@ -150,8 +152,8 @@ class MacrocyclesController < ApplicationController
 
   def duplicate
     @macrocycles = current_user.macrocycles.order(created_at: :desc)
-    original_macrocycle = current_user.macrocycles.find_by_id(params[:macrocycle_id])
-    if original_macrocycle.present?
+    original_macrocycle = Macrocycle.find_by_id(params[:macrocycle_id])
+    if original_macrocycle.present? && original_macrocycle.user.allow_profile_view.present?
       @macrocycle = original_macrocycle.duplicate(current_user)
     end
     respond_to do |format|
@@ -189,7 +191,6 @@ class MacrocyclesController < ApplicationController
       format.json
     end
   end
-
 
   private
 

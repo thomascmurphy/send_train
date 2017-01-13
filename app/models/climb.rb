@@ -74,7 +74,8 @@ class Climb < ActiveRecord::Base
   end
 
   def self.climbing_grade_conversion_western
-    conversion = {1 => {"boulder": "VB-", "sport": "5.5", "trad": "5.5"},
+    conversion = {0 => {"boulder": "VB-", "sport": "5.4", "trad": "5.4"},
+                  1 => {"boulder": "VB-", "sport": "5.5", "trad": "5.5"},
                   5 => {"boulder": "VB-", "sport": "5.6", "trad": "5.6"},
                   10 => {"boulder": "VB", "sport": "5.7", "trad": "5.7"},
                   15 => {"boulder": "V0", "sport": "5.8", "trad": "5.8"},
@@ -107,7 +108,8 @@ class Climb < ActiveRecord::Base
   end
 
   def self.climbing_grade_conversion_european
-    conversion = {1 => {"boulder": "Font 1", "sport": "4b", "trad": "4b"},
+    conversion = {0 => {"boulder": "Font 0", "sport": "4a", "trad": "4a"},
+                  1 => {"boulder": "Font 1", "sport": "4b", "trad": "4b"},
                   5 => {"boulder": "Font 2", "sport": "4c", "trad": "4c"},
                   10 => {"boulder": "Font 3", "sport": "5a", "trad": "5a"},
                   15 => {"boulder": "Font 4", "sport": "5b", "trad": "5b"},
@@ -172,6 +174,51 @@ class Climb < ActiveRecord::Base
 
     useful_conversions = grade_conversion.select{|key,value| useful_grades.include? key}
     return useful_conversions.map{ |key, value| [value[:sport], key] }
+  end
+
+  def self.convert_split_grade(grade)
+    if grade.include?("-") && grade.index("-") != grade.length - 1
+      grades = grade.split("-")
+      grade = grades[0][0] + grades[1] + "-"
+    elsif grade.include?("/")
+      grades = grade.split("/")
+      grade = grades[0]
+    end
+    grade
+  end
+
+  def self.grade_from_string(string, type)
+    grades = climbing_grade_conversion_western.with_indifferent_access
+    grade = grades.select{|key, hash| key if hash[type].downcase == convert_split_grade(string).downcase}
+    grade = grade.present? ? grade.keys.first : 0
+  end
+
+  def self.clean_mountain_project_type(string)
+    types = string.downcase
+    if types.include?("boulder")
+      type = "boulder"
+    elsif types.include?("sport")
+      type = "sport"
+    elsif types.include?("trad")
+      type = "trad"
+    else
+      type = "sport"
+    end
+    type
+  end
+
+  def self.location_from_mountain_project(locations)
+    location = "#{locations[1]} > #{locations[-1]}"
+  end
+
+  def from_mountain_project(params)
+    climb_type = Climb.clean_mountain_project_type(params["type"])
+    self.name = params["name"]
+    self.grade = Climb.grade_from_string(params["rating"], climb_type)
+    self.climb_type = climb_type
+    self.location = Climb.location_from_mountain_project(params["location"])
+    self.mountain_project_url = params["url"]
+    self
   end
 
 end

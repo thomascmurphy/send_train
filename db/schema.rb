@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160920153558) do
+ActiveRecord::Schema.define(version: 20170112164521) do
 
   create_table "attempts", force: :cascade do |t|
     t.datetime "date"
@@ -33,20 +33,23 @@ ActiveRecord::Schema.define(version: 20160920153558) do
     t.string   "name"
     t.integer  "length"
     t.string   "length_unit"
-    t.boolean  "outdoor",     default: true
-    t.boolean  "crimpy",      default: false
-    t.boolean  "slopey",      default: false
-    t.boolean  "pinchy",      default: false
-    t.boolean  "pockety",     default: false
-    t.boolean  "powerful",    default: false
-    t.boolean  "dynamic",     default: false
-    t.boolean  "endurance",   default: false
-    t.boolean  "technical",   default: false
+    t.boolean  "outdoor",              default: true
+    t.boolean  "crimpy",               default: false
+    t.boolean  "slopey",               default: false
+    t.boolean  "pinchy",               default: false
+    t.boolean  "pockety",              default: false
+    t.boolean  "powerful",             default: false
+    t.boolean  "dynamic",              default: false
+    t.boolean  "endurance",            default: false
+    t.boolean  "technical",            default: false
     t.text     "notes"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+    t.integer  "mountain_project_id"
+    t.text     "mountain_project_url"
   end
 
+  add_index "climbs", ["mountain_project_id"], name: "index_climbs_on_mountain_project_id"
   add_index "climbs", ["user_id"], name: "index_climbs_on_user_id"
 
   create_table "events", force: :cascade do |t|
@@ -211,6 +214,23 @@ ActiveRecord::Schema.define(version: 20160920153558) do
   add_index "mesocycles_microcycles", ["mesocycle_id"], name: "index_mesocycles_microcycles_on_mesocycle_id"
   add_index "mesocycles_microcycles", ["microcycle_id"], name: "index_mesocycles_microcycles_on_microcycle_id"
 
+  create_table "messages", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "parent_message_id"
+    t.text     "body"
+    t.string   "title"
+    t.integer  "messageable_id"
+    t.string   "messageable_type"
+    t.boolean  "read",              default: false
+    t.integer  "views",             default: 0
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+  end
+
+  add_index "messages", ["messageable_type", "messageable_id"], name: "index_messages_on_messageable_type_and_messageable_id"
+  add_index "messages", ["parent_message_id"], name: "index_messages_on_parent_message_id"
+  add_index "messages", ["user_id"], name: "index_messages_on_user_id"
+
   create_table "microcycles", force: :cascade do |t|
     t.string   "label"
     t.string   "microcycle_type"
@@ -241,19 +261,28 @@ ActiveRecord::Schema.define(version: 20160920153558) do
   add_index "user_coaches", ["coach_id"], name: "index_user_coaches_on_coach_id"
   add_index "user_coaches", ["user_id"], name: "index_user_coaches_on_user_id"
 
+  create_table "user_followers", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "follower_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "user_followers", ["user_id"], name: "index_user_followers_on_user_id"
+
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "",   null: false
-    t.string   "encrypted_password",     default: "",   null: false
+    t.string   "email",                    default: "",        null: false
+    t.string   "encrypted_password",       default: "",        null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,    null: false
+    t.integer  "sign_in_count",            default: 0,         null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
     t.date     "birthdate"
     t.string   "gender"
     t.integer  "weight"
@@ -262,17 +291,34 @@ ActiveRecord::Schema.define(version: 20160920153558) do
     t.string   "last_name"
     t.string   "postcode"
     t.boolean  "is_admin"
-    t.string   "default_weight_unit",    default: "lb"
-    t.string   "default_length_unit",    default: "ft"
+    t.string   "default_weight_unit",      default: "lb"
+    t.string   "default_length_unit",      default: "ft"
     t.string   "gym_name"
     t.datetime "climbing_start_date"
-    t.string   "grade_format"
-    t.integer  "onboarding_step",        default: 0
-    t.boolean  "accept_shares",          default: true
+    t.string   "grade_format",             default: "western"
+    t.integer  "onboarding_step",          default: 0
+    t.boolean  "accept_shares",            default: true
+    t.boolean  "allow_profile_view",       default: true
+    t.boolean  "allow_followers",          default: true
+    t.string   "handle"
+    t.integer  "mountain_project_user_id"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
+  add_index "users", ["handle"], name: "index_users_on_handle", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+
+  create_table "votes", force: :cascade do |t|
+    t.integer  "value"
+    t.integer  "user_id"
+    t.integer  "voteable_id"
+    t.string   "voteable_type"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "votes", ["user_id"], name: "index_votes_on_user_id"
+  add_index "votes", ["voteable_type", "voteable_id"], name: "index_votes_on_voteable_type_and_voteable_id"
 
   create_table "workout_exercises", force: :cascade do |t|
     t.integer "workout_id"

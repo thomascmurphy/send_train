@@ -11,7 +11,12 @@ class User < ActiveRecord::Base
   has_many :exercise_performances, dependent: :destroy
   has_many :coaches, class_name: 'UserCoach', foreign_key: 'user_id', dependent: :destroy
   has_many :students, class_name: 'UserCoach', foreign_key: 'coach_id', dependent: :destroy
+  has_many :followers, class_name: 'UserFollower', foreign_key: 'user_id', dependent: :destroy
+  has_many :following, class_name: 'UserFollower', foreign_key: 'follower_id', dependent: :destroy
   has_many :goals
+  has_many :sent_messages, class_name: 'Message', foreign_key: 'user_id', dependent: :destroy
+  has_many :votes
+  has_many :messages, as: :messageable
   after_create :seed_exercises
 
   # Include default devise modules. Others available are:
@@ -246,53 +251,83 @@ class User < ActiveRecord::Base
     when 5
       "You can also track your climbing progress so that we can try to determine the effectiveness of each workout that you do."
     when 6
-      "Remember why you train: record your goals, break them down into subgoals, and tick them off as you progress."
+      "We have Mountain Project integration so you can just import and sync all of your climbs easily."
     when 7
+      "Remember why you train: record your goals, break them down into subgoals, and tick them off as you progress."
+    when 8
       "Thanks so much for taking the tour! I hope this is a helpful tool for everyone."
     else
       nil
     end
   end
 
-  def climb_score_at_date(end_date, type="all")
-    climb_ids = self.attempts.where("completion = 100 AND date < ?", end_date).map(&:climb_id)
+  def climb_score_at_date(end_date)
+    climb_ids = self.attempts.where("completion = 100 AND date <= ?", end_date).map(&:climb_id)
     climbs = self.climbs.where(id: climb_ids)
-    if type != "all"
-      climbs = climbs.where(climb_type: type)
-    end
+    boulders = climbs.where(climb_type: "boulder")
+    ropes = climbs.where(climb_type: ["sport", "trad"])
     best_climbs = climbs.order(grade: :desc).first(10)
     if best_climbs.size > 0
       climb_score = best_climbs.map(&:grade).inject(0){|sum,x| sum + x }.to_f / best_climbs.size
     else
       climb_score = 0
     end
-    return climb_score
+
+    best_boulders = boulders.order(grade: :desc).first(10)
+    if best_boulders.size > 0
+      boulder_score = best_boulders.map(&:grade).inject(0){|sum,x| sum + x }.to_f / best_boulders.size
+    else
+      boulder_score = nil
+    end
+
+    best_ropes = ropes.order(grade: :desc).first(10)
+    if best_ropes.size > 0
+      rope_score = best_ropes.map(&:grade).inject(0){|sum,x| sum + x }.to_f / best_ropes.size
+    else
+      rope_score = nil
+    end
+
+    return {all: climb_score, boulder: boulder_score, sport: rope_score}
   end
 
   def climb_score_difference_at_dates(end_date_1, end_date_2, type="all")
-    first_score = self.climb_score_at_date(end_date_1, type)
-    second_score = self.climb_score_at_date(end_date_2, type)
+    first_score = self.climb_score_at_date(end_date_1).with_indifferent_access[type]
+    second_score = self.climb_score_at_date(end_date_2).with_indifferent_access[type]
     return first_score - second_score
   end
 
-  def climb_score_for_period(start_date, end_date, type="all")
-    climb_ids = self.attempts.where("completion = 100 AND date > ? AND date < ?", start_date, end_date).map(&:climb_id)
+  def climb_score_for_period(start_date, end_date)
+    climb_ids = self.attempts.where("completion = 100 AND date >= ? AND date <= ?", start_date, end_date).map(&:climb_id)
     climbs = self.climbs.where(id: climb_ids)
-    if type != "all"
-      climbs = climbs.where(climb_type: type)
-    end
+    boulders = climbs.where(climb_type: "boulder")
+    ropes = climbs.where(climb_type: ["sport", "trad"])
     best_climbs = climbs.order(grade: :desc).first(10)
     if best_climbs.size > 0
       climb_score = best_climbs.map(&:grade).inject(0){|sum,x| sum + x }.to_f / best_climbs.size
     else
       climb_score = 0
     end
-    return climb_score
+
+    best_boulders = boulders.order(grade: :desc).first(10)
+    if best_boulders.size > 0
+      boulder_score = best_boulders.map(&:grade).inject(0){|sum,x| sum + x }.to_f / best_boulders.size
+    else
+      boulder_score = nil
+    end
+
+    best_ropes = ropes.order(grade: :desc).first(10)
+    if best_ropes.size > 0
+      rope_score = best_ropes.map(&:grade).inject(0){|sum,x| sum + x }.to_f / best_ropes.size
+    else
+      rope_score = nil
+    end
+
+    return {all: climb_score, boulder: boulder_score, sport: rope_score}
   end
 
   def climb_score_difference_for_periods(start_date_1, end_date_1, start_date_2, end_date_2, type="all")
-    first_score = self.climb_score_for_period(start_date_1, end_date_1, type)
-    second_score = self.climb_score_for_period(start_date_2, end_date_2, type)
+    first_score = self.climb_score_for_period(start_date_1, end_date_1).with_indifferent_access[type]
+    second_score = self.climb_score_for_period(start_date_2, end_date_2).with_indifferent_access[type]
     return first_score - second_score
   end
 
@@ -300,10 +335,20 @@ class User < ActiveRecord::Base
     graph_data = []
     dates.each do |date|
       name_string = "#{date.strftime('%b %d, %Y')}"
-      score = self.climb_score_at_date(date)
+      scores = self.climb_score_at_date(date.end_of_day)
+      if scores[:boulder].present? && scores[:sport].present?
+        grade_string = "#{Climb.convert_score_to_grades(scores[:boulder], self.grade_format, 'boulder')} / #{Climb.convert_score_to_grades(scores[:sport], self.grade_format, 'sport')}"
+      elsif scores[:boulder].present?
+        grade_string = Climb.convert_score_to_grades(scores[:boulder], self.grade_format, 'boulder')
+      elsif scores[:sport].present?
+        grade_string = Climb.convert_score_to_grades(scores[:sport], self.grade_format, 'sport')
+      else
+        grade_string = Climb.convert_score_to_grades(scores[:all], self.grade_format)
+      end
+      grade_strings =
       graph_data << {'name': name_string,
-                     'value': score,
-                     'tooltip_value': Climb.convert_score_to_grades(score, self.grade_format)}
+                     'value': scores[:all],
+                     'tooltip_value': grade_string}
     end
     return graph_data
   end
@@ -368,12 +413,231 @@ class User < ActiveRecord::Base
     return user_weight + agnostic_weight
   end
 
-  def smart_name
-    if self.first_name.present? || self.last_name.present?
+  def smart_name(display_email=false)
+    if self.handle.present?
+      return self.handle
+    elsif self.first_name.present? || self.last_name.present?
       return "#{self.first_name} #{self.last_name}"
-    else
+    elsif display_email.present?
       return self.email
+    else
+      return "User #{self.id}"
     end
+  end
+
+  def my_users(allow_profile_view=true)
+    user_ids = UserFollower.where(follower_id: self.id).pluck(:user_id)
+    if user_ids.present?
+      users = User.where(id: user_ids)
+      if allow_profile_view.present?
+        users = users.where(allow_profile_view: true)
+      end
+    else
+      users = nil
+    end
+    users
+  end
+
+  def my_followers(allow_profile_view=true)
+    user_ids = UserFollower.where(user_id: self.id).pluck(:follower_id)
+    if user_ids.present?
+      users = User.where(id: user_ids)
+      if allow_profile_view.present?
+        users = users.where(allow_profile_view: true)
+      end
+    else
+      users = nil
+    end
+    users
+  end
+
+  def is_following(user_id)
+    user_id.present? && self.following.where(user_id: user_id).present?
+  end
+
+  def follower_count
+    UserFollower.where(user_id: self.id).count
+  end
+
+  def workout_count
+    self.workouts.count
+  end
+
+  def parent_goals
+    self.goals.where(parent_goal_id: nil)
+  end
+
+  def dashboard_activity
+    activity = []
+
+    my_user_ids = self.my_users.present? ? self.my_users.map{|x| x.id} : []
+    my_exercise_ids = self.exercises.pluck(:id)
+    my_workout_ids = self.workouts.pluck(:id)
+    my_macrocycle_ids = self.macrocycles.pluck(:id)
+    my_goal_ids = self.goals.pluck(:id)
+
+    followed_user_exercise_activity = Exercise.where(user_id: my_user_ids, created_at: DateTime.now-7.days..DateTime.now.end_of_day)
+    followed_user_workout_activity = Workout.where(user_id: my_user_ids, created_at: DateTime.now-7.days..DateTime.now.end_of_day)
+    followed_user_macrocycle_activity = Macrocycle.where(user_id: my_user_ids, created_at: DateTime.now-7.days..DateTime.now.end_of_day)
+
+    voted_climb_ids = self.votes.where(voteable_type: "Attempt").pluck(:voteable_id)
+    #dunno if I want to keep these here
+    voted_climb_ids = []
+    my_user_climb_ids = Climb.where(user_id: my_user_ids).pluck(:id)
+    user_new_climbs = Attempt.where(completion: 100, climb_id: my_user_climb_ids, date: DateTime.now-7.days..DateTime.now.end_of_day).where.not(id: voted_climb_ids)
+
+    user_achieved_goals = Goal.where(completed: true, updated_at: DateTime.now-7.days..DateTime.now.end_of_day, user_id: my_user_ids)
+
+    follower_activity = UserFollower.where(user_id: self.id, created_at: DateTime.now-7.days..DateTime.now.end_of_day)
+
+    my_daily_events = self.events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).where.not(workout_id: nil, completed: true).order(start_date: :asc)
+    daily_event_count = my_daily_events.count
+
+    my_message_ids = self.sent_messages.pluck(:id)
+    replies = Message.where(parent_message_id: my_message_ids).where(read: false)
+    direct_messages = self.messages.where(parent_message_id: nil, read: false)
+    new_message_count = replies.length + direct_messages.length
+
+    new_exercise_votes = Vote.where.not(user_id: self.id).where(voteable_type: "Exercise", voteable_id: my_exercise_ids, updated_at: DateTime.now-7.days..DateTime.now.end_of_day, value: 1).group(:voteable_id).count.sort_by { |id, votes| votes }.reverse.to_h
+    new_workout_votes = Vote.where.not(user_id: self.id).where(voteable_type: "Workout", voteable_id: my_workout_ids, updated_at: DateTime.now-7.days..DateTime.now.end_of_day, value: 1).group(:voteable_id).count.sort_by { |id, votes| votes }.reverse.to_h
+    new_macrocycle_votes = Vote.where.not(user_id: self.id).where(voteable_type: "Macrocycle", voteable_id: my_macrocycle_ids, updated_at: DateTime.now-7.days..DateTime.now.end_of_day, value: 1).group(:voteable_id).count.sort_by { |id, votes| votes }.reverse.to_h
+    new_goal_votes = Vote.where.not(user_id: self.id).where(voteable_type: "Goal", voteable_id: my_goal_ids, updated_at: DateTime.now-7.days..DateTime.now.end_of_day, value: 1).group(:voteable_id).count.sort_by { |id, votes| votes }.reverse.to_h
+
+
+
+
+    followed_user_exercise_activity.each do |exercise|
+      activity << {label: "New Exercise",
+                   description: "#{exercise.user.smart_name} added a new exercise.",
+                   item: exercise,
+                   date: exercise.created_at}
+    end
+
+    followed_user_workout_activity.each do |workout|
+      activity << {label: "New Workout",
+                   description: "#{workout.user.smart_name} added a new workout.",
+                   item: workout,
+                   date: workout.created_at}
+    end
+
+    followed_user_macrocycle_activity.each do |macrocycle|
+      activity << {label: "New Plan Template",
+                   description: "#{macrocycle.user.smart_name} added a new plan template.",
+                   item: macrocycle,
+                   date: macrocycle.created_at}
+    end
+
+    user_new_climbs.each do |attempt|
+      activity << {label: "Sendage!",
+                   description: "#{attempt.climb.user.smart_name} has sent #{attempt.climb.name}.",
+                   item: attempt,
+                   date: attempt.created_at,
+                   custom_link: "/community/users/#{attempt.climb.user.id}"}
+    end
+
+    user_achieved_goals.each do |goal|
+      activity << {label: "Goal Achieved!",
+                   description: "#{goal.user.smart_name} has completed their goal: \"#{goal.label}\".",
+                   item: goal,
+                   date: goal.updated_at,
+                   custom_link: "/community/users/#{goal.user.id}"}
+    end
+
+    follower_activity.each do |user_follower|
+      activity << {label: "New Follower",
+                   description: "#{user_follower.follower.smart_name} is now following you.",
+                   item: nil,
+                   date: user_follower.created_at,
+                   disable_votes: true,
+                   custom_link: "/community/users/#{user_follower.follower.id}"}
+    end
+
+    activity = activity.sort_by{|x| x[:date]}.reverse
+
+    if new_exercise_votes.present? || new_workout_votes.present? || new_macrocycle_votes.present? || new_goal_votes.present?
+      combined_votes = new_exercise_votes.map{|id, votes| {type: "Exercise", id: id, votes: votes}} +
+                       new_workout_votes.map{|id, votes| {type: "Workout", id: id, votes: votes}} +
+                       new_macrocycle_votes.map{|id, votes| {type: "Macrocycle", id: id, votes: votes}} +
+                       new_goal_votes.map{|id, votes| {type: "Goal", id: id, votes: votes}}
+      top_voted = combined_votes.sort_by{|x| x[:votes]}.reverse[0..4]
+      description = "You have gotten some praise in the last week:<ul>"
+      top_voted.each_with_index do |voted_item, index|
+        item_klass = Object.const_get voted_item[:type]
+        item = item_klass.find(voted_item[:id])
+        description << "<li>#{item.label}: #{ActionController::Base.helpers.pluralize(voted_item[:votes], 'like')}"
+      end
+      description << "</ul>"
+      activity.unshift({label: "New Praise",
+                        description: description,
+                        item: nil,
+                        date: DateTime.now})
+    end
+
+    if new_message_count > 0
+      activity.unshift({label: "New Messages",
+                        description: "You have #{ActionController::Base.helpers.pluralize(new_message_count, 'new message')}",
+                        item: nil,
+                        date: DateTime.now,
+                        custom_link: "/community"})
+    end
+
+    if my_daily_events.present?
+      activity.unshift({label: "Today's Workouts",
+                        description: "You have #{ActionController::Base.helpers.pluralize(daily_event_count, 'workout')} on the schedule today.",
+                        item: nil,
+                        date: DateTime.now,
+                        custom_link: "/events"})
+    end
+
+    activity[0..11]
+
+  end
+
+  def create_mountain_project_integration(login)
+    require 'mountain_project/request'
+    mountain_project = MountainProject::Request.new
+    if login.present?
+      user = mountain_project.get_user_by_email(login)
+      user_id = user["id"].to_i if user["id"].present?
+      if user_id.present?
+        self.mountain_project_user_id = user_id
+        self.handle = user["name"] if self.handle.blank?
+        self.save
+        return user_id
+      end
+    end
+    return false
+  end
+
+  def sync_mountain_project_climbs
+    require 'mountain_project/request'
+    mountain_project = MountainProject::Request.new
+    if self.mountain_project_user_id.present?
+      ticks = mountain_project.get_ticks(self.mountain_project_user_id)
+      if ticks["ticks"].present?
+        climb_ids = ticks["ticks"].map{|x| x["routeId"]}
+        if climb_ids.present?
+          climbs = mountain_project.get_routes(climb_ids)
+          if climbs["routes"].present?
+            climbs["routes"].each do |route|
+              climb = Climb.find_or_initialize_by(mountain_project_id: route["id"].to_i, user_id: self.id)
+              if climb.new_record?
+                climb = climb.from_mountain_project(route)
+                climb.save
+              end
+              tick = ticks["ticks"].select{|x| x["routeId"] == route["id"].to_i}.first
+              attempt = Attempt.find_or_initialize_by(climb_id: climb.id, date: DateTime.strptime(tick["date"], "%Y-%m-%d"))
+              if attempt.new_record?
+                attempt = attempt.from_mountain_project(tick)
+                attempt.save
+              end
+            end
+            return true
+          end
+        end
+      end
+    end
+    return false
   end
 
 end

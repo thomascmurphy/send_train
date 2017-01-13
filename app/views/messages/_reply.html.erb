@@ -1,0 +1,23 @@
+<% @primary_message_id = defined?(@primary_message) ? @primary_message.id : nil %>
+<div class="message_reply">
+  <%= link_to reply.user.smart_name, community_user_path(reply.user.id) %>&nbsp;&nbsp;
+  <span class="voting_area voting_area_inline" data-voteable-item="Message<%= reply.id %>">
+    <%= render partial: "votes/voting_area", object: reply, as: 'voteable', locals: {version: "inline"} %>
+  </span>&nbsp;&nbsp;
+  <span class="time_ago"><%= time_ago_in_words(reply.created_at) %> ago</span></br>
+
+  <div class="message_body">
+    <%= reply.body %>
+  </div>
+  <div class="message_actions">
+    <%= link_to raw("<strong><span class='glyphicon glyphicon-share-alt'></span> reply</strong>"), new_message_path(parent_message_id: reply.id, primary_message_id: @primary_message_id), remote: true, class: "" %>
+  </div>
+
+  <% if reply.replies.present? %>
+    <div class="message_replies">
+      <% reply.replies_ordered.each do |sub_reply| %>
+        <%= render partial: 'messages/reply', object: sub_reply, locals: {indent: 1} %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

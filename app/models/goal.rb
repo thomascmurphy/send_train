@@ -2,6 +2,13 @@ class Goal < ActiveRecord::Base
   belongs_to :user
   belongs_to :parent_goal, class_name: 'Goal', foreign_key: 'parent_goal_id'
   has_many :sub_goals, class_name: 'Goal', foreign_key: 'parent_goal_id', dependent: :destroy
+  has_many :votes, as: :voteable
+  has_many :messages, as: :messageable
+  after_create :auto_upvote
+
+  def auto_upvote
+    Vote.item_auto_upvote(self)
+  end
 
   def panel_class
     if self.completed.present?

@@ -34,11 +34,11 @@ class ProfileController < ApplicationController
 
     respond_to do |format|
       if @user.update_attributes(profile_params)
-        format.html { redirect_to profile_path, notice: 'Profile was successfully updated.' }
+        format.html { redirect_to root_path, notice: 'Profile was successfully updated.' }
         format.js
         format.json { render json: @user, status: :ok, location: @user }
       else
-        format.html { render action: "new" }
+        format.html { render action: "edit", notice: 'Something\'s wrong.' }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
@@ -95,10 +95,12 @@ class ProfileController < ApplicationController
     end
     if @show_climbs.present? && @user.should_show_climb_data?
       if dates.present?
-        @climb_data = @user.climb_graph_data_for_dates(dates.uniq).to_json
+        climb_graph_data = @user.climb_graph_data_for_dates(dates.uniq)
       else
-        @climb_data = @user.climb_graph_data.to_json
+        climb_graph_data = @user.climb_graph_data
       end
+      @climb_data = {'title': 'Climb Progress', 'values': climb_graph_data}.to_json
+      table_progress.unshift({title: "Climb Progress", values: climb_graph_data.map{|x| [x[:name], x[:tooltip_value]]}.to_h}) if climb_graph_data.present? && table_progress.present?
     end
     respond_to do |format|
       format.html {
@@ -132,12 +134,52 @@ class ProfileController < ApplicationController
     @past_events = @events.where("end_date < ?", DateTime.now.beginning_of_day).order(start_date: :desc)
   end
 
+  def start_mountain_project
+    @user = current_user
+    respond_to do |format|
+      format.html
+      format.js
+      format.json
+    end
+  end
+
+  def connect_mountain_project
+    @user = current_user
+    respond_to do |format|
+      if @user.create_mountain_project_integration(params[:login])
+        format.html { redirect_to profile_edit_path, notice: 'Mountain Project connection successful!' }
+        format.js
+        format.json { render json: @user, status: :ok, location: @user }
+      else
+        @user.errors.add(:base, "We couldn't connect a Mountain Project account with that username/email.")
+        format.html { redirect_to profile_edit_path, notice: 'Something\'s wrong.' }
+        format.js
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def disconnect_mountain_project
+    @user = current_user
+    respond_to do |format|
+      if @user.update_attributes(mountain_project_user_id: nil)
+        format.html { redirect_to profile_edit_path, notice: 'Disconnection successful!' }
+        format.js
+        format.json { render json: @user, status: :ok, location: @user }
+      else
+        format.html { redirect_to profile_edit_path, notice: 'Something\'s wrong.' }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
 
   def profile_params
     params.require(:user).permit(:first_name, :last_name, :grade_format,
                                  :birthdate, :climbing_start_date, :default_length_unit,
                                  :default_weight_unit, :gym_name, :accept_shares,
+                                 :handle, :allow_profile_view, :allow_followers,
                                  :weight, :weight_unit)
   end
 
