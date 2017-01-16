@@ -1,0 +1,40 @@
+<%= form_for(@event, remote: true) do |f| %>
+  <%= hidden_field_tag "user_id", @user_id %>
+  <%= f.hidden_field :completed %>
+  <div class="modal-body">
+    <ul class="errors"></ul>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <%= f.label "Date" %><br>
+          <%= select_month(@event.start_date.month, {field_name: "month", prefix: "start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+          <%= select_day(@event.start_date.day, {field_name: "day", prefix: "start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+          <%= select_year(@event.start_date.year, {field_name: "year", prefix: "start_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+        </div>
+      </div>
+      <% if @event.id.present? %>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <% if @event.workout_id.present? %>
+              <%= f.label :completed %><br>
+              <%= f.check_box :completed %>
+            <% else %>
+              <%= f.label :end_date %><br>
+              <%= select_month(@event.end_date.month, {field_name: "month", prefix: "end_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+              <%= select_day(@event.end_date.day, {field_name: "day", prefix: "end_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+              <%= select_year(@event.end_date.year, {field_name: "year", prefix: "end_date"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <%= render 'form_exercises' %>
+
+  </div>
+  <div class="modal-footer">
+    <%= link_to "Cancel", event_path(@event), method: :delete, remote: true, class: "btn btn-danger" %>
+    <input type="submit" class="btn btn-primary" value="Save">
+  </div>
+<% end %>

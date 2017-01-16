@@ -44,6 +44,9 @@ TrainToSend::Application.routes.draw do
     end
     get 'gym_session', to: 'events#gym_session_new'
     post 'gym_session', to: 'events#gym_session_create'
+    get 'self_assessment', to: 'events#self_assessment'
+    get 'self_assessment/new', to: 'events#self_assessment_new', as: 'self_assessment_new'
+    post 'self_assessment/new', to: 'events#self_assessment_save', as: 'self_assessment_save'
 
     get 'profile', to: 'profile#show'
     get 'profile/edit', to: 'profile#edit'

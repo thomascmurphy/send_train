@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170112164521) do
+ActiveRecord::Schema.define(version: 20170115160820) do
 
   create_table "attempts", force: :cascade do |t|
     t.datetime "date"
@@ -131,8 +131,9 @@ ActiveRecord::Schema.define(version: 20170112164521) do
     t.text     "description"
     t.integer  "user_id"
     t.integer  "reference_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.boolean  "private",       default: false
   end
 
   add_index "exercises", ["user_id"], name: "index_exercises_on_user_id"
@@ -146,6 +147,7 @@ ActiveRecord::Schema.define(version: 20170112164521) do
     t.boolean  "completed",      default: false
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
+    t.boolean  "private",        default: false
   end
 
   add_index "goals", ["parent_goal_id"], name: "index_goals_on_parent_goal_id"
@@ -181,8 +183,9 @@ ActiveRecord::Schema.define(version: 20170112164521) do
     t.string   "macrocycle_type"
     t.integer  "user_id"
     t.integer  "reference_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.boolean  "private",         default: false
   end
 
   add_index "macrocycles", ["user_id"], name: "index_macrocycles_on_user_id"
@@ -325,6 +328,7 @@ ActiveRecord::Schema.define(version: 20170112164521) do
     t.integer "exercise_id"
     t.integer "order_in_workout"
     t.integer "reps"
+    t.string  "label"
   end
 
   add_index "workout_exercises", ["exercise_id"], name: "index_workout_exercises_on_exercise_id"
@@ -345,8 +349,9 @@ ActiveRecord::Schema.define(version: 20170112164521) do
     t.integer  "user_id"
     t.text     "description"
     t.integer  "reference_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.boolean  "private",      default: false
   end
 
   add_index "workouts", ["user_id"], name: "index_workouts_on_user_id"

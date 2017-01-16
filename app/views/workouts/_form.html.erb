@@ -40,7 +40,7 @@
             <% @workout.workout_exercises_ordered.each do |workout_exercise| %>
               <tr>
                 <td>
-                  <%= workout_exercise.exercise.label %>
+                  <input class="form-control inline_block" type="text" name="workout_exercises[][label]" value="<%= workout_exercise.label %>" <%= defined?(disable_fields) && disable_fields.present? ? 'disabled="disabled"' : '' %>/>
                   <input name="workout_exercises[][id]" type="hidden" value="<%= workout_exercise.id %>"/>
                 </td>
                 <td>

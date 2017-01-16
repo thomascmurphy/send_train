@@ -467,6 +467,18 @@ class User < ActiveRecord::Base
     self.goals.where(parent_goal_id: nil)
   end
 
+  def public_exercises
+    self.exercises.where(private: false)
+  end
+
+  def public_workouts
+    self.workouts.where(private: false)
+  end
+
+  def public_macrocycles
+    self.macrocycles.where(private: false)
+  end
+
   def dashboard_activity
     activity = []
 
@@ -638,6 +650,10 @@ class User < ActiveRecord::Base
       end
     end
     return false
+  end
+
+  def self.find_super_admin
+    User.where(is_admin: true).first
   end
 
 end

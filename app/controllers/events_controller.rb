@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
   before_filter :set_events, :except => [:show, :new, :edit, :delete, :gym_session_new]
-  before_filter :set_field_data, :only => [:show, :edit]
+  before_filter :set_field_data, :only => [:show, :edit, :self_assessment_new]
 
   def set_events
     if params[:user_id].present? && params[:user_id].to_i != current_user.id
@@ -144,6 +144,7 @@ class EventsController < ApplicationController
 
   def update
     @event = current_user.events.find_by_id(params[:id])
+    binding.pry
     start_date_params = params[:start_date]
     if start_date_params.present?
       if start_date_params[:day].present? && start_date_params[:month].present? && start_date_params[:year].present?
@@ -250,6 +251,38 @@ class EventsController < ApplicationController
   def print
     @event = Event.find_by_id(params[:event_id])
     render layout: "print"
+  end
+
+  def self_assessment
+
+  end
+
+  def self_assessment_new
+    workout = Workout.self_assessment_workout
+    @event = current_user.events.create(workout_id: workout.id, start_date: DateTime.now)
+    @user_id = current_user.id
+    respond_to do |format|
+      format.html
+      format.js
+      format.json { render json: @event, status: :created, location: @event }
+    end
+  end
+
+  def self_assessment_save
+    @event = current_user.events.new(event_params)
+    @event.label = "Self Assessment"
+    @event.completed = true
+
+    respond_to do |format|
+      if @event.save
+        format.html { redirect_to @event, notice: 'Event was successfully created.' }
+        format.js
+        format.json { render json: @event, status: :created, location: @event }
+      else
+        format.html { render action: "new" }
+        format.json { render json: @event.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
 

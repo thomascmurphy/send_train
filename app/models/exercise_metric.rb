@@ -31,7 +31,7 @@ class ExerciseMetric < ActiveRecord::Base
   def unit_string(parentheses=false)
     case self.exercise_metric_type.slug
     when "weight"
-      units = "#{self.exercise.user.default_weight_unit}s"
+      units = self.exercise.user.present? ? "#{self.exercise.user.default_weight_unit}s" : "lbs"
     when "time"
       units = "seconds"
     when "hold-size"

@@ -12,10 +12,11 @@ class Workout < ActiveRecord::Base
   after_create :set_reference_id, :auto_upvote
 
   SEEDED_REFERENCE_IDS = [1, 2, 3]
+  SELF_ASSESSMENT_REFERENCE_ID = 4
 
   def set_reference_id
     if self.reference_id.blank?
-      self[:reference_id] = self.id
+      self.reference_id = self.id
       self.save
     end
   end
@@ -196,6 +197,7 @@ class Workout < ActiveRecord::Base
             next
           end
         end
+        workout_exercise.label = workout_exercise_params.with_indifferent_access["label"]
         workout_exercise.reps = workout_exercise_params.with_indifferent_access["reps"].to_i
         workout_exercise.order_in_workout = exercise_index
         workout_exercise.save
@@ -285,6 +287,191 @@ class Workout < ActiveRecord::Base
       end
     end
     return progress
+  end
+
+  def self.create_self_assessment_workout
+    user_id = User.find_super_admin.id
+    deadhang = Exercise.create(
+      label: "Self-Assessment Deadhang",
+      exercise_type: "strength",
+      description: "Hang",
+      reference_id: 1,
+      user_id: user_id,
+      private: true
+    )
+    deadhang_metric_hold = deadhang.exercise_metrics.create(
+      label: "Hold",
+      exercise_metric_type_id: ExerciseMetricType::HOLD_TYPE_ID
+    )
+    hold_options = deadhang_metric_hold.exercise_metric_options.create([
+      {label: "Crimp", value: "Crimp"},
+      {label: "Sloper", value: "Sloper"},
+      {label: "Pinch", value: "Pinch"},
+      {label: "Middle Two Fingers", value: "Middle Two Fingers"}
+    ])
+    deadhang_metric_hold_size = deadhang.exercise_metrics.create(
+      label: "Hold Size",
+      exercise_metric_type_id: ExerciseMetricType::HOLD_SIZE_ID
+    )
+    deadhang_metric_weight = deadhang.exercise_metrics.create(
+      label: "Weight",
+      exercise_metric_type_id: ExerciseMetricType::WEIGHT_ID
+    )
+    deadhang_metric_hang_time = deadhang.exercise_metrics.create(
+      label: "Hang Time",
+      exercise_metric_type_id: ExerciseMetricType::TIME_ID
+    )
+
+    campus = Exercise.create(
+      label: "Self-Assessment Campus",
+      exercise_type: "power",
+      description: "Campus moves",
+      reference_id: 2,
+      user_id: user_id,
+      private: true
+    )
+    campus_metric_campus_rungs = campus.exercise_metrics.create(
+      label: "Rungs",
+      exercise_metric_type_id: ExerciseMetricType::CAMPUS_RUNGS_ID
+    )
+    campus_metric_rung_size = campus.exercise_metrics.create(
+      label: "Rung Size",
+      exercise_metric_type_id: ExerciseMetricType::HOLD_TYPE_ID
+    )
+    rung_options = campus_metric_rung_size.exercise_metric_options.create([
+      {label: "Large Edge", value: "Large Edge"},
+      {label: "Medium Edge", value: "Medium Edge"},
+      {label: "Small Edge", value: "Small Edge"}
+    ])
+
+    four_by_four = Exercise.create(
+      label: "Self-Assessment 4x4",
+      exercise_type: "powerendurance",
+      description: "Four by four",
+      reference_id: 4,
+      user_id: user_id,
+      private: true
+    )
+    four_by_four_metric_climb_1 = four_by_four.exercise_metrics.create(
+      label: "Climb 1",
+      exercise_metric_type_id: ExerciseMetricType::BOULDER_GRADE_ID
+    )
+    four_by_four_metric_climb_2 = four_by_four.exercise_metrics.create(
+      label: "Climb 2",
+      exercise_metric_type_id: ExerciseMetricType::BOULDER_GRADE_ID
+    )
+    four_by_four_metric_climb_3 = four_by_four.exercise_metrics.create(
+      label: "Climb 3",
+      exercise_metric_type_id: ExerciseMetricType::BOULDER_GRADE_ID
+    )
+    four_by_four_metric_climb_4 = four_by_four.exercise_metrics.create(
+      label: "Climb 4",
+      exercise_metric_type_id: ExerciseMetricType::BOULDER_GRADE_ID
+    )
+    four_by_four_metric_completion = four_by_four.exercise_metrics.create(
+      label: "Completion",
+      exercise_metric_type_id: ExerciseMetricType::COMPLETION_ID
+    )
+
+    pullup = Exercise.create(
+      label: "Self-Assessment Pullups",
+      exercise_type: "strength",
+      description: "You know the drill.",
+      reference_id: 5,
+      user_id: user_id,
+      private: true
+    )
+
+    pullup_metric_weight = pullup.exercise_metrics.create(
+      label: "Weight",
+      exercise_metric_type_id: ExerciseMetricType::WEIGHT_ID
+    )
+    pullup_metric_reps = pullup.exercise_metrics.create(
+      label: "Reps",
+      exercise_metric_type_id: ExerciseMetricType::REPETITIONS_ID
+    )
+
+    self_assessment_workout = Workout.create(
+      label: "Self-Assessment",
+      workout_type: "",
+      description: "Self-assessment",
+      reference_id: Workout::SELF_ASSESSMENT_REFERENCE_ID,
+      user_id: user_id,
+      private: true
+    )
+
+    hang_order = 0
+
+    holds = ["Sloper", "Pinch", "Crimp", "Middle Two Fingers"]
+    holds.each_with_index do |hold, hold_index|
+      hang_order = hold_index
+      self_assessment_workout_exercise = self_assessment_workout.workout_exercises.create(
+        exercise: deadhang,
+        label: "Deadhang",
+        order_in_workout: hold_index,
+        reps: 1
+      )
+      self_assessment_workout_metrics = self_assessment_workout_exercise.workout_metrics.create([
+        {exercise_metric: deadhang_metric_hold, value: hold},
+        {exercise_metric: deadhang_metric_hold_size, value: nil},
+        {exercise_metric: deadhang_metric_weight, value: 0},
+        {exercise_metric: deadhang_metric_hang_time, value: 10}
+      ])
+    end
+
+    campus_order = 0
+    campus_moves = [{label: "Max Pull Through", value: "1 3 5"}, {label: "Max First Pull", value: "1 6"}]
+    campus_moves.each_with_index do |campus_move, campus_index|
+      campus_order = hang_order + campus_index
+      self_assessment_workout_exercise = self_assessment_workout.workout_exercises.create(
+        exercise: campus,
+        label: campus_move[:label],
+        order_in_workout: campus_order,
+        reps: 1
+      )
+      self_assessment_workout_metrics = self_assessment_workout_exercise.workout_metrics.create([
+        {exercise_metric: campus_metric_campus_rungs, value: campus_move[:value]},
+        {exercise_metric: campus_metric_rung_size, value: "Large Edge"}
+      ])
+    end
+
+    pullup_order = 0
+    pullup_exercises = [{label: "Max Weight", weight: 20, reps: 1},
+                        {label: "Max Reps", weight: 0, reps: 10}]
+    pullup_exercises.each_with_index do |pullup_exercise, pullup_index|
+      pullup_order = hang_order + campus_order + pullup_index
+      self_assessment_workout_exercise = self_assessment_workout.workout_exercises.create(
+        exercise: pullup,
+        label: pullup_exercise[:label],
+        order_in_workout: pullup_order,
+        reps: 1
+      )
+      self_assessment_workout_metrics = self_assessment_workout_exercise.workout_metrics.create([
+        {exercise_metric: pullup_metric_weight, value: pullup_exercise[:weight]},
+        {exercise_metric: pullup_metric_reps, value: pullup_exercise[:reps]}
+      ])
+
+    end
+
+    self_assessment_workout_exercise = self_assessment_workout.workout_exercises.create(
+      exercise: four_by_four,
+      label: "4x4",
+      order_in_workout: hang_order + campus_order + pullup_order,
+      reps: 1
+    )
+    self_assessment_workout_metrics = self_assessment_workout_exercise.workout_metrics.create([
+      {exercise_metric: four_by_four_metric_climb_1, value: nil},
+      {exercise_metric: four_by_four_metric_climb_2, value: nil},
+      {exercise_metric: four_by_four_metric_climb_3, value: nil},
+      {exercise_metric: four_by_four_metric_climb_4, value: nil},
+      {exercise_metric: four_by_four_metric_completion, value: 100}
+    ])
+
+  end
+
+  def self.self_assessment_workout
+    super_admin = User.find_super_admin
+    workout = Workout.where(user_id: super_admin.id, reference_id: Workout::SELF_ASSESSMENT_REFERENCE_ID).first
   end
 
 end

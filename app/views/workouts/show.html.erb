@@ -36,7 +36,7 @@
           <% @workout.workout_exercises_ordered.each do |workout_exercise| %>
             <tr>
               <td>
-                <%= link_to workout_exercise.exercise.label, exercise_path(workout_exercise.exercise), remote: true %>
+                <%= link_to workout_exercise.label, exercise_path(workout_exercise.exercise), remote: true %>
               </td>
               <td>
                 <% workout_exercise.workout_metrics.ordered_by_metric.each do |workout_metric| %>

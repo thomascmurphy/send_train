@@ -83,6 +83,7 @@
                           <li><a href="<%= url_for controller: '/macrocycles', action: 'index' %>">Plan Templates</a></li>
                           <li><a href="<%= url_for controller: '/events', action: 'index' %>">Schedule</a></li>
                           <li><a href="<%= url_for controller: '/profile', action: 'progress' %>">Progress</a></li>
+                          <li><a href="<%= url_for controller: '/events', action: 'self_assessment' %>">Self-Assessment</a></li>
                         </ul>
                       </li>
 
@@ -103,10 +104,9 @@
                           <% if ["community", "messages"].include?(controller.controller_name) %> <span class="sr-only">(current)</span><% end %>
                         </a>
                         <ul class="dropdown-menu">
-                          <li><a href="<%= url_for controller: '/community', action: 'index' %>">Dashboard</a></li>
-                          <li><a href="<%= url_for controller: '/community', action: 'training' %>">Training Ideas</a></li>
-                          <li><a href="<%= url_for controller: '/community', action: 'my_users' %>">My Community</a></li>
-                          <li><a href="<%= url_for controller: '/messages', action: 'index' %>">Discussions</a></li>
+<!--                           <li><a href="<%= url_for controller: '/community', action: 'training' %>">Training Ideas</a></li> -->
+                          <li><a href="<%= url_for controller: '/community', action: 'my_users' %>">People</a></li>
+                          <li><a href="<%= url_for controller: '/messages', action: 'index' %>">Forum</a></li>
                         </ul>
                       </li>
 
@@ -117,6 +117,7 @@
                       <li class="dropdown">
                         <a href="#" class="dropdown-toggle no_bg" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= current_user.email %> <span class="caret"></span></a>
                         <ul class="dropdown-menu">
+                          <li><a href="<%= url_for controller: '/community', action: 'index' %>">Messages</a></li>
                           <li><%= link_to('Edit Profile', {controller: '/profile', action: 'edit'}, class: "") %></li>
                           <li><%= link_to('Edit Password/Email', edit_user_registration_path, class: "") %></li>
                           <% if current_user.students.present? %>
