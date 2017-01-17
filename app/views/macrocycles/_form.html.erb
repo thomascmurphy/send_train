@@ -1,10 +1,12 @@
 <%= form_for(@macrocycle) do |f| %>
   <% unless defined?(workout_links) && workout_links.present? %>
     <div class="row large_margin_top">
-      <div class="col-sm-6">
-        <%= f.text_field :label, {placeholder: "Name", class: "form-control margin_right margin_bottom", style: (defined?(disable_fields) && disable_fields.present?) ? "" : "display: inline-block; width: auto; vertical-align: middle;", disabled: (defined?(disable_fields) && disable_fields.present?)} %>
+      <div class="col-sm-6 margin_bottom">
+        <%= f.text_field :label, {placeholder: "Name", class: "form-control margin_right", style: (defined?(disable_fields) && disable_fields.present?) ? "" : "display: inline-block; width: auto; vertical-align: middle;", disabled: (defined?(disable_fields) && disable_fields.present?)} %>
+        <%= f.check_box :private %>
+        <%= f.label :private, class: "margin_right" %>
         <% unless defined?(disable_fields) && disable_fields.present? %>
-          <input type="submit" class="btn btn-primary margin_bottom" value="Save Template">
+          <input type="submit" class="btn btn-primary" value="Save Template">
         <% end %>
       </div>
       <div class="col-sm-6">

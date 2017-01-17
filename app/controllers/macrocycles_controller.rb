@@ -195,7 +195,7 @@ class MacrocyclesController < ApplicationController
   private
 
   def macrocycle_params
-    params.require(:macrocycle).permit(:label, :macrocycle_type, :mesocycle_ids => [])
+    params.require(:macrocycle).permit(:label, :macrocycle_type, :private, :mesocycle_ids => [])
   end
 
 end

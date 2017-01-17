@@ -2,6 +2,15 @@ class ExercisePerformance < ActiveRecord::Base
   belongs_to :user
   belongs_to :workout_metric
   belongs_to :event
+  after_save :set_calculated_value
+
+  def set_calculated_value
+    exercise_metric_type = self.workout_metric.exercise_metric.exercise_metric_type
+    if exercise_metric_type.slug == "weight"
+      calculated_value = self.user.agnostic_weight(self.value.to_i)
+      self.update_column(:calculated_value, calculated_value)
+    end
+  end
 
   def self.campus_score(campus_rungs_string)
     campus_rung_array = []
@@ -18,7 +27,8 @@ class ExercisePerformance < ActiveRecord::Base
       total_rungs = campus_rung_skips.inject(0){|sum,x| sum + x }
       campus_score = top_three_skips_sum**2 + total_rungs
     end
-    return campus_score
+    graded_campus_score = campus_score * 1.1 + 36.0
+    return graded_campus_score
   end
 
   def quantify
@@ -58,7 +68,7 @@ class ExercisePerformance < ActiveRecord::Base
             hold_type = performance.value
           when 'weight'
             weight_original = performance.value.to_i
-            weight = performance.user.agnostic_weight(performance.value.to_i)
+            weight = performance.calculated_value || 0
           when 'time'
             hang_time = performance.value.to_i
           when 'rest-time'

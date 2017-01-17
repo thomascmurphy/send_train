@@ -1,0 +1,19 @@
+<div class="panel panel-default" data-article-id="<%= article.id %>">
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-1">
+        <div class="voting_area" data-voteable-item="Article<%= article.id %>">
+          <%= render partial: "votes/voting_area", object: article, as: 'voteable', locals: {} %>
+        </div>
+      </div>
+      <div class="col-xs-11">
+        <h3 class="no_margin_top"><%= link_to article.title, article_path(article), class: "article_title" %></h3>
+        <div>
+          <%= link_to article.user.smart_name, community_user_path(article.user.id) %>&nbsp;&nbsp;
+          <span class="article_score"><%= "#{pluralize(Vote.item_score(article), 'point')}" %></span>&nbsp;&nbsp;
+          <span class="time_ago"><%= time_ago_in_words(article.publish_date) %> ago</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

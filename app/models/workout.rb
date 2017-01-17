@@ -420,7 +420,7 @@ class Workout < ActiveRecord::Base
     end
 
     campus_order = 0
-    campus_moves = [{label: "Max Pull Through", value: "1 3 5"}, {label: "Max First Pull", value: "1 6"}]
+    campus_moves = [{label: "Max Pull Through", value: "1 3 5"}, {label: "Max First Pull", value: "1 6"}, {label: "Ladders", value: "1 2 3 4 5 6 7 6 5 4 3 2 1"}]
     campus_moves.each_with_index do |campus_move, campus_index|
       campus_order = hang_order + campus_index
       self_assessment_workout_exercise = self_assessment_workout.workout_exercises.create(
@@ -467,11 +467,17 @@ class Workout < ActiveRecord::Base
       {exercise_metric: four_by_four_metric_completion, value: 100}
     ])
 
+    self_assessment_workout
+
   end
 
   def self.self_assessment_workout
     super_admin = User.find_super_admin
     workout = Workout.where(user_id: super_admin.id, reference_id: Workout::SELF_ASSESSMENT_REFERENCE_ID).first
+    if workout.blank?
+      workout = Workout.create_self_assessment_workout
+    end
+    workout
   end
 
 end

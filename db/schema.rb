@@ -11,7 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170115160820) do
+ActiveRecord::Schema.define(version: 20170116220615) do
+
+  create_table "articles", force: :cascade do |t|
+    t.string   "title"
+    t.text     "body"
+    t.string   "category"
+    t.integer  "user_id"
+    t.date     "publish_date"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "articles", ["user_id"], name: "index_articles_on_user_id"
 
   create_table "attempts", force: :cascade do |t|
     t.datetime "date"
@@ -119,6 +131,7 @@ ActiveRecord::Schema.define(version: 20170115160820) do
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
     t.integer  "rep"
+    t.float    "calculated_value"
   end
 
   add_index "exercise_performances", ["event_id"], name: "index_exercise_performances_on_event_id"
@@ -305,6 +318,7 @@ ActiveRecord::Schema.define(version: 20170115160820) do
     t.boolean  "allow_followers",          default: true
     t.string   "handle"
     t.integer  "mountain_project_user_id"
+    t.boolean  "is_contributor",           default: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

@@ -46,7 +46,6 @@ TrainToSend::Application.routes.draw do
     post 'gym_session', to: 'events#gym_session_create'
     get 'self_assessment', to: 'events#self_assessment'
     get 'self_assessment/new', to: 'events#self_assessment_new', as: 'self_assessment_new'
-    post 'self_assessment/new', to: 'events#self_assessment_save', as: 'self_assessment_save'
 
     get 'profile', to: 'profile#show'
     get 'profile/edit', to: 'profile#edit'
@@ -76,8 +75,6 @@ TrainToSend::Application.routes.draw do
       get "reject"
     end
 
-    get 'community', to: 'community#index'
-    get 'community/messages', to: 'community#all_messages'
     get 'community/training', to: 'community#training'
     get 'community/users', to: 'community#users'
     get 'community/my_users', to: 'community#my_users'
@@ -93,8 +90,14 @@ TrainToSend::Application.routes.draw do
     resources :messages do
       get "delete"
     end
+    get 'inbox/unread', to: 'messages#inbox_unread', as: 'messages_inbox_unread'
+    get 'inbox', to: 'messages#inbox', as: 'messages_inbox'
 
     resources :votes, only: [:new]
+
+    resources :articles do
+      get "delete"
+    end
 
   end
 

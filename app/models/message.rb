@@ -39,6 +39,8 @@ class Message < ActiveRecord::Base
         "Re: Plan \"#{self.messageable.label}\""
       when "Goal"
         "Re: Goal \"#{self.messageable.label}\""
+      when "Article"
+        "Re: Article \"#{self.messageable.title}\""
       else
 
       end
@@ -63,6 +65,8 @@ class Message < ActiveRecord::Base
         "Discuss Plan \"#{self.messageable.label}\""
       when "Goal"
         "Discuss Goal \"#{self.messageable.label}\""
+      when "Article"
+        "Discuss Article \"#{self.messageable.title}\""
       else
 
       end

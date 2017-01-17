@@ -148,7 +148,7 @@
   <div class="col-xs-12">
     <h3>Goals</h3>
     <div class="side_scrolling">
-      <% @user.parent_goals.each do |goal| %>
+      <% @user.public_goals.each do |goal| %>
         <div class="col-md-3 col-sm-6 inline_block float_none valign_top">
           <div class="panel<%= goal.panel_class %>">
             <div class="panel-heading">

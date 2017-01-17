@@ -1,0 +1,31 @@
+<div class="row large_margin_bottom">
+  <div class="col-xs-1">
+    <div class="voting_area large" data-voteable-item="Article<%= @article.id %>">
+      <%= render partial: "votes/voting_area", object: @article, as: 'voteable', locals: {} %>
+    </div>
+  </div>
+  <div class="col-xs-8">
+    <h1><%= @article.title %></h1>
+  </div>
+  <div class="col-xs-3 text-right">
+    <% if current_user.is_admin? || @article.user_id == current_user.id %>
+      <%= link_to raw("<span class='glyphicon glyphicon-pencil'></span> Edit"), edit_article_path(@article), class: "btn btn-success btn-lg margin_top" %>
+    <% end %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <%= @article.body.html_safe %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= render partial: "messages/messaging_area", object: @article, as: 'messageable', locals: {} %>
+
+<!-- Modal -->
+<div class="modal fade" id="message_modal" tabindex="-1" role="dialog" aria-labelledby="messageModal">
+
+</div>

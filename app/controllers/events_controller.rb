@@ -144,7 +144,6 @@ class EventsController < ApplicationController
 
   def update
     @event = current_user.events.find_by_id(params[:id])
-    binding.pry
     start_date_params = params[:start_date]
     if start_date_params.present?
       if start_date_params[:day].present? && start_date_params[:month].present? && start_date_params[:year].present?
@@ -265,23 +264,6 @@ class EventsController < ApplicationController
       format.html
       format.js
       format.json { render json: @event, status: :created, location: @event }
-    end
-  end
-
-  def self_assessment_save
-    @event = current_user.events.new(event_params)
-    @event.label = "Self Assessment"
-    @event.completed = true
-
-    respond_to do |format|
-      if @event.save
-        format.html { redirect_to @event, notice: 'Event was successfully created.' }
-        format.js
-        format.json { render json: @event, status: :created, location: @event }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @event.errors, status: :unprocessable_entity }
-      end
     end
   end
 
