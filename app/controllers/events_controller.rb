@@ -271,7 +271,7 @@ class EventsController < ApplicationController
     dates = []
     line_progress = []
     table_progress = []
-    if @workout.present?
+    if @workout.present? && current_user.events.where(workout_id: @workout.id, completed: true).present?
       @last_self_assessment = current_user.events.where(workout_id: @workout.id, completed: true).last
       @skew_data = @last_self_assessment.quantify(nil, true)
       @skew_data = @skew_data.map{|x| {name: x[:name], value: x[:value], tooltip_value: "#{x[:tooltip_value]}<br/>(~#{x[:climb_grade]})", category: x[:category]}}
