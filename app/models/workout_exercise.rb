@@ -49,6 +49,27 @@ class WorkoutExercise < ActiveRecord::Base
     is_rest
   end
 
+  def pretty_type
+    case self.exercise_type
+    when "strength"
+      pretty_type = "Strength"
+    when "power"
+      pretty_type = "Power"
+    when "powerendurance"
+      pretty_type = "Power Endurance"
+    when "endurance"
+      pretty_type = "Endurance"
+    when "technique"
+      pretty_type = "Technique"
+    when "cardio"
+      pretty_type = "Cardio"
+    else
+      pretty_type = self.exercise.pretty_type
+    end
+
+    return pretty_type
+  end
+
 
 
 end

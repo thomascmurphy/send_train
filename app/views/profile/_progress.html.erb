@@ -1,11 +1,11 @@
-<% if @workout.present? && @workout_progress.present? %>
+<% if @workout.present? && @line_progress.present? %>
   <div class="panel panel-default">
     <div class="panel-heading">
       <h3 class="panel-title"><%= @workout.label %></h3>
     </div>
     <div class="panel-body">
       <div class="build_many_lines"
-           data-line-data='<%= @workout_progress %>'
+           data-line-data='<%= @line_progress %>'
            <% if @climb_data.present? %>data-first-line-data='<%= @climb_data %>'<% end %>
            data-chart-title="<%= @workout.label %> Progress">
       </div>

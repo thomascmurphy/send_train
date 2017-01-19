@@ -244,14 +244,14 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def quantify(filter_workout_exercise_ids = nil)
+  def quantify(filter_workout_exercise_ids = nil, normalize = false)
     quantifications = []
     completed_workout_exercises = []
     self.exercise_performances.each do |exercise_performance|
       workout_exercise_id = exercise_performance.workout_metric.workout_exercise_id
       if !completed_workout_exercises.include? workout_exercise_id
         if filter_workout_exercise_ids.blank? || (filter_workout_exercise_ids.include? workout_exercise_id)
-          quantifications << exercise_performance.quantify
+          quantifications << exercise_performance.quantify(normalize)
           completed_workout_exercises << workout_exercise_id
         end
       end

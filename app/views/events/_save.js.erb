@@ -4,9 +4,23 @@ $("ul.errors").html("")
     $("ul.errors").append($("<li />").html("<%= message.html_safe %>"));
   <% end %>
 <% else %>
-  $(".calendar").html("<%= escape_javascript(render partial: 'events/calendar', locals: {coach_viewing: defined?(@coach_viewing) ? @coach_viewing : false}) %>");
-  $(".current_events").html("<%= escape_javascript(render partial: 'current_events', locals: {coach_viewing: defined?(@coach_viewing) ? @coach_viewing : false}) %>");
-  $(".upcoming_events").html("<%= escape_javascript(render partial: 'upcoming_events', locals: {coach_viewing: defined?(@coach_viewing) ? @coach_viewing : false}) %>");
-  $(".past_events").html("<%= escape_javascript(render partial: 'past_events', locals: {coach_viewing: defined?(@coach_viewing) ? @coach_viewing : false}) %>");
+  if ($(".calendar").length > 0) {
+    $(".calendar").html("<%= escape_javascript(render partial: 'events/calendar', locals: {coach_viewing: defined?(@coach_viewing) ? @coach_viewing : false}) %>");
+  }
+  if ($(".current_events").length > 0) {
+    $(".current_events").html("<%= escape_javascript(render partial: 'current_events', locals: {coach_viewing: defined?(@coach_viewing) ? @coach_viewing : false}) %>");
+  }
+  if ($(".upcoming_events").length > 0) {
+    $(".upcoming_events").html("<%= escape_javascript(render partial: 'upcoming_events', locals: {coach_viewing: defined?(@coach_viewing) ? @coach_viewing : false}) %>");
+  }
+  if ($(".past_events").length > 0) {
+    $(".past_events").html("<%= escape_javascript(render partial: 'past_events', locals: {coach_viewing: defined?(@coach_viewing) ? @coach_viewing : false}) %>");
+  }
+  if ($(".self_assessment_skew_area").length > 0) {
+    $(".self_assessment_skew_area").html("<%= escape_javascript(render partial: 'self_assessment_skew', locals: {coach_viewing: defined?(@coach_viewing) ? @coach_viewing : false}) %>");
+  }
+  if ($(".self_assessment_suggestions_area").length > 0) {
+    $(".self_assessment_suggestions_area").html("<%= escape_javascript(render partial: 'self_assessment_suggestions', locals: {coach_viewing: defined?(@coach_viewing) ? @coach_viewing : false}) %>");
+  }
   $("#event_modal").modal("hide");
 <% end %>

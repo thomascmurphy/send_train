@@ -4,8 +4,8 @@ class Exercise < ActiveRecord::Base
   has_many :workouts, through: :workout_exercises
   has_many :exercise_metrics, dependent: :destroy
   has_many :exercise_metric_options, through: :exercise_metrics
-  has_many :votes, as: :voteable
-  has_many :messages, as: :messageable
+  has_many :votes, as: :voteable, dependent: :destroy
+  has_many :messages, as: :messageable, dependent: :destroy
   after_create :set_reference_id, :auto_upvote
 
   SEEDED_REFERENCE_IDS = [1, 2, 3, 4]
