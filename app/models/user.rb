@@ -13,10 +13,10 @@ class User < ActiveRecord::Base
   has_many :students, class_name: 'UserCoach', foreign_key: 'coach_id', dependent: :destroy
   has_many :followers, class_name: 'UserFollower', foreign_key: 'user_id', dependent: :destroy
   has_many :following, class_name: 'UserFollower', foreign_key: 'follower_id', dependent: :destroy
-  has_many :goals
+  has_many :goals, dependent: :destroy
   has_many :sent_messages, class_name: 'Message', foreign_key: 'user_id', dependent: :destroy
-  has_many :votes
-  has_many :messages, as: :messageable
+  has_many :votes, dependent: :destroy
+  has_many :messages, as: :messageable, dependent: :destroy
   has_many :articles
   after_create :seed_exercises
 
@@ -404,14 +404,14 @@ class User < ActiveRecord::Base
 
   def agnostic_weight(weight)
     agnostic_weight = weight
-    user_weight = self.weight || 0
+    user_weight = self.weight || 150
     if self.weight_unit == "lb"
       user_weight = user_weight * 0.453592
     end
     if self.default_weight_unit == "lb"
       agnostic_weight = weight * 0.453592
     end
-    return user_weight + agnostic_weight
+    return agnostic_weight.to_f / user_weight.to_f
   end
 
   def smart_name(display_email=false)

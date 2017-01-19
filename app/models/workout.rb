@@ -7,8 +7,8 @@ class Workout < ActiveRecord::Base
   has_many :exercises, through: :workout_exercises
   has_many :workout_metrics, through: :workout_exercises
   has_many :exercise_performances, through: :workout_metrics
-  has_many :votes, as: :voteable
-  has_many :messages, as: :messageable
+  has_many :votes, as: :voteable, dependent: :destroy
+  has_many :messages, as: :messageable, dependent: :destroy
   after_create :set_reference_id, :auto_upvote
 
   SEEDED_REFERENCE_IDS = [1, 2, 3]
@@ -271,11 +271,12 @@ class Workout < ActiveRecord::Base
     end
   end
 
-  def progress(filter_workout_exercise_ids=nil, start_date=(DateTime.now - 1.year), end_date=DateTime.now)
+  def progress(filter_workout_exercise_ids=nil, start_date=(DateTime.now - 3.months), end_date=DateTime.now, specific_user_id=nil)
     progress = {}
-    events = self.events.where(completed: true).where("start_date >= ? AND end_date <= ?",
-                                                      start_date.beginning_of_day,
-                                                      end_date.end_of_day).order(end_date: :asc)
+    events = specific_user_id.present? ? self.events.where(user_id: specific_user_id) : self.events
+    events = events.where(completed: true).where("start_date >= ? AND end_date <= ?",
+                                                  start_date.beginning_of_day,
+                                                  end_date.end_of_day).order(end_date: :asc)
     events.each do |event|
       quantifications = event.quantify(filter_workout_exercise_ids)
       quantifications.each do |quantification|
@@ -344,35 +345,6 @@ class Workout < ActiveRecord::Base
       {label: "Small Edge", value: "Small Edge"}
     ])
 
-    four_by_four = Exercise.create(
-      label: "Self-Assessment 4x4",
-      exercise_type: "powerendurance",
-      description: "Four by four",
-      reference_id: 4,
-      user_id: user_id,
-      private: true
-    )
-    four_by_four_metric_climb_1 = four_by_four.exercise_metrics.create(
-      label: "Climb 1",
-      exercise_metric_type_id: ExerciseMetricType::BOULDER_GRADE_ID
-    )
-    four_by_four_metric_climb_2 = four_by_four.exercise_metrics.create(
-      label: "Climb 2",
-      exercise_metric_type_id: ExerciseMetricType::BOULDER_GRADE_ID
-    )
-    four_by_four_metric_climb_3 = four_by_four.exercise_metrics.create(
-      label: "Climb 3",
-      exercise_metric_type_id: ExerciseMetricType::BOULDER_GRADE_ID
-    )
-    four_by_four_metric_climb_4 = four_by_four.exercise_metrics.create(
-      label: "Climb 4",
-      exercise_metric_type_id: ExerciseMetricType::BOULDER_GRADE_ID
-    )
-    four_by_four_metric_completion = four_by_four.exercise_metrics.create(
-      label: "Completion",
-      exercise_metric_type_id: ExerciseMetricType::COMPLETION_ID
-    )
-
     pullup = Exercise.create(
       label: "Self-Assessment Pullups",
       exercise_type: "strength",
@@ -402,7 +374,10 @@ class Workout < ActiveRecord::Base
 
     hang_order = 0
 
-    holds = ["Sloper", "Pinch", "Crimp", "Middle Two Fingers"]
+    holds = [{type: "Sloper", size: nil},
+             {type: "Pinch", size: nil},
+             {type: "Crimp", size: 0.5},
+             {type: "Middle Two Fingers", size: 1}]
     holds.each_with_index do |hold, hold_index|
       hang_order = hold_index
       self_assessment_workout_exercise = self_assessment_workout.workout_exercises.create(
@@ -412,20 +387,24 @@ class Workout < ActiveRecord::Base
         reps: 1
       )
       self_assessment_workout_metrics = self_assessment_workout_exercise.workout_metrics.create([
-        {exercise_metric: deadhang_metric_hold, value: hold},
-        {exercise_metric: deadhang_metric_hold_size, value: nil},
+        {exercise_metric: deadhang_metric_hold, value: hold[:type]},
+        {exercise_metric: deadhang_metric_hold_size, value: hold[:size]},
         {exercise_metric: deadhang_metric_weight, value: 0},
         {exercise_metric: deadhang_metric_hang_time, value: 10}
       ])
     end
 
     campus_order = 0
-    campus_moves = [{label: "Max Pull Through", value: "1 3 5"}, {label: "Max First Pull", value: "1 6"}, {label: "Ladders", value: "1 2 3 4 5 6 7 6 5 4 3 2 1"}]
+    campus_moves = [{label: "Campus: Max Pull Through", value: "1 3 5", exercise_type: "power"},
+                    {label: "Campus: Max First Pull", value: "1 4", exercise_type: "power"},
+                    {label: "Campus: Ladders", value: "1 2 3 4 5 6 7 6 5 4 3 2 1", exercise_type: "powerendurance"},
+                    {label: "Campus: Foot On Moves", value: "20", exercise_type: "endurance"}]
     campus_moves.each_with_index do |campus_move, campus_index|
       campus_order = hang_order + campus_index
       self_assessment_workout_exercise = self_assessment_workout.workout_exercises.create(
         exercise: campus,
         label: campus_move[:label],
+        exercise_type: campus_move[:exercise_type],
         order_in_workout: campus_order,
         reps: 1
       )
@@ -436,13 +415,14 @@ class Workout < ActiveRecord::Base
     end
 
     pullup_order = 0
-    pullup_exercises = [{label: "Max Weight", weight: 20, reps: 1},
-                        {label: "Max Reps", weight: 0, reps: 10}]
+    pullup_exercises = [{label: "Pullup: Max Weight", weight: 20, reps: 1, exercise_type: "strength"},
+                        {label: "Pullup: Max Reps", weight: 0, reps: 10, exercise_type: "powerendurance"}]
     pullup_exercises.each_with_index do |pullup_exercise, pullup_index|
       pullup_order = hang_order + campus_order + pullup_index
       self_assessment_workout_exercise = self_assessment_workout.workout_exercises.create(
         exercise: pullup,
         label: pullup_exercise[:label],
+        exercise_type: pullup_exercise[:exercise_type],
         order_in_workout: pullup_order,
         reps: 1
       )
@@ -453,28 +433,30 @@ class Workout < ActiveRecord::Base
 
     end
 
-    self_assessment_workout_exercise = self_assessment_workout.workout_exercises.create(
-      exercise: four_by_four,
-      label: "4x4",
-      order_in_workout: hang_order + campus_order + pullup_order,
-      reps: 1
-    )
-    self_assessment_workout_metrics = self_assessment_workout_exercise.workout_metrics.create([
-      {exercise_metric: four_by_four_metric_climb_1, value: nil},
-      {exercise_metric: four_by_four_metric_climb_2, value: nil},
-      {exercise_metric: four_by_four_metric_climb_3, value: nil},
-      {exercise_metric: four_by_four_metric_climb_4, value: nil},
-      {exercise_metric: four_by_four_metric_completion, value: 100}
-    ])
+    # self_assessment_workout_exercise = self_assessment_workout.workout_exercises.create(
+    #   exercise: four_by_four,
+    #   label: "4x4",
+    #   order_in_workout: hang_order + campus_order + pullup_order,
+    #   reps: 1
+    # )
+    # self_assessment_workout_metrics = self_assessment_workout_exercise.workout_metrics.create([
+    #   {exercise_metric: four_by_four_metric_climb_1, value: nil},
+    #   {exercise_metric: four_by_four_metric_climb_2, value: nil},
+    #   {exercise_metric: four_by_four_metric_climb_3, value: nil},
+    #   {exercise_metric: four_by_four_metric_climb_4, value: nil},
+    #   {exercise_metric: four_by_four_metric_completion, value: 100}
+    # ])
 
     self_assessment_workout
 
   end
 
-  def self.self_assessment_workout
+  def self.self_assessment_workout(create_if_empty=false)
     super_admin = User.find_super_admin
-    workout = Workout.where(user_id: super_admin.id, reference_id: Workout::SELF_ASSESSMENT_REFERENCE_ID).first
-    if workout.blank?
+    if super_admin.present?
+      workout = Workout.where(user_id: super_admin.id, reference_id: Workout::SELF_ASSESSMENT_REFERENCE_ID).first
+    end
+    if workout.blank? && create_if_empty.present?
       workout = Workout.create_self_assessment_workout
     end
     workout

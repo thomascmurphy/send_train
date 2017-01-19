@@ -3,7 +3,7 @@ class Message < ActiveRecord::Base
   belongs_to :parent_message, class_name: 'Message', foreign_key: 'parent_message_id'
   has_many :replies, class_name: 'Message', foreign_key: 'parent_message_id', dependent: :destroy
   belongs_to :messageable, polymorphic: true
-  has_many :votes, as: :voteable
+  has_many :votes, as: :voteable, dependent: :destroy
   after_create :auto_upvote, :transfer_messageable
 
   def auto_upvote

@@ -3,8 +3,8 @@ class Macrocycle < ActiveRecord::Base
   has_many :macrocycle_workouts, dependent: :destroy
   has_many :workouts, through: :macrocycle_workouts
   has_many :events, dependent: :destroy
-  has_many :votes, as: :voteable
-  has_many :messages, as: :messageable
+  has_many :votes, as: :voteable, dependent: :destroy
+  has_many :messages, as: :messageable, dependent: :destroy
   after_create :set_reference_id, :auto_upvote
 
   SEEDED_REFERENCE_IDS = [1, 2, 3]

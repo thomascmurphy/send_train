@@ -20,9 +20,29 @@
   </div>
 </div>
 
-<div class="event_list margin_top">
+<% if @last_self_assessment.present? %>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="self_assessment_skew_area">
+        <%= render "self_assessment_skew" %>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="self_assessment_suggestions_area">
+        <%= render "self_assessment_suggestions" %>
+      </div>
+    </div>
+  </div>
 
-</div>
+
+  <div class="row large_margin_top margin_bottom">
+    <div class="col-xs-12">
+      <div class="progress_area">
+        <%= render "profile/progress" %>
+      </div>
+    </div>
+  </div>
+<% end %>
 
 <!-- Modal -->
 <div class="modal fade" id="event_modal" tabindex="-1" role="dialog" aria-labelledby="eventModal">

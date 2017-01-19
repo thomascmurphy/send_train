@@ -102,7 +102,7 @@ class ArticlesController < ApplicationController
 
   private
     def article_params
-      params.require(:article).permit(:title, :body, :subject, :publish_date)
+      params.require(:article).permit(:title, :body, :category, :publish_date)
     end
 
     def page

@@ -2,8 +2,8 @@ class Goal < ActiveRecord::Base
   belongs_to :user
   belongs_to :parent_goal, class_name: 'Goal', foreign_key: 'parent_goal_id'
   has_many :sub_goals, class_name: 'Goal', foreign_key: 'parent_goal_id', dependent: :destroy
-  has_many :votes, as: :voteable
-  has_many :messages, as: :messageable
+  has_many :votes, as: :voteable, dependent: :destroy
+  has_many :messages, as: :messageable, dependent: :destroy
   after_create :auto_upvote
 
   def auto_upvote

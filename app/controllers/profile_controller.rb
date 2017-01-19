@@ -90,7 +90,7 @@ class ProfileController < ApplicationController
         end
       end
       @date_strings = dates.uniq.sort.map{|d| d.strftime("%b %d, %Y")}
-      @workout_progress = formatted_progress.to_json
+      @line_progress = formatted_progress.to_json
       @table_progress = table_progress
     end
     if @show_climbs.present? && @user.should_show_climb_data?
@@ -109,7 +109,7 @@ class ProfileController < ApplicationController
         end
       }
       format.js { render :reload }
-      format.json { render json: @workout_progress, status: :ok }
+      format.json { render json: @line_progress, status: :ok }
     end
   end
 

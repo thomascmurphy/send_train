@@ -253,11 +253,66 @@ class EventsController < ApplicationController
   end
 
   def self_assessment
+    date_params = params[:date]
+    if date_params.present?
+      if date_params[:day_lower].present? && date_params[:month_lower].present? && date_params[:year_lower].present?
+        @date_lower = DateTime.strptime("#{date_params[:year_lower]} #{date_params[:month_lower]} #{date_params[:day_lower]}", "%Y %m %d")
+      end
+      if date_params[:day_upper].present? && date_params[:month_upper].present? && date_params[:year_upper].present?
+        @date_upper = DateTime.strptime("#{date_params[:year_upper]} #{date_params[:month_upper]} #{date_params[:day_upper]}", "%Y %m %d").end_of_day
+      end
+    else
+      @date_lower = DateTime.now - 3.month;
+      @date_upper = DateTime.now;
+    end
+
+    @workout = Workout.self_assessment_workout
+
+    dates = []
+    line_progress = []
+    table_progress = []
+    if @workout.present?
+      @last_self_assessment = current_user.events.where(workout_id: @workout.id, completed: true).last
+      @skew_data = @last_self_assessment.quantify(nil, true)
+      @skew_data = @skew_data.map{|x| {name: x[:name], value: x[:value], tooltip_value: "#{x[:tooltip_value]}<br/>(~#{x[:climb_grade]})", category: x[:category]}}
+      @skew_data_max = @skew_data.map{|x| x[:value]}.max
+      sorted_data = @skew_data.sort_by{|x| x[:value]}
+      @strongest_aspect = sorted_data.last
+      @weakest_aspect = sorted_data.first
+      overall = {"Strength": [], "Power": [], "Power Endurance": [], "Endurance": []}.with_indifferent_access
+      @skew_data.each do |exercise|
+        overall[exercise[:category]] << exercise[:value]
+      end
+      overall = overall.sort_by{|key, value| value.inject{ |sum, el| sum + el }.to_f / value.size}.to_h
+      @weakest_overall = overall.keys.first
+      @strongest_overall = overall.keys.last
+
+      @skew_data = @skew_data.to_json
+
+      progress = @workout.progress(nil, @date_lower, @date_upper, current_user.id)
+      progress.each do |label, quantifications|
+        dates.concat quantifications.map{|q| DateTime.strptime(q[:date], "%b %d, %Y")}
+        exercise_progress_line = {'title': label, 'values': []}
+        exercise_progress_table = {'title': label, 'values': {}}
+        quantifications.each do |quantification|
+          exercise_progress_line[:values] << {name: "#{label.capitalize} (#{quantification[:date]})",
+                                              value: quantification[:value],
+                                              tooltip_value: quantification[:tooltip_value]}
+
+          exercise_progress_table[:values][quantification[:date]] = quantification[:tooltip_value]
+        end
+        line_progress << exercise_progress_line
+        table_progress << exercise_progress_table
+      end
+    end
+    @date_strings = dates.uniq.sort.map{|d| d.strftime("%b %d, %Y")}
+    @line_progress = line_progress.to_json
+    @table_progress = table_progress
 
   end
 
   def self_assessment_new
-    workout = Workout.self_assessment_workout
+    workout = Workout.self_assessment_workout(true)
     @event = current_user.events.create(workout_id: workout.id, start_date: DateTime.now)
     @user_id = current_user.id
     respond_to do |format|

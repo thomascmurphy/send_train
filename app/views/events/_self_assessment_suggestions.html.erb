@@ -1,0 +1,22 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Results</h3>
+  </div>
+  <div class="panel-body">
+    <% if @weakest_aspect.present? %>
+      <p class="lead">Your specific weakness seems to be <strong><%= @weakest_aspect[:name] %></strong></p>
+    <% end %>
+
+    <% if @strongest_aspect.present? %>
+      <p class="lead">Your specific strength seems to be <strong><%= @strongest_aspect[:name] %></strong></p>
+    <% end %>
+
+    <% if @weakest_overall.present? %>
+      <p class="lead">Your overall weakness seems to be <strong><%= @weakest_overall %></strong></p>
+    <% end %>
+
+    <% if @strongest_overall.present? %>
+      <p class="lead">Your overall strength seems to be <strong><%= @strongest_overall %></strong></p>
+    <% end %>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 class Attempt < ActiveRecord::Base
   belongs_to :climb
-  has_many :votes, as: :voteable
+  has_many :votes, as: :voteable, dependent: :destroy
 
   def set_date_to_now
     self.date = DateTime.now
