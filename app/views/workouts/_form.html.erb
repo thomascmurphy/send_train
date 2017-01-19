@@ -1,16 +1,22 @@
 <%= form_for(@workout) do |f| %>
   <div class="row">
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <div class="form-group">
         <%= f.text_field :label, {placeholder: "Name", class: "form-control", disabled: (defined?(disable_fields) && disable_fields.present?)} %>
       </div>
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <div class="form-group">
         <%= f.select(:workout_type, [['Type', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']], {}, {class: "form-control", disabled: (defined?(disable_fields) && disable_fields.present?)}) %>
       </div>
     </div>
-    <div class="col-xs-4 text-right">
+    <div class="col-sm-3">
+      <div class="form-group">
+        <%= f.check_box :private %>
+        <%= f.label :private %>
+      </div>
+    </div>
+    <div class="col-xs-3 text-right">
       <% unless defined?(disable_fields) && disable_fields.present? %>
         <input type="submit" class="btn btn-success margin_bottom" value="Save Workout">
       <% end %>
@@ -40,7 +46,7 @@
             <% @workout.workout_exercises_ordered.each do |workout_exercise| %>
               <tr>
                 <td>
-                  <%= workout_exercise.exercise.label %>
+                  <input class="form-control inline_block" type="text" name="workout_exercises[][label]" value="<%= workout_exercise.label %>" <%= defined?(disable_fields) && disable_fields.present? ? 'disabled="disabled"' : '' %>/>
                   <input name="workout_exercises[][id]" type="hidden" value="<%= workout_exercise.id %>"/>
                 </td>
                 <td>

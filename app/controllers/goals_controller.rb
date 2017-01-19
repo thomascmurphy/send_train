@@ -108,7 +108,7 @@ class GoalsController < ApplicationController
   private
 
   def goal_params
-    params.require(:goal).permit(:label, :parent_goal_id, :public, :deadline, :completed)
+    params.require(:goal).permit(:label, :parent_goal_id, :public, :deadline, :completed, :private)
   end
 
 end

@@ -67,22 +67,6 @@ class CommunityController < ApplicationController
     @my_followers = @my_followers.paginate(:page => page, :per_page => per_page)
   end
 
-  def index
-    my_message_ids = current_user.sent_messages.pluck(:id)
-    replies = Message.where(parent_message_id: my_message_ids)
-    direct_messages = current_user.messages.where(parent_message_id: nil)
-    @new_messages = (replies.where(read: false) + direct_messages.where(read: false)).sort_by{|x| [Vote.item_score(x), x.updated_at]}.reverse
-    @new_messages = @new_messages.paginate(:page => page, :per_page => per_page)
-  end
-
-  def all_messages
-    my_message_ids = current_user.sent_messages.pluck(:id)
-    replies = Message.where(parent_message_id: my_message_ids)
-    direct_messages = current_user.messages.where(parent_message_id: nil)
-    @all_messages = (replies + direct_messages).sort_by{|x| [Vote.item_score(x), x.updated_at]}.reverse
-    @all_messages = @all_messages.paginate(:page => page, :per_page => per_page)
-  end
-
   def training
 
   end

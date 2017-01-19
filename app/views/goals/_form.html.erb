@@ -3,13 +3,19 @@
   <div class="modal-body">
     <ul class="errors"></ul>
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-4">
         <div class="form-group">
           <%= f.label :name %><br>
           <%= f.text_field :label, class: "form-control" %>
         </div>
       </div>
-      <div class="col-sm-6">
+      <div class="col-sm-4">
+        <div class="form-group">
+          <%= f.label :private %><br>
+          <%= f.check_box :private %>
+        </div>
+      </div>
+      <div class="col-sm-4">
         <div class="form-group">
           <%= f.label :deadline %><br>
           <%= select_month(@goal.deadline.present? ? @goal.deadline.month : DateTime.now, {field_name: "month"}, {class: "form-control", style: "display: inline-block; width: auto;"}) %>

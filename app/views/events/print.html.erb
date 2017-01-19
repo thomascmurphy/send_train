@@ -12,7 +12,7 @@
       <% if workout_exercise.is_rest %>
         <tr>
           <td style="width: 150px;">
-            <%= workout_exercise.exercise.label %>
+            <%= workout_exercise.label %>
           </td>
           <td style="width: 75px;">
           </td>
@@ -44,7 +44,7 @@
           <tr>
             <td style="width: 150px;">
               <% if rep == 1 %>
-                <%= workout_exercise.exercise.label %>
+                <%= workout_exercise.label %>
               <% end %>
             </td>
             <td style="width: 75px;">

@@ -2,16 +2,22 @@
   <div class="modal-body">
     <ul class="errors"></ul>
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-4">
         <div class="form-group">
           <%= f.label :name %><br>
           <%= f.text_field :label, class: "form-control", disabled: (defined?(disable_fields) && disable_fields.present?) %>
         </div>
       </div>
-      <div class="col-sm-6">
+      <div class="col-sm-4">
         <div class="form-group">
           <%= f.label :exercise_type %><br>
           <%= f.select(:exercise_type, [['None', ''], ['Strength', 'strength'], ['Power', 'power'], ['Power Endurance', 'powerendurance'], ['Endurance', 'endurance'], ['Technique', 'technique'], ['Cardio', 'cardio']], {}, {class: "form-control", disabled: (defined?(disable_fields) && disable_fields.present?)}) %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="form-group">
+          <%= f.label :private %><br>
+          <%= f.check_box :private %>
         </div>
       </div>
     </div>

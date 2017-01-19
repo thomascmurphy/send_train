@@ -110,6 +110,6 @@ class ExercisesController < ApplicationController
   private
 
   def exercise_params
-    params.require(:exercise).permit(:label, :exercise_type, :description)
+    params.require(:exercise).permit(:label, :exercise_type, :description, :private)
   end
 end

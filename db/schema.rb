@@ -11,7 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170112164521) do
+ActiveRecord::Schema.define(version: 20170116220615) do
+
+  create_table "articles", force: :cascade do |t|
+    t.string   "title"
+    t.text     "body"
+    t.string   "category"
+    t.integer  "user_id"
+    t.date     "publish_date"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "articles", ["user_id"], name: "index_articles_on_user_id"
 
   create_table "attempts", force: :cascade do |t|
     t.datetime "date"
@@ -119,6 +131,7 @@ ActiveRecord::Schema.define(version: 20170112164521) do
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
     t.integer  "rep"
+    t.float    "calculated_value"
   end
 
   add_index "exercise_performances", ["event_id"], name: "index_exercise_performances_on_event_id"
@@ -131,8 +144,9 @@ ActiveRecord::Schema.define(version: 20170112164521) do
     t.text     "description"
     t.integer  "user_id"
     t.integer  "reference_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.boolean  "private",       default: false
   end
 
   add_index "exercises", ["user_id"], name: "index_exercises_on_user_id"
@@ -146,6 +160,7 @@ ActiveRecord::Schema.define(version: 20170112164521) do
     t.boolean  "completed",      default: false
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
+    t.boolean  "private",        default: false
   end
 
   add_index "goals", ["parent_goal_id"], name: "index_goals_on_parent_goal_id"
@@ -181,8 +196,9 @@ ActiveRecord::Schema.define(version: 20170112164521) do
     t.string   "macrocycle_type"
     t.integer  "user_id"
     t.integer  "reference_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.boolean  "private",         default: false
   end
 
   add_index "macrocycles", ["user_id"], name: "index_macrocycles_on_user_id"
@@ -302,6 +318,7 @@ ActiveRecord::Schema.define(version: 20170112164521) do
     t.boolean  "allow_followers",          default: true
     t.string   "handle"
     t.integer  "mountain_project_user_id"
+    t.boolean  "is_contributor",           default: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
@@ -325,6 +342,7 @@ ActiveRecord::Schema.define(version: 20170112164521) do
     t.integer "exercise_id"
     t.integer "order_in_workout"
     t.integer "reps"
+    t.string  "label"
   end
 
   add_index "workout_exercises", ["exercise_id"], name: "index_workout_exercises_on_exercise_id"
@@ -345,8 +363,9 @@ ActiveRecord::Schema.define(version: 20170112164521) do
     t.integer  "user_id"
     t.text     "description"
     t.integer  "reference_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.boolean  "private",      default: false
   end
 
   add_index "workouts", ["user_id"], name: "index_workouts_on_user_id"

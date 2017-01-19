@@ -107,6 +107,16 @@ class MessagesController < ApplicationController
     @message.destroy
   end
 
+  def inbox_unread
+    @new_messages = current_user.new_messages
+    @new_messages = @new_messages.paginate(:page => page, :per_page => per_page)
+  end
+
+  def inbox
+    @all_messages = current_user.all_messages
+    @all_messages = @all_messages.paginate(:page => page, :per_page => per_page)
+  end
+
   private
 
   def message_params

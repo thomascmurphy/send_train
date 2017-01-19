@@ -17,6 +17,8 @@
 //= require_tree .
 
 //= require bootstrap-sprockets
+//= require jquery-hotkeys
+//= require bootstrap-wysiwyg
 //= require chartery
 //= require touch-punch
 
@@ -82,6 +84,14 @@ ready = function() {
   });
 
   $('[data-toggle="tooltip"]').tooltip();
+
+  // $('#wysiwyg_editor').wysiwyg({
+	// 	'form':
+	// 	{
+	// 		'text-field': 'wysiwyg_body',
+	// 		'seperate-binary': false
+	// 	}
+  // });
 
 }
 

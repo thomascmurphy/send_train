@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
   before_filter :set_events, :except => [:show, :new, :edit, :delete, :gym_session_new]
-  before_filter :set_field_data, :only => [:show, :edit]
+  before_filter :set_field_data, :only => [:show, :edit, :self_assessment_new]
 
   def set_events
     if params[:user_id].present? && params[:user_id].to_i != current_user.id
@@ -250,6 +250,21 @@ class EventsController < ApplicationController
   def print
     @event = Event.find_by_id(params[:event_id])
     render layout: "print"
+  end
+
+  def self_assessment
+
+  end
+
+  def self_assessment_new
+    workout = Workout.self_assessment_workout
+    @event = current_user.events.create(workout_id: workout.id, start_date: DateTime.now)
+    @user_id = current_user.id
+    respond_to do |format|
+      format.html
+      format.js
+      format.json { render json: @event, status: :created, location: @event }
+    end
   end
 
 

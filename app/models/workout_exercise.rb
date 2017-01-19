@@ -3,6 +3,14 @@ class WorkoutExercise < ActiveRecord::Base
   belongs_to :exercise
   has_many :workout_metrics, dependent: :destroy
   has_many :exercise_metrics, through: :workout_metrics
+  after_create :set_label
+
+  def set_label
+    if self.exercise.present? && self.label.blank?
+      self.label = self.exercise.label
+      self.save
+    end
+  end
 
   def duplicate(user, new_exercise_id, new_workout_id, exercise_metric_id_conversion=nil)
     new_workout_exercise = self.dup

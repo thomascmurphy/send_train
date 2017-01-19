@@ -83,6 +83,7 @@
                           <li><a href="<%= url_for controller: '/macrocycles', action: 'index' %>">Plan Templates</a></li>
                           <li><a href="<%= url_for controller: '/events', action: 'index' %>">Schedule</a></li>
                           <li><a href="<%= url_for controller: '/profile', action: 'progress' %>">Progress</a></li>
+                          <li><a href="<%= url_for controller: '/events', action: 'self_assessment' %>">Self-Assessment</a></li>
                         </ul>
                       </li>
 
@@ -97,16 +98,16 @@
                         </ul>
                       </li>
 
-                      <li class="<% if ["community", "messages"].include?(controller.controller_name) %>active<% end %>">
+                      <li class="<% if ["community", "messages", "articles"].include?(controller.controller_name) %>active<% end %>">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                           Community <span class="caret"></span>
-                          <% if ["community", "messages"].include?(controller.controller_name) %> <span class="sr-only">(current)</span><% end %>
+                          <% if ["community", "messages", "articles"].include?(controller.controller_name) %> <span class="sr-only">(current)</span><% end %>
                         </a>
                         <ul class="dropdown-menu">
-                          <li><a href="<%= url_for controller: '/community', action: 'index' %>">Dashboard</a></li>
-                          <li><a href="<%= url_for controller: '/community', action: 'training' %>">Training Ideas</a></li>
-                          <li><a href="<%= url_for controller: '/community', action: 'my_users' %>">My Community</a></li>
-                          <li><a href="<%= url_for controller: '/messages', action: 'index' %>">Discussions</a></li>
+<!--                           <li><a href="<%= url_for controller: '/community', action: 'training' %>">Training Ideas</a></li> -->
+                          <li><a href="<%= url_for controller: '/community', action: 'my_users' %>">People</a></li>
+                          <li><a href="<%= url_for controller: '/messages', action: 'index' %>">Forum</a></li>
+                          <li><a href="<%= url_for controller: '/articles', action: 'index' %>">Articles</a></li>
                         </ul>
                       </li>
 
@@ -114,9 +115,17 @@
                   </ul>
                   <ul class="nav navbar-nav navbar-right">
                     <% if user_signed_in? %>
+                      <li>
+                        <% if current_user.new_messages.count > 0 %>
+                          <a href="<%= url_for controller: '/messages', action: 'inbox_unread' %>" class="no_bg orange" id="inbox_link"><span class='glyphicon glyphicon-envelope'></span></a>
+                        <% else %>
+                          <a href="<%= url_for controller: '/messages', action: 'inbox' %>" class="no_bg" id="inbox_link"><span class='glyphicon glyphicon-envelope'></span></a>
+                        <% end %>
+                      </li>
                       <li class="dropdown">
                         <a href="#" class="dropdown-toggle no_bg" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= current_user.email %> <span class="caret"></span></a>
                         <ul class="dropdown-menu">
+                          <li><%= link_to('Messages', {controller: '/messages', action: 'inbox_unread'}, class: "") %></li>
                           <li><%= link_to('Edit Profile', {controller: '/profile', action: 'edit'}, class: "") %></li>
                           <li><%= link_to('Edit Password/Email', edit_user_registration_path, class: "") %></li>
                           <% if current_user.students.present? %>
@@ -202,7 +211,8 @@
       <div class="row">
         <div class="col-xs-12">
           <%= link_to('Privacy Policy', {controller: '/home', action: 'privacy_policy'}, class: "no_bg") %>|
-          <%= link_to('Terms of Service', {controller: '/home', action: 'terms_of_service'}, class: "no_bg") %>
+          <%= link_to('Terms of Service', {controller: '/home', action: 'terms_of_service'}, class: "no_bg") %>|
+          <%= link_to "Comment/Suggestion", controller: "/comments", action: "new", remote: true, class: "no_bg" %>
         </div>
       </div>
     </div>

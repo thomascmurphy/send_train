@@ -17,6 +17,7 @@ class User < ActiveRecord::Base
   has_many :sent_messages, class_name: 'Message', foreign_key: 'user_id', dependent: :destroy
   has_many :votes
   has_many :messages, as: :messageable
+  has_many :articles
   after_create :seed_exercises
 
   # Include default devise modules. Others available are:
@@ -467,6 +468,62 @@ class User < ActiveRecord::Base
     self.goals.where(parent_goal_id: nil)
   end
 
+  def public_exercises
+    self.exercises.where(private: false)
+  end
+
+  def public_workouts
+    self.workouts.where(private: false)
+  end
+
+  def public_macrocycles
+    self.macrocycles.where(private: false)
+  end
+
+  def public_goals
+    self.parent_goals.where(private: false)
+  end
+
+  def all_messages
+    my_message_ids = self.sent_messages.pluck(:id)
+    my_exercise_ids = self.exercises.pluck(:id)
+    my_workout_ids = self.workouts.pluck(:id)
+    my_macrocycle_ids = self.macrocycles.pluck(:id)
+    my_goal_ids = self.goals.pluck(:id)
+    my_article_ids = self.articles.pluck(:id)
+
+    replies = Message.where(parent_message_id: my_message_ids)
+    direct_messages = self.messages.where(parent_message_id: nil)
+    exercise_messages = Message.where(messageable_type: "Exercise", messageable_id: my_exercise_ids)
+    workout_messages = Message.where(messageable_type: "Workout", messageable_id: my_workout_ids)
+    macrocycle_messages = Message.where(messageable_type: "Macrocycle", messageable_id: my_macrocycle_ids)
+    goal_messages = Message.where(messageable_type: "Goal", messageable_id: my_goal_ids)
+    article_messages = Message.where(messageable_type: "Article", messageable_id: my_article_ids)
+
+    all_messages = replies + direct_messages + exercise_messages + workout_messages + macrocycle_messages + goal_messages + article_messages
+    all_messages.sort_by{|x| [Vote.item_score(x), x.updated_at]}.reverse
+  end
+
+  def new_messages
+    my_message_ids = self.sent_messages.pluck(:id)
+    my_exercise_ids = self.exercises.pluck(:id)
+    my_workout_ids = self.workouts.pluck(:id)
+    my_macrocycle_ids = self.macrocycles.pluck(:id)
+    my_goal_ids = self.goals.pluck(:id)
+    my_article_ids = self.articles.pluck(:id)
+
+    replies = Message.where(parent_message_id: my_message_ids, read: false)
+    direct_messages = self.messages.where(parent_message_id: nil, read: false)
+    exercise_messages = Message.where(messageable_type: "Exercise", messageable_id: my_exercise_ids, read: false)
+    workout_messages = Message.where(messageable_type: "Workout", messageable_id: my_workout_ids, read: false)
+    macrocycle_messages = Message.where(messageable_type: "Macrocycle", messageable_id: my_macrocycle_ids, read: false)
+    goal_messages = Message.where(messageable_type: "Goal", messageable_id: my_goal_ids, read: false)
+    article_messages = Message.where(messageable_type: "Article", messageable_id: my_article_ids, read: false)
+
+    new_messages = replies + direct_messages + exercise_messages + workout_messages + macrocycle_messages + goal_messages + article_messages
+    new_messages.sort_by{|x| [Vote.item_score(x), x.updated_at]}.reverse
+  end
+
   def dashboard_activity
     activity = []
 
@@ -493,10 +550,7 @@ class User < ActiveRecord::Base
     my_daily_events = self.events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).where.not(workout_id: nil, completed: true).order(start_date: :asc)
     daily_event_count = my_daily_events.count
 
-    my_message_ids = self.sent_messages.pluck(:id)
-    replies = Message.where(parent_message_id: my_message_ids).where(read: false)
-    direct_messages = self.messages.where(parent_message_id: nil, read: false)
-    new_message_count = replies.length + direct_messages.length
+    new_message_count = self.new_messages.count
 
     new_exercise_votes = Vote.where.not(user_id: self.id).where(voteable_type: "Exercise", voteable_id: my_exercise_ids, updated_at: DateTime.now-7.days..DateTime.now.end_of_day, value: 1).group(:voteable_id).count.sort_by { |id, votes| votes }.reverse.to_h
     new_workout_votes = Vote.where.not(user_id: self.id).where(voteable_type: "Workout", voteable_id: my_workout_ids, updated_at: DateTime.now-7.days..DateTime.now.end_of_day, value: 1).group(:voteable_id).count.sort_by { |id, votes| votes }.reverse.to_h
@@ -638,6 +692,10 @@ class User < ActiveRecord::Base
       end
     end
     return false
+  end
+
+  def self.find_super_admin
+    User.where(is_admin: true).first
   end
 
 end

@@ -1,0 +1,30 @@
+<div class="row margin_bottom">
+  <div class="col-xs-8">
+    <h1>Self Assessment</h1>
+  </div>
+  <div class="col-xs-4 text-right">
+    <%= link_to raw("<span class='glyphicon glyphicon-plus'></span> Add Assessment"), self_assessment_new_path, remote: true, class: "btn btn-success btn-lg margin_top" %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <p>The goal here is to utilize a set of objective tests to determine 1) your relative weaknesses so you can work to improve them and
+      2) your overall climbing performance broken down into these very measurable aspects in order to show your progress. The most important thing
+      to keep in mind here is to be consistent. It doesn't matter so much what hangboard or campusboard you use, just be sure to use something
+      that you'll be able to test yourself on for the foreseeable future. We want to compare your recorded performances rather than compare you to others.
+      That being said, one thing that will help tremendously is to know your bodyweight (head to
+      <%= link_to('your profile', {controller: '/profile', action: 'edit'}, class: "") %> to record that). We only use this to determine how
+      much weight you are able to add relative to your own weight, as that is much more telling than weight alone.
+    </p>
+  </div>
+</div>
+
+<div class="event_list margin_top">
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="event_modal" tabindex="-1" role="dialog" aria-labelledby="eventModal">
+
+</div>

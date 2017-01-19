@@ -243,6 +243,10 @@ body {
   bottom: 0px;
 }
 
+#wysiwyg_editor {
+  overflow:scroll; min-height:300px;
+}
+
 /* ============ General Elements */
 html, body{
   height: 100%;
@@ -854,6 +858,12 @@ a.message_title:visited{
   font-size: 30px;
 }
 
+#inbox_link {
+  font-size: 18px;
+  padding-left: 0;
+  padding-right: 0;
+}
+
 #notice_area{
   margin-bottom: 50px;
 }
@@ -917,6 +927,10 @@ a.message_title:visited{
               background-color: $shader_hover;
               color: $white;
               @include border-radius(5px);
+            }
+
+            > a.orange{
+              color: $orange;
             }
 
             > a:hover{
