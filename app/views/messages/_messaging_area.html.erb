@@ -1,10 +1,10 @@
 <div class="row">
   <div class="col-xs-9">
-    <h3>Discussion</h3>
+    <h3>Comments</h3>
   </div>
   <div class="col-xs-3 text-right">
     <% if user_signed_in? %>
-      <%= link_to raw("<span class='glyphicon glyphicon-pencil'></span> Discuss"), new_message_path(messageable_id: messageable.id, messageable_type: messageable.class.name), remote: true, class: "btn btn-success margin_top" %>
+      <%= link_to raw("<span class='glyphicon glyphicon-pencil'></span> Comment"), new_message_path(messageable_id: messageable.id, messageable_type: messageable.class.name), remote: true, class: "btn btn-success margin_top" %>
     <% end %>
   </div>
 </div>

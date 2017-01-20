@@ -138,11 +138,13 @@ class MessagesController < ApplicationController
   end
 
   def inbox_unread
+    require 'will_paginate/array'
     @new_messages = current_user.new_messages
     @new_messages = @new_messages.paginate(:page => page, :per_page => per_page)
   end
 
   def inbox
+    require 'will_paginate/array'
     @all_messages = current_user.all_messages
     @all_messages = @all_messages.paginate(:page => page, :per_page => per_page)
   end
