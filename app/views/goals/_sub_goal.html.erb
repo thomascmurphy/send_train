@@ -31,7 +31,7 @@
     <% if sub_goal.sub_goals.present? %>
       <ul>
         <% sub_goal.sub_goals.each do |sub_sub_goal| %>
-          <%= render partial: 'goals/sub_goal', object: sub_sub_goal, locals: {indent: indent + 1 || 1, table_row: table_row} %>
+          <%= render partial: 'goals/sub_goal', object: sub_sub_goal, locals: {indent: indent + 1 || 1, table_row: table_row, display_links: display_links} %>
         <% end %>
       </ul>
     <% end %>
