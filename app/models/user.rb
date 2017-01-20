@@ -632,7 +632,7 @@ class User < ActiveRecord::Base
                         description: "You have #{ActionController::Base.helpers.pluralize(new_message_count, 'new message')}",
                         item: nil,
                         date: DateTime.now,
-                        custom_link: "/community"})
+                        custom_link: "/inbox/unread"})
     end
 
     if my_daily_events.present?
