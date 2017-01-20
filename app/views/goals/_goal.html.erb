@@ -25,7 +25,7 @@
         Subgoals:<br/>
         <ul>
           <% goal.sub_goals.each do |sub_goal| %>
-            <%= render partial: 'goals/sub_goal', object: sub_goal, locals: {indent: 1, table_row: false, show_buttons: show_buttons} %>
+            <%= render partial: 'goals/sub_goal', object: sub_goal, locals: {indent: 1, table_row: false, display_links: defined?(show_buttons) ? show_buttons : false} %>
           <% end %>
         </ul>
       <% end %>
