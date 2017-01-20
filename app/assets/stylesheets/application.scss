@@ -738,6 +738,10 @@ input[type=range]:focus::-ms-fill-upper {
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
+
+  * {
+    white-space: normal;
+  }
 }
 
 .message_title {
