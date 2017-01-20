@@ -8,7 +8,7 @@
     <h1><%= @article.title %></h1>
   </div>
   <div class="col-xs-3 text-right">
-    <% if current_user.is_admin? || @article.user_id == current_user.id %>
+    <% if user_signed_in? && (current_user.is_admin? || @article.user_id == current_user.id) %>
       <%= link_to raw("<span class='glyphicon glyphicon-pencil'></span> Edit"), edit_article_path(@article), class: "btn btn-success btn-lg margin_top" %>
     <% end %>
   </div>

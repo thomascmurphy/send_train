@@ -4,18 +4,24 @@
       <%= render partial: "votes/voting_area", object: @primary_message, as: 'voteable', locals: {} %>
     </div>
   </div>
-  <div class="col-xs-8">
-    <h1><%= @primary_message.title %></h1>
+  <div class="col-xs-7">
+    <div class="message_title">
+      <%= render "message_title" %>
+    </div>
   </div>
-  <div class="col-xs-3 text-right">
+  <div class="col-xs-4 text-right">
+    <% if @primary_message.user == current_user && @primary_message.deleted.blank? %>
+      <%= link_to raw("<strong><span class='glyphicon glyphicon-pencil'></span> Edit</strong>"), edit_message_path(@primary_message, primary_message_id: @primary_message_id), remote: true, class: "btn btn-info btn-lg margin_top" %>
+      <%= link_to raw("<strong><span class='glyphicon glyphicon-trash'></span> Delete</strong>"), message_delete_path(@primary_message, primary_message_id: @primary_message_id), remote: true, class: "btn btn-danger btn-lg margin_top" %>
+    <% end %>
     <%= link_to raw("<span class='glyphicon glyphicon-share-alt'></span> Reply"), new_message_path(parent_message_id: @primary_message.id, primary_message_id: @primary_message.id), remote: true, class: "btn btn-success btn-lg margin_top" %>
   </div>
 </div>
 <div class="row">
   <div class="col-xs-12">
     <div class="panel panel-default">
-      <div class="panel-body">
-        <%= @primary_message.body %>
+      <div class="panel-body message_body">
+        <%= render "message_body" %>
       </div>
     </div>
   </div>

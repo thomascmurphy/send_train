@@ -3,8 +3,10 @@
     <h1>All Users</h1>
   </div>
   <div class="col-xs-6 text-right">
-    <%= link_to "View My Followers", community_my_followers_path, class: "btn btn-info btn-lg margin_top" %>
-    <%= link_to "View My Users", community_my_users_path, class: "btn btn-success btn-lg margin_top" %>
+    <% if user_signed_in? %>
+      <%= link_to "View My Followers", community_my_followers_path, class: "btn btn-info btn-lg margin_top" %>
+      <%= link_to "View My Users", community_my_users_path, class: "btn btn-success btn-lg margin_top" %>
+    <% end %>
   </div>
 </div>
 <div class="row">

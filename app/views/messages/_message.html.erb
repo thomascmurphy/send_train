@@ -8,7 +8,13 @@
       </div>
       <div class="col-xs-11">
         <%= link_to message.smart_title, message_path(message), class: "message_title" %>
-        <div><%= simple_format(truncate(message.body, length: 50, separator: ' ')) %></div>
+        <div>
+          <% if message.deleted.present? %>
+            <em class="text-muted">Deleted by user.</em>
+          <% else %>
+            <%= simple_format(truncate(message.body, length: 50, separator: ' ')) %>
+          <% end %>
+        </div>
         <div>
           <%= link_to message.user.smart_name, community_user_path(message.user.id) %>&nbsp;&nbsp;
           <span class="message_score"><%= "#{pluralize(Vote.item_score(message), 'point')}" %></span>&nbsp;&nbsp;

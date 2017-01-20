@@ -18,19 +18,19 @@ TrainToSend::Application.routes.draw do
       get "delete"
     end
 
-    resources :exercises do
+    resources :exercises, only: [:index, :new, :create, :edit, :update, :destroy] do
       get "delete"
       get "duplicate"
     end
 
-    resources :workouts do
+    resources :workouts, only: [:index, :new, :create, :edit, :update, :destroy] do
       get "delete"
       get "duplicate"
       get "assign", to: 'workouts#assign_new'
       post "assign", to: 'workouts#assign_create'
     end
 
-    resources :macrocycles, :path => "plans" do
+    resources :macrocycles, only: [:index, :new, :create, :edit, :update, :destroy], :path => "plans" do
       get "delete"
       get "duplicate"
       get "assign", to: 'macrocycles#assign_new'
@@ -76,10 +76,8 @@ TrainToSend::Application.routes.draw do
     end
 
     get 'community/training', to: 'community#training'
-    get 'community/users', to: 'community#users'
     get 'community/my_users', to: 'community#my_users'
     get 'community/my_followers', to: 'community#my_followers'
-    get 'community/users/:user_id', to: 'community#user', as: 'community_user'
     get 'community/users/follow/:user_id', to: 'community#user_follow', as: 'community_user_follow'
     get 'community/users/unfollow/:user_id', to: 'community#user_unfollow', as: 'community_user_unfollow'
 
@@ -87,7 +85,7 @@ TrainToSend::Application.routes.draw do
       get "delete"
     end
 
-    resources :messages do
+    resources :messages, only: [:new, :create, :edit, :update, :destroy] do
       get "delete"
     end
     get 'inbox/unread', to: 'messages#inbox_unread', as: 'messages_inbox_unread'
@@ -95,20 +93,30 @@ TrainToSend::Application.routes.draw do
 
     resources :votes, only: [:new]
 
-    resources :articles do
+    resources :articles, only: [:new, :create, :edit, :update, :destroy] do
       get "delete"
     end
 
+    get 'comment', to: 'comments#new'
+    post 'comment', to: 'comments#create'
+
+    get 'onboarding', to: 'users#onboarding'
+    get 'onboarding_skip', to: 'users#onboarding_skip'
+
   end
 
-  get 'comment', to: 'comments#new'
-  post 'comment', to: 'comments#create'
+  resources :messages, only: [:index, :show]
+  resources :articles, only: [:index, :show]
+  resources :exercises, only: [:show]
+  resources :workouts, only: [:show]
+  resources :macrocycles, only: [:show], :path => "plans"
+  get 'community/users', to: 'community#users'
+  get 'community/users/:user_id', to: 'community#user', as: 'community_user'
 
   get 'privacy_policy', to: 'home#privacy_policy'
   get 'terms_of_service', to: 'home#terms_of_service'
 
-  get 'onboarding', to: 'users#onboarding'
-  get 'onboarding_skip', to: 'users#onboarding_skip'
+
 
   root to: "home#index"
   # The priority is based upon order of creation: first created -> highest priority.

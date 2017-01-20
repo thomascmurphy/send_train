@@ -310,6 +310,10 @@ a.row, a.block, img.block{
     display: block;
 }
 
+a.disable_click {
+  cursor: default;
+}
+
 .inline_block{
     display: inline-block;
 }

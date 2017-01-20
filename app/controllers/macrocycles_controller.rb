@@ -20,7 +20,6 @@ class MacrocyclesController < ApplicationController
       @macrocycle = nil
     end
     if @macrocycle.present?
-      @workouts = current_user.workouts
       respond_to do |format|
         format.html
         format.js

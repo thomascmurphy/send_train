@@ -1,0 +1,16 @@
+<% @primary_message_id = defined?(@primary_message) ? @primary_message.id : nil %>
+<div class="modal-dialog">
+  <div class="modal-content">
+  <div class="modal-header">
+    <h3>Delete Message</h3>
+  </div>
+  <div class="modal-body">
+  <ul class="errors"></ul>
+  Are you sure you wish to delete this message?
+  </div>
+  <div class="modal-footer">
+    <%= link_to "Yes, Delete This Message", message_path(@message, primary_message_id: @primary_message_id), method: :delete, remote: true, class: "btn btn-danger" %>
+    <%= link_to "No, Please Don't", "#", class: "btn btn-default", data: { dismiss: "modal" } %>
+  </div>
+  </div>
+</div>

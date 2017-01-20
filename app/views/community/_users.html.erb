@@ -14,7 +14,7 @@
       <td><%= user.workout_count %></td>
       <td><%= user.follower_count %></td>
       <td class="text-right">
-        <% unless current_user == user || user.allow_followers.blank? %>
+        <% if current_user != user && user.allow_followers.present? && user_signed_in? %>
           <% if current_user.is_following(user.id) %>
             <%= link_to "Unfollow", community_user_unfollow_path(user.id, sort_by: sort_by, sort_direction: sort_direction, page: page, per_page: per_page), remote: true, class: "btn btn-danger" %>
           <% else %>

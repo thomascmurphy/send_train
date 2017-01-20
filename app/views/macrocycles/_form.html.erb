@@ -3,9 +3,9 @@
     <div class="row large_margin_top">
       <div class="col-sm-6 margin_bottom">
         <%= f.text_field :label, {placeholder: "Name", class: "form-control margin_right", style: (defined?(disable_fields) && disable_fields.present?) ? "" : "display: inline-block; width: auto; vertical-align: middle;", disabled: (defined?(disable_fields) && disable_fields.present?)} %>
-        <%= f.check_box :private %>
-        <%= f.label :private, class: "margin_right" %>
         <% unless defined?(disable_fields) && disable_fields.present? %>
+          <%= f.check_box :private %>
+          <%= f.label :private, class: "margin_right" %>
           <input type="submit" class="btn btn-primary" value="Save Template">
         <% end %>
       </div>

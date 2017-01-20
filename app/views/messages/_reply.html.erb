@@ -6,11 +6,21 @@
   </span>&nbsp;&nbsp;
   <span class="time_ago"><%= time_ago_in_words(reply.created_at) %> ago</span></br>
 
-  <div class="message_body">
-    <%= reply.body %>
+  <div class="reply_body">
+    <% if reply.deleted.present? %>
+      <em class="text-muted">Deleted by user.</em>
+    <% else %>
+      <%= reply.body %>
+    <% end %>
   </div>
   <div class="message_actions">
-    <%= link_to raw("<strong><span class='glyphicon glyphicon-share-alt'></span> reply</strong>"), new_message_path(parent_message_id: reply.id, primary_message_id: @primary_message_id), remote: true, class: "" %>
+    <% if user_signed_in? %>
+      <%= link_to raw("<strong><span class='glyphicon glyphicon-share-alt'></span> reply</strong>"), new_message_path(parent_message_id: reply.id, primary_message_id: @primary_message_id), remote: true, class: "" %>
+      <% if reply.user == current_user && reply.deleted.blank? %>
+        <%= link_to raw("<strong><span class='glyphicon glyphicon-pencil'></span> edit</strong>"), edit_message_path(reply, primary_message_id: @primary_message_id), remote: true, class: "margin_left" %>
+        <%= link_to raw("<strong><span class='glyphicon glyphicon-trash'></span> delete</strong>"), message_delete_path(reply, primary_message_id: @primary_message_id), remote: true, class: "text-danger margin_left" %>
+      <% end %>
+    <% end %>
   </div>
 
   <% if reply.replies.present? %>

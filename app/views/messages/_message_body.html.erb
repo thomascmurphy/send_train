@@ -1,0 +1,5 @@
+<% if @primary_message.deleted.present? %>
+  <em class="text-muted">Deleted by user.</em>
+<% else %>
+  <%= @primary_message.body %>
+<% end %>

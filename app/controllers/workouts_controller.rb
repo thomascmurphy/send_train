@@ -2,9 +2,15 @@ class WorkoutsController < ApplicationController
   before_filter :set_exercises, :only => [:show, :new, :edit, :update]
 
   def set_exercises
-    @exercises = current_user.exercises
-    @boulder_grades = Climb.bouldering_grades(current_user.grade_format)
-    @sport_grades = Climb.sport_grades(current_user.grade_format)
+    if user_signed_in?
+      @exercises = current_user.exercises
+      @boulder_grades = Climb.bouldering_grades(current_user.grade_format)
+      @sport_grades = Climb.sport_grades(current_user.grade_format)
+    else
+      @exercises = []
+      @boulder_grades = Climb.bouldering_grades("wester")
+      @sport_grades = Climb.sport_grades("western")
+    end
   end
 
   def index

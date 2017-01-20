@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170116220615) do
+ActiveRecord::Schema.define(version: 20170120155142) do
 
   create_table "articles", force: :cascade do |t|
     t.string   "title"
@@ -241,6 +241,7 @@ ActiveRecord::Schema.define(version: 20170116220615) do
     t.integer  "views",             default: 0
     t.datetime "created_at",                        null: false
     t.datetime "updated_at",                        null: false
+    t.boolean  "deleted",           default: false
   end
 
   add_index "messages", ["messageable_type", "messageable_id"], name: "index_messages_on_messageable_type_and_messageable_id"

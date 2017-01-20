@@ -37,6 +37,11 @@ ready = function() {
       $(this).attr("disabled", "disabled");
   });
 
+  $('body').on('click', '.disable_click', function(e){
+    e.preventDefault();
+    return false;
+  });
+
   $('body').on('change, input', '.slider_container input[type="range"]', function(){
 		var slider_container = $(this).closest('.slider_container');
 		var show_value = $(this).val();

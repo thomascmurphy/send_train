@@ -11,5 +11,11 @@ $("ul.errors").html("")
   } else if ($(".messageable_message_list").length > 0) {
     $(".messageable_message_list").html("<%= escape_javascript(render partial: 'messages/replies', object: @message.messageable, as: 'messageable') %>")
   }
+  if ($(".message_body").length > 0) {
+    $(".message_body").html("<%= escape_javascript(render 'messages/message_body') %>")
+  }
+  if ($(".message_title").length > 0) {
+    $(".message_title").html("<%= escape_javascript(render 'messages/message_title') %>")
+  }
   $("#message_modal").modal("hide")
 <% end %>

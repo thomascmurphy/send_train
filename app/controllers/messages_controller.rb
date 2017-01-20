@@ -69,7 +69,7 @@ class MessagesController < ApplicationController
   end
 
   def edit
-    @message = current_user.messages.find_by_id(params[:id])
+    @message = current_user.sent_messages.find_by_id(params[:id])
     respond_to do |format|
       format.html
       format.js
@@ -78,11 +78,18 @@ class MessagesController < ApplicationController
   end
 
   def update
-    @message = current_user.messages.find_by_id(params[:id])
-
+    @message = current_user.sent_messages.find_by_id(params[:id])
+    if params[:primary_message_id].present?
+      @primary_message = Message.find_by_id(params[:primary_message_id])
+    else
+      @primary_message = @message
+    end
     respond_to do |format|
       if @message.update_attributes(message_params)
-        format.html
+        require 'will_paginate/array'
+        @messages = Message.where(parent_message_id: nil, messageable_id: nil).sort_by{|x| [Vote.item_score(x), x.updated_at]}.reverse
+        @messages = @messages.paginate(:page => page, :per_page => per_page)
+        format.html { redirect_to @message, notice: 'Message was successfully updated.' }
         format.js
         format.json { render json: @message, status: :ok, location: @message }
       else
@@ -94,7 +101,12 @@ class MessagesController < ApplicationController
   end
 
   def delete
-    @message = current_user.messages.find_by_id(params[:message_id])
+    @message = current_user.sent_messages.find_by_id(params[:message_id])
+    if params[:primary_message_id].present?
+      @primary_message = Message.find_by_id(params[:primary_message_id])
+    else
+      @primary_message = @message
+    end
     respond_to do |format|
       format.html
       format.js
@@ -103,8 +115,26 @@ class MessagesController < ApplicationController
   end
 
   def destroy
-    @message = current_user.messages.find_by_id(params[:id])
-    @message.destroy
+    @message = current_user.sent_messages.find_by_id(params[:id])
+    @message.deleted = true
+    if params[:primary_message_id].present?
+      @primary_message = Message.find_by_id(params[:primary_message_id])
+    else
+      @primary_message = @message
+    end
+    respond_to do |format|
+      if @message.save
+        require 'will_paginate/array'
+        @messages = Message.where(parent_message_id: nil, messageable_id: nil).sort_by{|x| [Vote.item_score(x), x.updated_at]}.reverse
+        @messages = @messages.paginate(:page => page, :per_page => per_page)
+        format.html { redirect_to @message, notice: 'Message was successfully deleted.' }
+        format.js
+        format.json { render json: @message, status: :created, location: @message }
+      else
+        format.html { render action: "new" }
+        format.json { render json: @message.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def inbox_unread
@@ -121,7 +151,7 @@ class MessagesController < ApplicationController
 
   def message_params
     params.require(:message).permit(:title, :body, :parent_message_id, :messageable_id,
-                                    :messageable_type, :read, :views)
+                                    :messageable_type, :read, :views, :deleted)
   end
 
   def page
