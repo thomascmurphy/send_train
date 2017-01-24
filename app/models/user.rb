@@ -533,9 +533,9 @@ class User < ActiveRecord::Base
     my_macrocycle_ids = self.macrocycles.pluck(:id)
     my_goal_ids = self.goals.pluck(:id)
 
-    followed_user_exercise_activity = Exercise.where(user_id: my_user_ids, created_at: DateTime.now-7.days..DateTime.now.end_of_day).where.not(reference_id: Exercise::SEEDED_REFERENCE_IDS)
-    followed_user_workout_activity = Workout.where(user_id: my_user_ids, created_at: DateTime.now-7.days..DateTime.now.end_of_day).where.not(reference_id: Workout::SEEDED_REFERENCE_IDS)
-    followed_user_macrocycle_activity = Macrocycle.where(user_id: my_user_ids, created_at: DateTime.now-7.days..DateTime.now.end_of_day).where.not(reference_id: Macrocycle::SEEDED_REFERENCE_IDS)
+    followed_user_exercise_activity = Exercise.where(private: false, user_id: my_user_ids, created_at: DateTime.now-7.days..DateTime.now.end_of_day).where.not(reference_id: Exercise::SEEDED_REFERENCE_IDS)
+    followed_user_workout_activity = Workout.where(private: false, user_id: my_user_ids, created_at: DateTime.now-7.days..DateTime.now.end_of_day).where.not(reference_id: Workout::SEEDED_REFERENCE_IDS)
+    followed_user_macrocycle_activity = Macrocycle.where(private: false, user_id: my_user_ids, created_at: DateTime.now-7.days..DateTime.now.end_of_day).where.not(reference_id: Macrocycle::SEEDED_REFERENCE_IDS)
 
     voted_climb_ids = self.votes.where(voteable_type: "Attempt").pluck(:voteable_id)
     #dunno if I want to keep these here
@@ -543,7 +543,7 @@ class User < ActiveRecord::Base
     my_user_climb_ids = Climb.where(user_id: my_user_ids).pluck(:id)
     user_new_climbs = Attempt.where(completion: 100, climb_id: my_user_climb_ids, date: DateTime.now-7.days..DateTime.now.end_of_day).where.not(id: voted_climb_ids)
 
-    user_achieved_goals = Goal.where(completed: true, updated_at: DateTime.now-7.days..DateTime.now.end_of_day, user_id: my_user_ids)
+    user_achieved_goals = Goal.where(private: false, completed: true, updated_at: DateTime.now-7.days..DateTime.now.end_of_day, user_id: my_user_ids)
 
     follower_activity = UserFollower.where(user_id: self.id, created_at: DateTime.now-7.days..DateTime.now.end_of_day)
 
