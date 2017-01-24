@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
   has_many :votes, dependent: :destroy
   has_many :messages, as: :messageable, dependent: :destroy
   has_many :articles
+  has_many :badges, dependent: :destroy
   after_create :seed_exercises
 
   # Include default devise modules. Others available are:

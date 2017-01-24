@@ -7,7 +7,7 @@ class Macrocycle < ActiveRecord::Base
   has_many :messages, as: :messageable, dependent: :destroy
   after_create :set_reference_id, :auto_upvote
 
-  SEEDED_REFERENCE_IDS = [1, 2, 3]
+  SEEDED_REFERENCE_IDS = [1]
 
   def set_reference_id
     if self.reference_id.blank?

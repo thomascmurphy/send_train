@@ -1,10 +1,8 @@
 class ProfileController < ApplicationController
   def show
     @user = current_user
-    @next_events = current_user.events.where("start_date <= ? AND end_date >= ?", DateTime.now.end_of_day, DateTime.now.beginning_of_day).where.not(workout_id: nil, completed: true).order(start_date: :asc).first(2)
-    @best_workouts_bouldering = current_user.workouts.sort_by{|w| w.efficacy("boulder")}.reverse[0..1]
-    @best_workouts_sport_climbing = current_user.workouts.sort_by{|w| w.efficacy("sport")}.reverse[0..1]
-    @ongoing_goals = Goal.where(user_id: current_user.id, parent_goal_id: nil, completed: false)
+    @badges = Badge::BADGE_LIST
+    @user_badge_types = current_user.badges.pluck(:badge_type)
   end
 
   def edit

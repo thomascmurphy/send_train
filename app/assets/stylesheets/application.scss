@@ -817,6 +817,15 @@ a.message_title:visited{
   font-size: 18px;
 }
 
+.badge_holder {
+
+  .badge_display {
+    @include border-radius(5px);
+    background-color: $orange;
+    color: $white;
+  }
+}
+
 
 
 /* ============ Header Area */
@@ -912,6 +921,12 @@ a.message_title:visited{
 
   .col-sm-1.calendar_day{
     width: 14.28571428%;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .col-sm-1.badge_holder{
+    width: 10%;
     padding-left: 5px;
     padding-right: 5px;
   }

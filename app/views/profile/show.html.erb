@@ -1,150 +1,24 @@
 <div class="row">
   <div class="col-xs-12">
-    <h1>Dashboard</h1>
+    <h1>Profile</h1>
   </div>
 </div>
 
 <div class="row large_margin_top margin_bottom">
-  <div class="col-sm-6">
-    <h3>Recent Progress</h3>
-    <% if current_user.should_show_climb_data? %>
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Best Climbs</h3>
-        </div>
-        <div class="panel-body">
-            <div class="build_line" <% @user.climb_graph_data.each_with_index do |line_data, index| %>
-                                        data-primary-name-<%= index %> = "<%= line_data[:name] %>"
-                                        data-primary-value-<%= index %> = "<%= line_data[:value] %>"
-                                        data-primary-tooltip-value-<%= index %> = "<%= line_data[:tooltip_value] %>"
-                                    <% end %>></div>
-        </div>
-      </div>
-    <% else %>
+  <div class="col-xs-12">
+    <h3>Badges</h3>
+    <% @badges.each do |category, badges| %>
       <div class="row">
-        <div class="col-xs-10">
-          <div class="well">
-            <%= link_to "Add more climb data to view your climbing progress!", climbs_path %>
+        <h3><%= category %></h3>
+        <% badges.each do |badge| %>
+          <div class="col-sm-1 badge_holder <%= 'translucent' unless @user_badge_types.include?(badge[:type]) %>">
+            <div class="badge_display">
+              <%= badge[:type] %>
+              <h4 class="text-center"><%= badge[:title] %></h4>
+            </div>
           </div>
-        </div>
+        <% end %>
       </div>
     <% end %>
-  </div>
-  <div class="col-sm-6">
-    <h3>Upcoming Workouts</h3>
-    <div class="row">
-      <% if @next_events.present? %>
-        <% @next_events.each do |event| %>
-          <div class="col-sm-6 margin_bottom">
-            <div class="panel<%= event.panel_class %>">
-              <div class="panel-heading">
-                <h3 class="panel-title"><%= event.smart_label %></h3>
-              </div>
-              <div class="panel-body">
-                <%= event.start_date.strftime('%b %d %Y') %> - <%= event.end_date.strftime('%b %d %Y') %><br>
-
-                <% if event.notes.present? %>
-                  <hr/>
-                  <%= simple_format(truncate(event.notes, length: 50, separator: ' ')) %>
-                <% elsif event.workout.present? %>
-                  <hr/>
-                  <%= simple_format(truncate(event.workout.description, length: 50, separator: ' ')) %>
-                <% end %>
-
-                <% if event.child_events.present? %>
-                  <hr/>
-                  <ul>
-                    <% event.child_events.each do |child_event| %>
-                      <li class="<% if child_event.completed.present? %>translucent<% end %>">
-                        <%= child_event.label %>
-                      </li>
-                    <% end %>
-                  </ul>
-                <% end %>
-              </div>
-            </div>
-          </div>
-        <% end %>
-      <% else %>
-        <div class="col-xs-10">
-          <div class="well">
-            <%= link_to "You have no events, you should probably schedule some.", events_path %>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
-</div>
-
-<% if @ongoing_goals.present? %>
-<div class="margin_bottom">
-  <h3>Current Goals</h3>
-  <div class="row">
-    <% @ongoing_goals.each_with_index do |goal, index| %>
-      <%= render partial: 'goals/goal', object: goal, locals: {show_buttons: false} %>
-      <% if index % 4 == 3 %>
-    </div><div class="row">
-      <% end %>
-    <% end %>
-  </div>
-</div>
-<% end %>
-
-<div class="row margin_bottom">
-  <div class="col-sm-6">
-    <h3>Most Effective Bouldering Workouts</h3>
-    <div class="row">
-      <% if current_user.should_show_workout_data? %>
-        <% @best_workouts_bouldering.each do |workout| %>
-          <div class="col-sm-6 margin_bottom">
-            <div class="panel<%= workout.panel_class %>">
-              <div class="panel-heading">
-                <h3 class="panel-title"><%= workout.label %></h3>
-              </div>
-              <div class="panel-body">
-                <%= simple_format(truncate(workout.description, length: 50, separator: ' ')) %>
-              </div>
-              <div class="panel-footer text-right">
-                <h3><small>Score:</small> <span class="alt_font"><%= workout.efficacy_nice("boulder") %></span></h3>
-              </div>
-            </div>
-          </div>
-        <% end %>
-      <% else %>
-        <div class="col-xs-10">
-          <div class="well">
-            Once you have completed a few workout plans we can start showing you more data here.
-          </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    <h3>Most Effective Sport Climbing Workouts</h3>
-    <div class="row">
-      <% if current_user.should_show_workout_data? %>
-        <% @best_workouts_sport_climbing.each do |workout| %>
-          <div class="col-sm-6 margin_bottom">
-            <div class="panel<%= workout.panel_class %>">
-              <div class="panel-heading">
-                <h3 class="panel-title"><%= workout.label %></h3>
-              </div>
-              <div class="panel-body">
-                <%= simple_format(truncate(workout.description, length: 50, separator: ' ')) %>
-              </div>
-              <div class="panel-footer text-right">
-                <h3><small>Score:</small> <span class="alt_font"><%= workout.efficacy_nice("sport") %></span></h3>
-              </div>
-            </div>
-          </div>
-        <% end %>
-      <% else %>
-        <div class="col-xs-10">
-          <div class="well">
-            Once you have completed a few workout plans we can start showing you more data here.
-          </div>
-        </div>
-      <% end %>
-    </div>
   </div>
 </div>
