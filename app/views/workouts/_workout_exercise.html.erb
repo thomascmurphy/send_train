@@ -1,10 +1,10 @@
 <div class="planner_exercise alert<%= exercise.alert_class %> draggable" data-exercise-id="<%= exercise.id %>">
   <span class="exercise_label">
     <%= exercise.label %>
-    <input name="workout_exercises[][id]" type="hidden" value=""/>
-    <input name="workout_exercises[][exercise_id]" type="hidden" value="<%= exercise.id %>"/>
   </span>
   <div class="hidden exercise_metrics">
+    <input name="workout_exercises[][id]" type="hidden" value=""/>
+    <input name="workout_exercises[][exercise_id]" type="hidden" value="<%= exercise.id %>"/>
     <% exercise.exercise_metrics.each do |exercise_metric| %>
       <div class="form-group text-right">
         <label>
