@@ -541,7 +541,8 @@ class User < ActiveRecord::Base
     #dunno if I want to keep these here
     voted_climb_ids = []
     my_user_climb_ids = Climb.where(user_id: my_user_ids).pluck(:id)
-    user_new_climbs = Attempt.where(completion: 100, climb_id: my_user_climb_ids, date: DateTime.now-7.days..DateTime.now.end_of_day).where.not(id: voted_climb_ids)
+    user_new_climbs = Attempt.where(completion: 100, climb_id: my_user_climb_ids, date: DateTime.now-7.days..DateTime.now.end_of_day).where.not(id: voted_climb_ids).includes(:climb).order('climbs.grade DESC')
+    user_new_climbs_grouped = user_new_climbs.group_by{|x| x.climb.user}
 
     user_achieved_goals = Goal.where(private: false, completed: true, updated_at: DateTime.now-7.days..DateTime.now.end_of_day, user_id: my_user_ids)
 
@@ -581,13 +582,21 @@ class User < ActiveRecord::Base
                    date: macrocycle.created_at}
     end
 
-    user_new_climbs.each do |attempt|
+    user_new_climbs_grouped.each do |user, attempts|
       activity << {label: "Sendage!",
-                   description: "#{attempt.climb.user.smart_name} has sent #{attempt.climb.name}.",
-                   item: attempt,
-                   date: attempt.created_at,
-                   custom_link: "/community/users/#{attempt.climb.user.id}"}
+                   description: "#{user.smart_name} has sent #{attempts.first.climb.name} (#{attempts.first.climb.grade_string}).",
+                   item: attempts.first,
+                   date: attempts.first.created_at,
+                   custom_link: "/community/users/#{user.id}"}
     end
+
+    # user_new_climbs.each do |attempt|
+    #   activity << {label: "Sendage!",
+    #                description: "#{attempt.climb.user.smart_name} has sent #{attempt.climb.name}.",
+    #                item: attempt,
+    #                date: attempt.created_at,
+    #                custom_link: "/community/users/#{attempt.climb.user.id}"}
+    # end
 
     user_achieved_goals.each do |goal|
       activity << {label: "Goal Achieved!",

@@ -1,4 +1,5 @@
 class AttemptsController < ApplicationController
+  helper_method :sort_by, :sort_direction, :page, :per_page
 
   def set_other_models
     @boulder_grades = Climb.bouldering_grades(current_user.grade_format)
@@ -98,5 +99,22 @@ class AttemptsController < ApplicationController
   private
     def attempt_params
       params.require(:attempt).permit(:climb_id, :date, :completion, :flash, :onsight)
+    end
+
+    def sort_by
+      legal_sorts = Climb.column_names + ['redpoint_date']
+      legal_sorts.include?(params[:sort_by]) ? params[:sort_by] : "redpoint_date"
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:sort_direction]) ? params[:sort_direction] : "desc"
+    end
+
+    def page
+      (params[:page] || 1).to_i
+    end
+
+    def per_page
+      (params[:per_page] || 20).to_i
     end
 end
