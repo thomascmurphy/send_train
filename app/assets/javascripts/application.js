@@ -26,11 +26,14 @@ var ready;
 ready = function() {
 
   $('body').on('click', '.disable_after_click', function(e){
+    if ($(this).attr('type') == "submit") {
+      $(this).closest('form').submit();
+    }
     $(this).attr("disabled", "disabled");
   });
 
   $('body').on('click', '.spin_after_click', function(e){
-    $(this).find('.glyphicon').addClass('spinning');
+    $(this).find('.glyphicon').removeClass('hidden').addClass('spinning');
   });
 
   $('.disable_after_click_remote').on("ajax:success", function(){

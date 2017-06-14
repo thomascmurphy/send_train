@@ -9,7 +9,7 @@
   If this event has child events (e.g. if this event has an associated "plan"), the child events will also be deleted.
   </div>
   <div class="modal-footer">
-    <%= link_to "Yes, Delete This Event", event_path(@event), method: :delete, remote: true, class: "btn btn-danger" %>
+    <%= link_to raw("<span class='glyphicon glyphicon-repeat hidden'></span> Yes, Delete This Event"), event_path(@event), method: :delete, remote: true, class: "btn btn-danger spin_after_click disable_after_click" %>
     <%= link_to "No, Please Don't", "#", class: "btn btn-default", data: { dismiss: "modal" } %>
   </div>
   </div>

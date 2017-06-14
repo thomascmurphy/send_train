@@ -344,7 +344,6 @@ ActiveRecord::Schema.define(version: 20170120155142) do
     t.integer "order_in_workout"
     t.integer "reps"
     t.string  "label"
-    t.string  "exercise_type"
   end
 
   add_index "workout_exercises", ["exercise_id"], name: "index_workout_exercises_on_exercise_id"
