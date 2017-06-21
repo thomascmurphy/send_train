@@ -14,25 +14,25 @@
           <% @event.workout.workout_exercises_ordered.each do |workout_exercise| %>
             <% for rep in 1..workout_exercise.reps %>
               <% performances = @event.exercise_performances_by_metric(rep) %>
-              <% if (performances.keys & workout_exercise.workout_metrics.pluck(:id)).present? %>
-                <tr>
-                  <td>
-                    <% if rep == 1 %>
-                      <%= workout_exercise.label %>
-                    <% end %>
-                  </td>
-                  <td><%= rep %></td>
-                  <td>
-                    <% workout_exercise.workout_metrics.each do |workout_metric| %>
-                      <div class="<% if workout_exercise.workout_metrics.count > 1 %>col-sm-6<% end %>">
-                        <% if performances[workout_metric.id].present? %>
-                          <%= render partial: 'exercise_performance', locals: {exercise_performance: performances[workout_metric.id]} %>
-                        <% end %>
-                      </div>
-                    <% end %>
-                  </td>
-                </tr>
-              <% end %>
+              <%# if (performances.keys & workout_exercise.workout_metrics.pluck(:id)).present? %>
+              <tr>
+                <td>
+                  <% if rep == 1 %>
+                    <%= workout_exercise.label %>
+                  <% end %>
+                </td>
+                <td><%= rep %></td>
+                <td>
+                  <% workout_exercise.workout_metrics.each do |workout_metric| %>
+                    <div class="<% if workout_exercise.workout_metrics.count > 1 %>col-sm-6<% end %>">
+                      <% if performances[workout_metric.id].present? %>
+                        <%= render partial: 'exercise_performance', locals: {exercise_performance: performances[workout_metric.id]} %>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </td>
+              </tr>
+              <%# end %>
             <% end %>
           <% end %>
         </tbody>

@@ -22,7 +22,7 @@ exercises_ready = function() {
     var type_value = $(this).val();
     metric_row.nextAll('tr').each(function(){
       if ($(this).hasClass('options_row') || $(this).hasClass('add_option_button_row')) {
-        if (type_value == 5) {
+        if (type_value == 5 || type_value == 11) {
           $(this).show();
         } else {
           $(this).hide();

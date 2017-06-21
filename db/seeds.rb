@@ -16,5 +16,6 @@ exercise_metric_types = ExerciseMetricType.create([
                                                     { label: 'Sport Grade', input_field: 'select', slug: 'sport-grade' },
                                                     { label: 'Rest Time', input_field: 'number', slug: 'rest-time' },
                                                     { label: 'Completion', input_field: 'range', slug: 'completion' },
-                                                    { label: 'Hold Size', input_field: 'number', slug: 'hold-size' }
+                                                    { label: 'Hold Size', input_field: 'number', slug: 'hold-size' },
+                                                    { label: 'Custom Options', input_field: 'select', slug: 'custom-options' }
                                                   ])
