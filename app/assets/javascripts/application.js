@@ -93,6 +93,15 @@ ready = function() {
 
   $('[data-toggle="tooltip"]').tooltip();
 
+  $('body').on('click', '.image_field_container .remove_image', function() {
+    $(this).hide();
+    $(this).siblings('.image_field').first().val('');
+    $(this).siblings('.img-thumbnail').addClass('hidden');
+    //$('.photoPreview').css('background', '');
+    $(this).siblings('.image_form-group').first().removeClass('hidden');
+    $(this).siblings('.remove_image_checkbox').prop('checked', true);
+  });
+
   // $('#wysiwyg_editor').wysiwyg({
 	// 	'form':
 	// 	{

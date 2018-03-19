@@ -1,4 +1,5 @@
 class Exercise < ActiveRecord::Base
+  attr_accessor :remove_image
   belongs_to :user
   has_many :workout_exercises, dependent: :destroy
   has_many :workouts, through: :workout_exercises
@@ -6,7 +7,11 @@ class Exercise < ActiveRecord::Base
   has_many :exercise_metric_options, through: :exercise_metrics
   has_many :votes, as: :voteable, dependent: :destroy
   has_many :messages, as: :messageable, dependent: :destroy
+  before_save :delete_image, if: ->{ remove_image == '1' && !image_updated_at_changed? }
   after_create :set_reference_id, :auto_upvote
+
+  has_attached_file :image, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "/assets/missing_:style.png"
+  validates_attachment_content_type :image, content_type: /\Aimage\/.*\z/
 
   SEEDED_REFERENCE_IDS = [1, 2, 3, 4]
 
@@ -172,6 +177,12 @@ class Exercise < ActiveRecord::Base
       end
       return new_exercise
     end
+  end
+
+  private
+
+  def delete_image
+    self.image = nil
   end
 
 

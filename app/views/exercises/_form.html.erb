@@ -1,4 +1,4 @@
-<%= form_for(@exercise, remote: true) do |f| %>
+<%= form_for(@exercise, remote: !(defined?(display_image_field) && display_image_field.present?), html: {multipart: true}, authenticity_token: (defined?(display_image_field) && display_image_field.present?)) do |f| %>
   <div class="modal-body">
     <ul class="errors"></ul>
     <div class="row">
@@ -24,12 +24,25 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-12">
+      <div class="<%= defined?(display_image_field) && display_image_field.present? ? 'col-xs-8' : 'col-xs-12' %>">
         <div class="form-group">
           <%= f.label :description %><br>
           <%= f.text_area :description, class: "form-control", size: "60x3", disabled: (defined?(disable_fields) && disable_fields.present?) %>
         </div>
       </div>
+      <% if defined?(display_image_field) && display_image_field.present? %>
+        <div class="col-xs-4">
+          <div class="image_field_container">
+            <%= image_tag @exercise.image.url(:thumb), class: "img-thumbnail" %>
+            <button type="button" class="btn btn-danger remove_image <%= @exercise.image.blank? ? 'hidden' : '' %>">Remove Image</button>
+            <div class="form-group image_form-group <%= @exercise.image.present? ? 'hidden' : '' %>">
+              <%= f.label :image %><br>
+              <%= f.file_field :image, class:'image_field' %>
+            </div>
+            <%= f.check_box :remove_image, class: 'hidden remove_image_checkbox' %>
+          </div>
+        </div>
+      <% end %>
     </div>
     <div class="row">
       <div class="col-xs-12">

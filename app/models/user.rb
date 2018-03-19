@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  attr_accessor :remove_avatar
   has_many :climbs, dependent: :destroy
   has_many :attempts, through: :climbs
   has_many :events, dependent: :destroy
@@ -18,6 +19,9 @@ class User < ActiveRecord::Base
   has_many :votes, dependent: :destroy
   has_many :messages, as: :messageable, dependent: :destroy
   has_many :articles
+  has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "/images/:style/missing.png"
+  validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/
+  before_save :delete_avatar, if: ->{ remove_avatar == '1' && !avatar_updated_at_changed? }
   after_create :seed_exercises
 
   # Include default devise modules. Others available are:
@@ -705,6 +709,23 @@ class User < ActiveRecord::Base
 
   def self.find_super_admin
     User.where(is_admin: true).first
+  end
+
+  def self.find_wodbot
+    wodbot = nil
+    super_admin = find_super_admin
+    if super_admin.present?
+      super_admin_email = super_admin.email
+      wodbot_email = super_admin_email.insert(super_admin_email.index('@'), '+wodbot')
+      wodbot = User.find_by_email(wodbot_email)
+    end
+    return wodbot
+  end
+
+  private
+
+  def delete_avatar
+    self.avatar = nil
   end
 
 end

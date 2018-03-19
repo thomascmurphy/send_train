@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170120155142) do
+ActiveRecord::Schema.define(version: 20170822231435) do
 
   create_table "articles", force: :cascade do |t|
     t.string   "title"
@@ -144,9 +144,13 @@ ActiveRecord::Schema.define(version: 20170120155142) do
     t.text     "description"
     t.integer  "user_id"
     t.integer  "reference_id"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.boolean  "private",       default: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.boolean  "private",            default: false
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
   end
 
   add_index "exercises", ["user_id"], name: "index_exercises_on_user_id"
@@ -320,6 +324,10 @@ ActiveRecord::Schema.define(version: 20170120155142) do
     t.string   "handle"
     t.integer  "mountain_project_user_id"
     t.boolean  "is_contributor",           default: false
+    t.string   "avatar_file_name"
+    t.string   "avatar_content_type"
+    t.integer  "avatar_file_size"
+    t.datetime "avatar_updated_at"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

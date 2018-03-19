@@ -67,11 +67,11 @@ class ExercisesController < ApplicationController
     respond_to do |format|
       if @exercise.update_attributes(exercise_params)
         @exercise.handle_exercise_metrics(params[:exercise_metrics])
-        format.html
+        format.html { redirect_to @exercise, notice: 'Exercise was successfully updated.' }
         format.js
         format.json { render json: @exercise, status: :ok, location: @exercise }
       else
-        format.html
+        format.html { redirect_to @exercise, notice: 'Something went wrong.' }
         format.js
         format.json { render json: @exercise.errors, status: :unprocessable_entity }
       end
@@ -110,6 +110,6 @@ class ExercisesController < ApplicationController
   private
 
   def exercise_params
-    params.require(:exercise).permit(:label, :exercise_type, :description, :private)
+    params.require(:exercise).permit(:label, :exercise_type, :description, :private, :image, :remove_image)
   end
 end

@@ -1,0 +1,12 @@
+<div class="row large_margin_bottom">
+  <div class="col-xs-12">
+    <h1 class="inline_block valign_middle" style="margin-top: 10px;">
+      <%= @exercise.label %> <small><span class="margin_left valign_text_top label label-<%= @exercise.color_class %>"><%= @exercise.pretty_type %></span></small>
+    </h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <%= render partial: "form", locals: {display_image_field: true} %>
+  </div>
+</div>

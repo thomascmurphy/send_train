@@ -52,6 +52,7 @@ gem 'pg'
 gem 'pretender'
 gem 'httparty'
 gem 'will_paginate-bootstrap'
+gem "paperclip", "~> 5.0.0"
 
 group :development, :test do
   gem 'pry'
