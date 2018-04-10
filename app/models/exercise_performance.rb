@@ -83,7 +83,16 @@ class ExercisePerformance < ActiveRecord::Base
              {weight: 0, hang_time: 10, rest_time: 0, hold_size: 2, reps: 1, fingers: 4, angle: 10},
              {weight: 0, hang_time: 10, rest_time: 0, hold_size: 2, reps: 1, fingers: 4, angle: 20},
              {weight: 0.3, hang_time: 10, rest_time: 0, hold_size: 2, reps: 1, fingers: 4, angle: 30},
-             {weight: 0, hang_time: 10, rest_time: 0, hold_size: 2, reps: 1, fingers: 4, angle: 40}
+             {weight: 0, hang_time: 10, rest_time: 0, hold_size: 2, reps: 1, fingers: 4, angle: 40},
+             {weight: 0, hang_time: 10, rest_time: 0, hold_size: 2, reps: 1, fingers: 4, angle: 0},
+             {weight: 0, hang_time: 10, rest_time: 0, hold_size: 25, reps: 1, fingers: 4, angle: 0},
+             {weight: 0, hang_time: 10, rest_time: 0, hold_size: 13, reps: 1, fingers: 4, angle: 0},
+             {weight: 1, hang_time: 10, rest_time: 0, hold_size: 25, reps: 1, fingers: 4, angle: 0},
+             {weight: 0.5, hang_time: 10, rest_time: 0, hold_size: 13, reps: 1, fingers: 4, angle: 0},
+             {weight: 0, hang_time: 10, rest_time: 0, hold_size: 50, reps: 1, fingers: 4, angle: 10},
+             {weight: 0, hang_time: 10, rest_time: 0, hold_size: 50, reps: 1, fingers: 4, angle: 20},
+             {weight: 0.3, hang_time: 10, rest_time: 0, hold_size: 50, reps: 1, fingers: 4, angle: 30},
+             {weight: 0, hang_time: 10, rest_time: 0, hold_size: 50, reps: 1, fingers: 4, angle: 40}
            ]
     values = []
     hangs.each do |hang|
@@ -98,7 +107,8 @@ class ExercisePerformance < ActiveRecord::Base
     #single_hang_score = ((weight_ratio + 1)/1.1)**2.1 * hang_time**0.6 / (hold_size / 2.0)**1.2
     weight_factor = 5*(weight_ratio.to_f + 1)
     hang_time_factor = (hang_time.to_f)**0.7
-    hold_size_factor = 1 / (hold_size.to_f + 0.7)**1.1
+    hold_size_modifier = hold_size > 4 ? 0.04 : 1.0
+    hold_size_factor = 1 / (hold_size_modifier * hold_size.to_f + 0.7)**1.1
     fingers_factor = 1 / (0.25 * fingers.to_f)**0.6
     angle_factor = ((angle.to_f + 720)/720)**21
     single_hang_score = weight_factor * hang_time_factor * hold_size_factor * fingers_factor * angle_factor

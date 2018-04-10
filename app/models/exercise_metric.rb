@@ -35,7 +35,7 @@ class ExerciseMetric < ActiveRecord::Base
     when "time"
       units = "seconds"
     when "hold-size"
-      units = "pads"
+      units = "pads/mm"
     when "completion"
       units = "%"
     else

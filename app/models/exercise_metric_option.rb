@@ -22,7 +22,12 @@ class ExerciseMetricOption < ActiveRecord::Base
     else
       pad_count = hold_size_value.to_s
     end
-    pad_string = hold_size_value.to_f > 1 ? "Pads" : "Pad"
+    if hold_size > 4
+      pad_string = "mm"
+    else
+      pad_string = hold_size_value.to_f > 1 ? "Pads" : "Pad"
+    end
+
     "#{pad_count} #{pad_string}"
   end
 

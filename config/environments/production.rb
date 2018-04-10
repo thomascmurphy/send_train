@@ -78,8 +78,17 @@ TrainToSend::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  config.action_mailer.delivery_method = :sendmail
-
-  config.action_mailer.default_url_options = { host: 'climber.training' }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.gmail.com',
+    port:                 587,
+    domain:               'example.com',
+    user_name:            'thomas.c.murphy@gmail.com',
+    password:             Rails.application.secrets.gmail_pw,
+    authentication:       'plain',
+    enable_starttls_auto: true
+  }
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.default_url_options = { host: 'http://climber.training' }
 
 end
