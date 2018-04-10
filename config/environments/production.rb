@@ -82,7 +82,7 @@ TrainToSend::Application.configure do
   config.action_mailer.smtp_settings = {
     address:              'smtp.gmail.com',
     port:                 587,
-    domain:               'example.com',
+    domain:               'climber.training',
     user_name:            'thomas.c.murphy@gmail.com',
     password:             Rails.application.secrets.gmail_pw,
     authentication:       'plain',
