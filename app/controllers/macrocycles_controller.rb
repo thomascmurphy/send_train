@@ -16,7 +16,7 @@ class MacrocyclesController < ApplicationController
 
   def show
     @macrocycle = Macrocycle.find_by_id(params[:id])
-    if @macrocycle.user.allow_profile_view.blank?
+    if @macrocycle.user.allow_profile_view.blank? && @macrocycle.user.id != current_user.id
       @macrocycle = nil
     end
     if @macrocycle.present?
@@ -152,7 +152,7 @@ class MacrocyclesController < ApplicationController
   def duplicate
     @macrocycles = current_user.macrocycles.order(created_at: :desc)
     original_macrocycle = Macrocycle.find_by_id(params[:macrocycle_id])
-    if original_macrocycle.present? && original_macrocycle.user.allow_profile_view.present?
+    if original_macrocycle.present? && (original_macrocycle.user.allow_profile_view.present? || original_macrocycle.user.id == current_user.id)
       @macrocycle = original_macrocycle.duplicate(current_user)
     end
     respond_to do |format|

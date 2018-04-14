@@ -16,7 +16,7 @@ class ExercisesController < ApplicationController
 
   def show
     @exercise = Exercise.find_by_id(params[:id])
-    if @exercise.user.allow_profile_view.blank?
+    if @exercise.user.allow_profile_view.blank? && @exercise.user.id != current_user.id
       @exercise = nil
     end
     respond_to do |format|
@@ -96,7 +96,7 @@ class ExercisesController < ApplicationController
   def duplicate
     @exercises = current_user.exercises.order(created_at: :desc)
     original_exercise = Exercise.find_by_id(params[:exercise_id])
-    if original_exercise.present? && original_exercise.user.allow_profile_view.present?
+    if original_exercise.present? && (original_exercise.user.allow_profile_view.present? || original_exercise.user.id == current_user.id)
       @exercise = original_exercise.duplicate(current_user)
     end
     respond_to do |format|
