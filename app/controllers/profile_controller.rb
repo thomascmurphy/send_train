@@ -31,7 +31,10 @@ class ProfileController < ApplicationController
         end
       end
     end
-
+    if params[:user][:handle] == ""
+      params[:user][:handle] = nil
+    end
+    binding.pry
     respond_to do |format|
       if @user.update_attributes(profile_params)
         format.html { redirect_to root_path, notice: 'Profile was successfully updated.' }

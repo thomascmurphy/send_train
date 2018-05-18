@@ -20,6 +20,8 @@ class User < ActiveRecord::Base
   has_many :articles
   after_create :seed_exercises
 
+  validates_uniqueness_of :handle, allow_blank: true
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
